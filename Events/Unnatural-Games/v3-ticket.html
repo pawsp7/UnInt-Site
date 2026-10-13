@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unnatural Games v3 — Ticket — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --paper: #F9F9FA; --olive: #95B747; --ink: #030205; --pink: #FA4A9E;
+    --wine: #591337; --lime: #BAF837; --cyan: #7EC8FF;
+    --muted: rgba(249,249,250,.74);
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; min-height: 100%; }
+  body { background: #12040c; font-family: var(--sans); color: var(--paper); display: flex; justify-content: center; padding: 72px 24px 48px; }
+  .toolbar { position: fixed; top: 16px; right: 16px; z-index: 20; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; max-width: 46vw; font-family: var(--mono); font-size: 12px; }
+  .toolbar a, .toolbar button { cursor: pointer; text-decoration: none; border: 1px solid rgba(186,248,55,.45); background: rgba(3,2,5,.88); color: var(--lime); padding: 8px 12px; font: inherit; }
+  .stage { width: 11in; height: 17in; flex: 0 0 auto; transform-origin: top center; filter: drop-shadow(0 28px 50px rgba(0,0,0,.55)); }
+
+  .poster {
+    position: relative; width: 11in; height: 17in; overflow: hidden; background: var(--ink); color: var(--paper);
+    display: grid;
+    grid-template-rows: 1.34in 2.38in 2.02in 1.12in 4.28in minmax(0, 1fr);
+    gap: 0.06in;
+    padding: 0.34in 0.36in 0.3in;
+  }
+  .poster > * { min-height: 0; min-width: 0; overflow: hidden; position: relative; z-index: 3; }
+  .poster::before {
+    content: ""; position: absolute; inset: 0.14in;
+    border: 0.035in dashed rgba(186,248,55,.55); pointer-events: none; z-index: 2;
+  }
+
+  .ticket {
+    position: relative; z-index: 3;
+    background: var(--lime); color: var(--ink);
+    display: grid; grid-template-columns: 1.25fr 1.35fr 1.45fr auto;
+    gap: 0.12in; align-items: center;
+    padding: 0.14in 0.18in;
+  }
+  .ticket h3 { margin: 0 0 0.03in; font-family: var(--mono); font-size: 0.095in; letter-spacing: 0.14em; text-transform: uppercase; }
+  .ticket .big { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.3in; letter-spacing: -0.03em; line-height: 0.92; }
+  .ticket .sub { margin-top: 0.03in; font-size: 0.125in; font-weight: 700; line-height: 1.2; }
+  .ticket .chip {
+    background: var(--ink); color: var(--lime); padding: 0.1in 0.12in;
+    font-family: var(--mono); font-weight: 700; font-size: 0.11in; letter-spacing: 0.08em;
+    text-transform: uppercase; text-align: center; line-height: 1.25;
+  }
+
+  .mast { display: flex; align-items: flex-end; gap: 0.12in; }
+  .wordmark { width: auto; height: 1.82in; display: block; }
+  .presents { margin: 0.02in 0 0; font-family: var(--mono); font-weight: 700; font-size: 0.15in; letter-spacing: 0.38em; text-transform: uppercase; }
+  .jelly { width: auto; height: 2.15in; display: block; margin-bottom: 0.12in; }
+
+  .hero { position: relative; z-index: 3; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 0.04in; }
+  .hero h1 { margin: 0; font-family: var(--display); font-weight: 700; text-transform: uppercase; line-height: 0.8; letter-spacing: -0.05em; }
+  .hero .u { display: block; color: var(--lime); font-size: 0.78in; }
+  .hero .g {
+    display: block; color: transparent; -webkit-text-stroke: 0.022in var(--paper);
+    font-size: 1.42in; letter-spacing: -0.04em;
+  }
+
+  .purpose { position: relative; z-index: 3; display: flex; flex-direction: column; justify-content: center; }
+  .purpose h2, .contact h3 {
+    margin: 0 0 0.04in; font-family: var(--mono); font-weight: 700;
+    font-size: 0.095in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--pink);
+  }
+  .purpose p { margin: 0; font-size: 0.165in; line-height: 1.28; font-weight: 500; max-width: 9.6in; }
+
+  .agenda { position: relative; z-index: 3; display: flex; flex-direction: column; justify-content: center; gap: 0.1in; }
+  .band { display: grid; grid-template-columns: 1.45in 1fr; gap: 0.16in; align-items: center; min-height: 1.28in; padding: 0.12in 0.18in; }
+  .band .dur { font-family: var(--mono); font-weight: 700; font-size: 0.15in; letter-spacing: 0.08em; text-transform: uppercase; }
+  .band h2 { margin: 0; font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.48in; letter-spacing: -0.04em; line-height: 0.88; }
+  .band p { margin: 0.06in 0 0; font-size: 0.175in; line-height: 1.25; font-weight: 600; }
+  .band.welcome { background: var(--cyan); color: var(--ink); }
+  .band.match { background: var(--lime); color: var(--ink); min-height: 1.55in; }
+  .band.debrief { background: var(--pink); color: var(--paper); }
+  .band.match h2 { font-size: 0.62in; }
+
+  .foot {
+    position: relative; z-index: 3;
+    display: grid; grid-template-rows: 1.15in 0.72in 1fr; gap: 0.08in; align-content: end;
+  }
+  .jellies { display: flex; align-items: flex-end; gap: 0.24in; }
+  .jellies img { width: 0.98in; height: 1.08in; object-fit: contain; }
+  .url-lockup { display: flex; align-items: center; gap: 0.1in; }
+  .dash { display: block; height: 0.06in; border-radius: 1in; }
+  .dash.lime { width: 0.48in; background: var(--lime); }
+  .dash.pink { width: 0.24in; background: var(--pink); }
+  .url { font-family: var(--mono); font-weight: 700; font-size: 0.18in; letter-spacing: 0.03em; text-transform: uppercase; }
+  .club-line { margin-top: 0.035in; font-family: var(--mono); font-weight: 700; font-size: 0.12in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--olive); }
+  .dock { display: flex; justify-content: space-between; align-items: flex-end; gap: 0.14in; }
+  .contact .line { font-size: 0.125in; line-height: 1.32; font-weight: 500; }
+  .contact code { font-family: var(--mono); font-size: 0.11in; color: var(--lime); }
+  .marks { display: flex; align-items: flex-end; gap: 0.08in; }
+  .logo-card { background: #fff; border-radius: 0.05in; padding: 0.055in 0.06in; display: flex; align-items: center; justify-content: center; }
+  .logo-card img { width: 1.62in; height: auto; display: block; }
+  .logo-card.sait img { width: 1.2in; }
+  .qr { width: 0.95in; text-align: center; }
+  .qr .box { background: #fff; border-radius: 0.05in; padding: 0.04in; width: 0.95in; height: 0.95in; }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr .cap { margin-top: 0.03in; font-family: var(--mono); font-size: 0.07in; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); }
+
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    body { background: #fff; padding: 0; display: block; }
+    .toolbar { display: none; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <a href="index.html">Ideas</a>
+  <a href="v1-presents.html">1 Presents</a>
+  <a href="v2-scoreboard.html">2 Scoreboard</a>
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+</div>
+<div class="stage" id="stage">
+<div class="poster">
+  <header class="ticket">
+    <div>
+      <h3>When</h3>
+      <div class="big" data-field="date">Mondays</div>
+      <div class="sub" data-field="time">6:00 – 8:00 PM</div>
+    </div>
+    <div>
+      <h3>Where</h3>
+      <div class="big" data-field="room">Room TBA</div>
+      <div class="sub" data-field="place">SAIT campus</div>
+    </div>
+    <div>
+      <h3>Type</h3>
+      <div class="big" data-field="type">Student club</div>
+      <div class="sub" data-field="typeDetail"></div>
+    </div>
+    <div class="chip">Free<br>no alcohol</div>
+  </header>
+
+  <section class="mast">
+    <div>
+      <img class="wordmark" src="assets/wordmark-glitch.svg" alt="Unnatural Intelligence">
+      <p class="presents">Presents</p>
+    </div>
+    <img class="jelly" src="assets/jellyfish-gradient.svg" alt="">
+  </section>
+
+  <section class="hero">
+    <h1>
+      <span class="u">Unnatural</span>
+      <span class="g">Games</span>
+    </h1>
+  </section>
+
+  <section class="purpose">
+    <h2>Purpose · <span data-field="pillar">Build pillar</span></h2>
+    <p data-field="purpose"></p>
+  </section>
+
+  <section class="agenda">
+    <article class="band welcome">
+      <div class="dur">15 min</div>
+      <div>
+        <h2>Welcome</h2>
+        <p data-field="welcome"></p>
+      </div>
+    </article>
+    <article class="band match">
+      <div class="dur">90 min</div>
+      <div>
+        <h2>The match</h2>
+        <p data-field="match"></p>
+      </div>
+    </article>
+    <article class="band debrief">
+      <div class="dur">15 min</div>
+      <div>
+        <h2>Debrief</h2>
+        <p data-field="debrief"></p>
+      </div>
+    </article>
+  </section>
+
+  <footer class="foot">
+    <div class="jellies">
+      <img src="assets/jellyfish-lime.svg" alt="">
+      <img src="assets/jellyfish-pink.svg" alt="">
+      <img src="assets/jellyfish-cyan.svg" alt="">
+      <img src="assets/jellyfish-paper.svg" alt="">
+    </div>
+    <div class="url-lockup">
+      <span class="dash lime"></span>
+      <span class="dash pink"></span>
+      <div>
+        <div class="url" data-field="url"></div>
+        <div class="club-line">SAIT student club</div>
+      </div>
+    </div>
+    <div class="dock">
+      <div class="contact">
+        <h3>Contact</h3>
+        <div class="line">Email <code id="contact-email" data-field="email"></code></div>
+        <div class="line">Discord <code id="contact-discord" data-field="discord"></code></div>
+        <div class="line" data-field="whoDetail"></div>
+        <div class="line" data-field="stakes"></div>
+      </div>
+      <div class="marks">
+        <div class="logo-card"><img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs"></div>
+        <div class="logo-card sait"><img src="assets/sait-logo.png" alt="SAIT"></div>
+        <div class="qr"><div class="box" id="qr"></div><div class="cap">Discord</div></div>
+      </div>
+    </div>
+  </footer>
+</div>
+</div>
+<script src="copy.js"></script>
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: GAMES_COPY.email,
+  contactDiscord: GAMES_COPY.discord,
+  qrUrl: GAMES_COPY.discordUrl
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unnatural Games v5 — Table scoreboard — Unnatural Intelligence</title>
+<!--
+  EDIT BEFORE saitsa.com/Poster-Submission
+  Date: Monday, October 19, 2026 · 6:00–8:00 PM.
+  Replace "Room posted on Discord" once SECC assigns a room.
+  Do not restyle the Saitsa Clubs logo. Do not add the official SAIT logo.
+  Print: Chrome → Tabloid 11×17, margins none, background graphics on.
+-->
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+  :root {
+    --paper: #F9F9FA; --olive: #95B747; --ink: #030205; --pink: #FA4A9E;
+    --wine: #591337; --lime: #BAF837; --cyan: #7EC8FF;
+    --muted: rgba(249,249,250,.74);
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; min-height: 100%; }
+  body { background: #12040c; font-family: var(--sans); color: var(--paper); display: flex; justify-content: center; padding: 72px 24px 48px; }
+  .toolbar { position: fixed; top: 16px; right: 16px; z-index: 20; display: flex; gap: 8px; font-family: var(--mono); font-size: 12px; }
+  .toolbar a, .toolbar button { cursor: pointer; text-decoration: none; border: 1px solid rgba(186,248,55,.45); background: rgba(3,2,5,.88); color: var(--lime); padding: 8px 12px; font: inherit; }
+  .stage { width: 11in; height: 17in; flex: 0 0 auto; transform-origin: top center; filter: drop-shadow(0 28px 50px rgba(0,0,0,.55)); }
+
+  .poster {
+    position: relative; width: 11in; height: 17in; overflow: hidden; background: var(--ink);
+    display: grid; grid-template-rows: 3.35in 6.15in 3.55in 3.95in;
+  }
+  .bars {
+    position: absolute; left: 0; right: 0; top: 2.62in; height: 0.62in;
+    width: auto; opacity: 0.8; pointer-events: none; z-index: 4;
+  }
+  .bars img { width: 100%; height: 100%; display: block; }
+
+  .hero {
+    position: relative; z-index: 2;
+    display: grid; grid-template-columns: 1fr 2.35in; align-items: end;
+    padding: 0.16in 0.22in 0.08in 0.28in; gap: 0.06in;
+  }
+  .name { width: 100%; height: auto; display: block; align-self: center; }
+  .hero-copy { display: flex; flex-direction: column; justify-content: flex-end; min-width: 0; }
+  .hero h1 {
+    margin: 0; font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 0.78in; line-height: 0.78; letter-spacing: -0.055em; color: var(--paper);
+    text-shadow: -0.02in 0.008in 0 var(--cyan), 0.02in -0.008in 0 var(--pink);
+  }
+  .hero p { margin: 0.08in 0 0; font-size: 0.145in; line-height: 1.25; font-weight: 600; }
+  .hero strong { color: var(--lime); }
+  .jelly {
+    position: absolute; right: 0.12in; top: 0.08in; width: 1.85in; height: 2.15in;
+    object-fit: contain; z-index: 3;
+  }
+  .chip {
+    position: absolute; top: 0.16in; left: 0.28in; z-index: 5;
+    font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--lime); color: var(--ink); padding: 0.06in 0.1in; font-weight: 700;
+  }
+
+  .score { position: relative; z-index: 2; display: grid; grid-template-columns: 2.35in 1fr 2.35in; min-height: 0; }
+  .side { padding: 0.28in 0.22in; display: flex; flex-direction: column; justify-content: center; color: var(--ink); }
+  .side.humans { background: var(--pink); }
+  .side.model { background: var(--cyan); }
+  .side .k { font-family: var(--mono); font-size: 0.095in; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; }
+  .side h2 { margin: 0.08in 0 0; font-family: var(--display); text-transform: uppercase; font-size: 0.78in; letter-spacing: -0.05em; line-height: 0.82; }
+  .side .scorebig { margin-top: 0.16in; font-family: var(--display); font-size: 1.15in; letter-spacing: -0.05em; line-height: 0.8; }
+  .side p { margin: 0.14in 0 0; font-size: 0.16in; line-height: 1.25; font-weight: 600; }
+
+  .table {
+    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+    gap: 0.12in; padding: 0.16in; background: #07060a; min-height: 0;
+  }
+  .cell {
+    background: rgba(249,249,250,.04); border: 1px solid rgba(249,249,250,.12);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.08in;
+    padding: 0.1in; min-height: 0;
+  }
+  .cell b { font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.14em; text-transform: uppercase; color: var(--lime); }
+
+  .board {
+    width: 1.85in; height: 1.85in; position: relative;
+    background-color: #14160f;
+    background-image: conic-gradient(var(--olive) 25%, #14160f 0 50%, var(--olive) 0 75%, #14160f 0);
+    background-size: 0.4625in 0.4625in;
+    border: 0.04in solid var(--paper);
+  }
+  .piece { position: absolute; width: 20%; height: 20%; }
+  .piece.e1 { left: 56.25%; bottom: 1%; transform: translateX(-50%); color: var(--paper); }
+  .piece.e8 { left: 56.25%; top: 1%; transform: translateX(-50%); color: var(--cyan); }
+
+  .c4 {
+    width: 2.15in; display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.035in;
+    background: var(--ink); padding: 0.08in; border: 0.035in solid var(--cyan);
+  }
+  .c4 i { aspect-ratio: 1; border-radius: 50%; background: #1a1c24; box-shadow: inset 0 0 0 1.5px rgba(249,249,250,.28); }
+  .c4 i.p { background: var(--pink); box-shadow: none; }
+  .c4 i.c { background: var(--cyan); box-shadow: none; }
+  .c4 i.l { background: var(--lime); box-shadow: none; }
+
+  .tiles { display: flex; gap: 0.06in; }
+  .tile {
+    width: 0.58in; height: 0.58in; background: #f3e6c4; color: #1c140c;
+    font-family: var(--display); font-size: 0.38in; line-height: 0.58in; text-align: center;
+    position: relative; box-shadow: 0.025in 0.025in 0 #c9b48a;
+  }
+  .tile small { position: absolute; right: 0.04in; bottom: 0.02in; font-family: var(--mono); font-size: 0.09in; line-height: 1; font-weight: 700; }
+
+  .cards { position: relative; width: 1.7in; height: 1.55in; }
+  .card {
+    position: absolute; width: 0.95in; height: 1.35in; background: var(--paper); color: var(--ink);
+    border-radius: 0.06in; padding: 0.06in 0.07in;
+    font-family: var(--display); font-size: 0.28in; line-height: 1;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .card svg { width: 0.38in; height: 0.38in; align-self: flex-end; }
+  .card.heart { transform: rotate(-12deg); left: 0; top: 0.08in; color: var(--pink); z-index: 1; }
+  .card.spade { transform: rotate(10deg); right: 0; top: 0; color: var(--ink); }
+
+  .how { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr 1fr; }
+  .step { padding: 0.22in 0.22in; display: flex; flex-direction: column; justify-content: flex-end; }
+  .step.a { background: var(--pink); color: var(--ink); }
+  .step.b { background: var(--lime); color: var(--ink); }
+  .step.c { background: var(--cyan); color: var(--ink); }
+  .step .n { font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; }
+  .step h3 { margin: 0.04in 0 0.06in; font-family: var(--display); text-transform: uppercase; font-size: 0.62in; letter-spacing: -0.045em; line-height: 0.82; }
+  .step p { margin: 0; font-size: 0.15in; line-height: 1.25; font-weight: 600; }
+
+  .dock {
+    position: relative; z-index: 2;
+    padding: 0.16in 0.28in 0.16in;
+    display: grid; grid-template-rows: 0.85in 1fr; gap: 0.12in;
+    background: var(--wine);
+  }
+  .meta { display: grid; grid-template-columns: 1fr 1.25fr 1.2fr; gap: 0.12in; align-content: center; }
+  .dock h3 { margin: 0 0 0.02in; font-family: var(--mono); font-size: 0.08in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lime); }
+  .dock .big { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.28in; letter-spacing: -0.03em; line-height: 0.95; }
+  .dock .sub { font-size: 0.115in; font-weight: 600; margin-top: 0.03in; color: rgba(249,249,250,.78); line-height: 1.25; }
+  .foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 0.12in; }
+  .contact { font-size: 0.112in; line-height: 1.35; font-weight: 600; }
+  .contact h3 { color: var(--cyan); }
+  .contact code { font-family: var(--mono); font-size: 0.092in; color: var(--lime); }
+  .marks { display: flex; align-items: flex-end; gap: 0.1in; }
+  .logo-card { background: #fff; width: 2.05in; padding: 0.05in 0.08in; }
+  .logo-card img { width: 100%; height: auto; display: block; }
+  .qr { width: 1.12in; text-align: center; }
+  .qr .box { background: #fff; padding: 0.04in; width: 1.12in; height: 1.12in; }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr .cap { font-family: var(--mono); font-size: 0.062in; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cyan); margin-top: 0.03in; }
+
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    body { background: #fff; padding: 0; display: block; }
+    .toolbar { display: none; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+  <a href="index.html">all ideas</a>
+</div>
+<div class="stage" id="stage">
+<div class="poster">
+  <div class="bars" aria-hidden="true"><img src="assets/glitch-bars.svg" alt=""></div>
+  <div class="chip">Student Club · Game night</div>
+  <img class="jelly" src="../../Branding/Vector Kit/marks/jellyfish-gradient.svg" alt="">
+
+  <section class="hero">
+    <img class="name" src="assets/name-glitch.png" alt="Unnatural Intelligence">
+    <div class="hero-copy">
+      <h1>Games</h1>
+      <p><strong>Purpose:</strong> the room plays as one team against a language model. No experience required.</p>
+    </div>
+  </section>
+
+  <section class="score">
+    <article class="side humans">
+      <div class="k">Humans</div>
+      <h2>The room.</h2>
+      <div class="scorebig">?</div>
+      <p>Argue it, then vote. Hands or a QR poll.</p>
+    </article>
+    <div class="table">
+      <div class="cell">
+        <div class="board" aria-hidden="true">
+          <svg class="piece e1" viewBox="0 0 64 64"><rect x="28" y="2" width="8" height="20" fill="currentColor"/><rect x="18" y="8" width="28" height="8" fill="currentColor"/><path fill="currentColor" d="M20 26h24l8 28H12z"/><rect x="10" y="54" width="44" height="8" fill="currentColor"/></svg>
+          <svg class="piece e8" viewBox="0 0 64 64"><rect x="28" y="2" width="8" height="20" fill="currentColor"/><rect x="18" y="8" width="28" height="8" fill="currentColor"/><path fill="currentColor" d="M20 26h24l8 28H12z"/><rect x="10" y="54" width="44" height="8" fill="currentColor"/></svg>
+        </div>
+        <b>Chess</b>
+      </div>
+      <div class="cell">
+        <div class="c4" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          <i></i><i></i><i></i><i class="p"></i><i></i><i></i><i></i>
+          <i></i><i></i><i class="c"></i><i class="p"></i><i></i><i></i><i></i>
+          <i></i><i class="l"></i><i class="p"></i><i class="c"></i><i class="p"></i><i></i><i></i>
+          <i class="c"></i><i class="p"></i><i class="c"></i><i class="p"></i><i class="l"></i><i class="c"></i><i class="p"></i>
+        </div>
+        <b>Connect 4</b>
+      </div>
+      <div class="cell">
+        <div class="tiles" aria-hidden="true">
+          <div class="tile">V<small>4</small></div>
+          <div class="tile">O<small>1</small></div>
+          <div class="tile">T<small>1</small></div>
+          <div class="tile">E<small>1</small></div>
+        </div>
+        <b>Scrabble</b>
+      </div>
+      <div class="cell">
+        <div class="cards" aria-hidden="true">
+          <div class="card heart">A<svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 21S3 14 3 8.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 9 1.5C21 14 12 21 12 21z"/></svg></div>
+          <div class="card spade">A<svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2s7 6.2 7 11a4.2 4.2 0 0 1-7 2.2A4.2 4.2 0 0 1 5 13C5 8.2 12 2 12 2zM10 18h4l1.2 4h-6.4z"/></svg></div>
+        </div>
+        <b>Cards</b>
+      </div>
+    </div>
+    <article class="side model">
+      <div class="k">Model</div>
+      <h2>The AI.</h2>
+      <div class="scorebig">?</div>
+      <p>It plays, then explains itself out loud.</p>
+    </article>
+  </section>
+
+  <section class="how">
+    <article class="step a"><div class="n">01</div><h3>Argue</h3><p>Three minutes. You only need an opinion.</p></article>
+    <article class="step b"><div class="n">02</div><h3>Vote</h3><p>One team. The winning idea is the move.</p></article>
+    <article class="step c"><div class="n">03</div><h3>Listen</h3><p>The model says why. We read it to the room.</p></article>
+  </section>
+
+  <footer class="dock">
+    <section class="meta">
+      <div><h3>When</h3><div class="big">Mon Oct 19</div><div class="sub">6:00 – 8:00 PM · 2026</div></div>
+      <div><h3>Where</h3><div class="big">SAIT campus</div><div class="sub">Room posted on Discord</div></div>
+      <div><h3>Type</h3><div class="big">Student Club</div><div class="sub">Social game night · free · no alcohol</div></div>
+    </section>
+    <div class="foot">
+      <div class="contact">
+        <h3>Contact</h3>
+        <div>Email <code id="contact-email"></code></div>
+        <div>Discord <code id="contact-discord"></code></div>
+        <div>15 min welcome · 90 min match · debrief · all programs</div>
+      </div>
+      <div class="marks">
+        <div class="logo-card"><img src="../../Branding/SaitsaStudentClubsPrimaryLogo.svg" alt="Saitsa Student Clubs"></div>
+        <div class="qr"><div class="box" id="qr"></div><div class="cap">Scan Discord</div></div>
+      </div>
+    </div>
+  </footer>
+</div>
+</div>
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: "unnaturalintelligencesait@gmail.com",
+  contactDiscord: "discord.gg/hcsQFRNUEa",
+  qrUrl: "https://discord.gg/hcsQFRNUEa"
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agents v2 — Paper rail — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --paper: #F9F9FA;
+    --olive: #95B747;
+    --ink: #030205;
+    --pink: #FA4A9E;
+    --wine: #591337;
+    --lime: #BAF837;
+    --cyan: #7EC8FF;
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: #d9d6cf;
+    font-family: var(--sans);
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+    padding: 72px 24px 48px;
+  }
+  .toolbar {
+    position: fixed; top: 16px; right: 16px; z-index: 20;
+    display: flex; gap: 8px; font-family: var(--mono); font-size: 12px;
+  }
+  .toolbar a, .toolbar button {
+    cursor: pointer; text-decoration: none;
+    border: 1px solid var(--ink); background: var(--paper); color: var(--ink);
+    padding: 8px 12px; font: inherit; letter-spacing: 0.04em;
+  }
+  .stage { width: 11in; height: 17in; flex: 0 0 auto; transform-origin: top center; filter: drop-shadow(0 24px 40px rgba(0,0,0,.28)); }
+
+  .poster {
+    width: 11in; height: 17in; overflow: hidden; background: var(--paper);
+    display: grid; grid-template-columns: 2.35in 1fr;
+  }
+  .rail {
+    background: var(--ink); color: var(--paper);
+    padding: 0.34in 0.26in 0.3in;
+    display: flex; flex-direction: column; gap: 0.18in;
+    position: relative;
+  }
+  .stamp {
+    font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink); background: var(--pink); padding: 0.06in 0.08in; font-weight: 700; text-align: center;
+  }
+  .rail-jelly {
+    width: 1.7in; height: 1.7in; margin: 0.04in auto 0;
+    display: block; object-fit: contain;
+  }
+  .rail-club {
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 0.22in; letter-spacing: -0.03em; line-height: 0.95;
+  }
+  .rail-club small {
+    display: block; margin-top: 0.08in; font-family: var(--mono); font-weight: 400;
+    font-size: 0.09in; letter-spacing: 0.12em; color: rgba(249,249,250,.62);
+  }
+  .pillar {
+    font-family: var(--mono); font-size: 0.095in; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink); background: var(--lime); padding: 0.08in 0.1in; font-weight: 700;
+    line-height: 1.35;
+  }
+  .rail-meta { margin-top: auto; display: grid; gap: 0.16in; }
+  .rail-meta h3 {
+    margin: 0 0 0.04in; font-family: var(--mono); font-size: 0.095in;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--lime);
+  }
+  .rail-meta .big {
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 0.26in; line-height: 1; letter-spacing: -0.03em;
+  }
+  .rail-meta .sub { margin-top: 0.04in; font-size: 0.115in; color: rgba(249,249,250,.7); font-weight: 600; }
+
+  .sheet {
+    padding: 0.34in 0.36in 0.28in 0.34in;
+    display: flex; flex-direction: column; justify-content: space-between;
+    gap: 0.14in; min-width: 0; height: 17in;
+  }
+  .hero-block { display: grid; gap: 0.12in; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.11in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--wine);
+  }
+  .title {
+    margin: 0; font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 0.92in; line-height: 0.84; letter-spacing: -0.045em;
+  }
+  .title .ai { color: var(--ink); }
+  .title .agents { color: var(--pink); }
+  .title .rest { display: block; color: transparent; -webkit-text-stroke: 0.022in var(--ink); font-size: 0.62in; }
+  .official { margin: 0; font-family: var(--mono); font-size: 0.1in; color: #555; }
+  .purpose { margin: 0; font-size: 0.165in; line-height: 1.28; max-width: 7.4in; }
+  .purpose strong { color: var(--wine); }
+  .purpose em { color: var(--pink); font-style: normal; font-weight: 700; }
+
+  .loop { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.1in; }
+  .loop article {
+    border: 0.018in solid var(--ink); background: #fff; padding: 0.12in 0.12in 0.14in; min-height: 1.35in;
+  }
+  .loop article:nth-child(1) { box-shadow: 0.07in 0.07in 0 var(--olive); }
+  .loop article:nth-child(2) { box-shadow: 0.07in 0.07in 0 var(--lime); }
+  .loop article:nth-child(3) { box-shadow: 0.07in 0.07in 0 var(--pink); }
+  .loop .n { font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.14em; text-transform: uppercase; color: #555; }
+  .loop h3 { margin: 0.04in 0 0.05in; font-family: var(--display); text-transform: uppercase; font-size: 0.24in; letter-spacing: -0.03em; }
+  .loop p { margin: 0; font-size: 0.12in; line-height: 1.28; }
+  .loop-icon { width: 0.4in; height: 0.4in; display: block; margin-bottom: 0.06in; }
+
+  .agenda { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.07in; }
+  .agenda li {
+    display: grid; grid-template-columns: 0.52in 0.72in 1fr; gap: 0.1in; align-items: center;
+    border: 0.018in solid var(--ink); padding: 0.1in 0.12in; background: #fff;
+  }
+  .agenda li.hands { background: var(--pink); color: var(--paper); border-color: var(--pink); }
+  .agenda .n { font-family: var(--mono); font-weight: 700; font-size: 0.15in; }
+  .agenda li.hands .n { color: var(--lime); }
+  .agenda .dur { font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.06em; }
+  .agenda p { margin: 0; font-size: 0.15in; line-height: 1.2; font-weight: 600; }
+  .agenda small { display: block; margin-top: 0.02in; font-weight: 400; font-size: 0.115in; }
+
+  .use { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.08in; }
+  .use article { background: var(--ink); color: var(--paper); padding: 0.12in; min-height: 1.15in; }
+  .use .n { font-family: var(--mono); font-size: 0.09in; color: var(--lime); letter-spacing: 0.12em; margin-bottom: 0.05in; }
+  .use h4 { margin: 0 0 0.04in; font-size: 0.16in; text-transform: uppercase; letter-spacing: -0.02em; }
+  .use p { margin: 0; font-size: 0.115in; line-height: 1.28; color: rgba(249,249,250,.78); }
+
+  .promise {
+    background: var(--lime); color: var(--ink); padding: 0.12in 0.16in;
+    display: grid; grid-template-columns: auto 1fr; gap: 0.16in; align-items: center;
+  }
+  .promise h3 { margin: 0; font-family: var(--display); text-transform: uppercase; font-size: 0.24in; letter-spacing: -0.03em; line-height: 0.95; }
+  .promise p { margin: 0; font-size: 0.135in; line-height: 1.3; font-weight: 600; }
+
+  .foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 0.12in; }
+  .contact h5 { margin: 0 0 0.05in; font-family: var(--mono); font-size: 0.095in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--wine); }
+  .contact .line { font-size: 0.125in; line-height: 1.35; }
+  .contact code { font-family: var(--mono); font-size: 0.115in; }
+  .marks { display: flex; align-items: flex-end; gap: 0.08in; }
+  .logo-card {
+    background: #fff; border: 0.014in solid var(--ink); width: 1.55in; padding: 0.06in;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-card.sait { width: 1.28in; }
+  .logo-card img { width: 100%; height: auto; display: block; }
+  .qr { width: 1.12in; text-align: center; }
+  .qr .box { background: #fff; border: 0.014in solid var(--ink); padding: 0.05in; width: 1.12in; height: 1.12in; }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr .cap { font-family: var(--mono); font-size: 0.08in; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.04in; }
+
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    body { background: #fff; padding: 0; display: block; }
+    .toolbar { display: none; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+  <a href="AI%20Agents%20Poster%20v2%20Paper%20(11%C3%9717).pdf">Open PDF</a>
+  <a href="v1-ink.html">v1 ink</a>
+  <a href="v3-arcade.html">v3 arcade</a>
+</div>
+<div class="stage" id="stage">
+<div class="poster">
+  <aside class="rail">
+    <div class="stamp">Student Club</div>
+    <img class="rail-jelly" src="assets/jellyfish-lime.svg" alt="">
+    <div class="rail-club">Unnatural<br>Intelligence<small>SAIT · Saitsa · non-academic</small></div>
+    <div class="pillar">Learn pillar<br>Accessible · practical · social</div>
+    <div class="rail-meta">
+      <div>
+        <h3>When</h3>
+        <div class="big">Thu Oct 1</div>
+        <div class="sub">6:00 – 8:00 PM</div>
+      </div>
+      <div>
+        <h3>Where</h3>
+        <div class="big">MB202</div>
+        <div class="sub">Stan Grad Centre · SAIT campus</div>
+      </div>
+      <div>
+        <h3>Type</h3>
+        <div class="big">Lunch &amp; Learn</div>
+        <div class="sub">Educational workshop · free</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sheet">
+    <div class="hero-block">
+      <div class="eyebrow">Workshop · Fall 2026 · Purpose: demystify AI agents</div>
+      <h1 class="title"><span class="ai">AI </span><span class="agents">Agents</span><span class="rest">What? How? Use.</span></h1>
+      <p class="official">AI Agents: What? How? &amp; Learning to Use Them</p>
+      <p class="purpose">A friendly two-hour workshop for the whole SAIT community. <strong>No prior experience.</strong> Chatbots answer. <em>Agents act.</em> Every attendee leaves having used an AI agent for a real task.</p>
+    </div>
+
+    <section class="loop">
+      <article>
+        <img class="loop-icon" src="assets/spark.svg" alt="">
+        <div class="n">01 · Perceive</div>
+        <h3>See it</h3>
+        <p>Notice the task, the files, the question. An agent starts by taking in more than the chat window.</p>
+      </article>
+      <article>
+        <img class="loop-icon" src="assets/workflow.svg" alt="">
+        <div class="n">02 · Decide</div>
+        <h3>Plan it</h3>
+        <p>Pick a next useful step. It chooses a tool instead of only talking back.</p>
+      </article>
+      <article>
+        <img class="loop-icon" src="assets/prompt.svg" alt="">
+        <div class="n">03 · Act</div>
+        <h3>Do it</h3>
+        <p>Call a tool, check the result, repeat. Limitations and risks stay on the table.</p>
+      </article>
+    </section>
+
+    <ol class="agenda">
+      <li><span class="n">01</span><span class="dur">15 min</span><p>Welcome, club presentation, new member sign-ups</p></li>
+      <li><span class="n">02</span><span class="dur">30 min</span><p>What is an AI agent?<small>Chatbot vs agent, everyday examples, live demos</small></p></li>
+      <li><span class="n">03</span><span class="dur">30 min</span><p>How do they work?<small>Perceive → decide → act, tools, limitations and risks</small></p></li>
+      <li class="hands"><span class="n">04</span><span class="dur">30 min</span><p>Hands-on: use an agent for a concrete task<small>Studying, resume, or a project</small></p></li>
+      <li><span class="n">05</span><span class="dur">15 min</span><p>Q&amp;A and open discussion</p></li>
+    </ol>
+
+    <section class="use">
+      <article><div class="n">Task A</div><h4>Studying</h4><p>Turn a syllabus into a study plan you will actually open next week.</p></article>
+      <article><div class="n">Task B</div><h4>Resume</h4><p>Draft with an agent, then put a human finish on it so it still sounds like you.</p></article>
+      <article><div class="n">Task C</div><h4>Project</h4><p>Automate one recurring assignment. Keep only what still saves time.</p></article>
+    </section>
+
+    <section class="promise">
+      <h3>Leave having used one</h3>
+      <p>All SAIT students, all programs. Bring a laptop if you have one. New members welcome. On campus · no alcohol.</p>
+    </section>
+
+    <footer class="foot">
+      <div class="contact">
+        <h5>Show up · Contact</h5>
+        <div class="line"><b>Unnatural Intelligence</b> — SAIT student club</div>
+        <div class="line">Email <code id="contact-email"></code></div>
+        <div class="line">Discord <code id="contact-discord"></code></div>
+      </div>
+      <div class="marks">
+        <div class="logo-card"><img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs"></div>
+        <div class="logo-card sait"><img src="assets/sait-logo.png" alt="SAIT"></div>
+        <div class="qr"><div class="box" id="qr"></div><div class="cap">Scan Discord</div></div>
+      </div>
+    </footer>
+  </div>
+</div>
+</div>
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: "unnaturalintelligencesait@gmail.com",
+  contactDiscord: "discord.gg/hcsQFRNUEa",
+  qrUrl: "https://discord.gg/hcsQFRNUEa"
+});
+</script>
+</body>
+</html>

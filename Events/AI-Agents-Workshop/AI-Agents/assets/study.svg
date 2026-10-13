@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Study icon" fill="none">
+  <rect width="64" height="64" rx="14" fill="#030205"/>
+  <path d="M12 18 L32 26 L52 18 V48 L32 56 L12 48 Z" fill="#7EC8FF"/>
+  <path d="M32 26 V56" stroke="#030205" stroke-width="2.5"/>
+  <path d="M20 28 L28 31 M20 34 L28 37" stroke="#030205" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+  <path d="M44 28 L36 31 M44 34 L36 37" stroke="#030205" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+</svg>

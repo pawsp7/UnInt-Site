@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banner 6×3 ft — Unnatural Intelligence</title>
+<script>
+  (function () {
+    const dpi = Number(new URLSearchParams(location.search).get("dpi") || 0);
+    if (dpi > 0) {
+      document.documentElement.style.setProperty("--preview-w", Math.round(72 * dpi) + "px");
+      document.documentElement.style.setProperty("--preview-h", Math.round(36 * dpi) + "px");
+    }
+  })();
+</script>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --preview-w: 1920px;
+    --preview-h: 960px;
+    --banner-w: var(--preview-w);
+    --banner-h: var(--preview-h);
+    --inch: calc(var(--preview-w) / 72);
+    --safe: calc(var(--inch) * 2);
+    --paper: #F9F9FA;
+    --olive: #95B747;
+    --ink: #030205;
+    --pink: #FA4A9E;
+    --wine: #591337;
+    --lime: #BAF837;
+    --cyan: #7EC8FF;
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: #14040c;
+    color: var(--paper);
+    font-family: var(--sans);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 72px 24px 48px;
+  }
+
+  .toolbar {
+    position: fixed; top: 16px; right: 16px; z-index: 20;
+    display: flex; flex-wrap: wrap; gap: 8px;
+    font-family: var(--mono); font-size: 12px;
+    justify-content: flex-end; max-width: 70vw;
+  }
+  .toolbar button, .toolbar a {
+    cursor: pointer; text-decoration: none;
+    border: 1px solid rgba(186,248,55,.45);
+    background: rgba(3,2,5,.88); color: var(--lime);
+    padding: 8px 12px; font: inherit; letter-spacing: 0.04em;
+  }
+  .toolbar button:hover, .toolbar a:hover { background: rgba(186,248,55,.14); }
+  .toolbar button[aria-pressed="true"] {
+    background: var(--lime); color: var(--ink); border-color: var(--lime);
+  }
+
+  .rail {
+    width: min(1100px, 100%);
+    margin: 0 auto 18px;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.55;
+    color: rgba(249,249,250,.72);
+    letter-spacing: 0.02em;
+  }
+  .rail strong { color: var(--lime); font-weight: 700; }
+  .rail code { color: var(--pink); }
+
+  .stage {
+    width: var(--banner-w);
+    height: var(--banner-h);
+    flex: 0 0 auto;
+    transform-origin: top center;
+    filter: drop-shadow(0 28px 50px rgba(0,0,0,.55));
+  }
+
+  .banner {
+    position: relative;
+    width: var(--banner-w);
+    height: var(--banner-h);
+    overflow: hidden;
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .bg { position: absolute; inset: 0; pointer-events: none; }
+  .bg .wash {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 48% 90% at 0% 50%, rgba(89,19,55,.92) 0%, rgba(89,19,55,0) 70%),
+      radial-gradient(ellipse 42% 70% at 18% 100%, rgba(250,74,158,.16) 0%, transparent 70%),
+      radial-gradient(ellipse 36% 60% at 88% 8%, rgba(186,248,55,.07) 0%, transparent 70%),
+      linear-gradient(90deg, #1a0812 0%, #0a0408 42%, #030205 100%);
+  }
+  .bg .grid { position: absolute; inset: 0; pointer-events: none; }
+  .bg .g {
+    position: absolute; inset: 0;
+    --grid-line: calc(var(--inch) * 0.10);
+    --grid-cell: calc(var(--inch) * 0.72);
+    background-image:
+      linear-gradient(var(--gc) var(--grid-line), transparent var(--grid-line)),
+      linear-gradient(90deg, var(--gc) var(--grid-line), transparent var(--grid-line));
+    background-size: var(--grid-cell) var(--grid-cell);
+  }
+  .bg .g-lime {
+    --gc: rgba(186, 248, 55, 0.17);
+    -webkit-mask-image:
+      radial-gradient(ellipse 52% 70% at 26% 30%, #000 0%, transparent 72%),
+      radial-gradient(ellipse 42% 52% at 86% 10%, #000 0%, transparent 70%);
+    mask-image:
+      radial-gradient(ellipse 52% 70% at 26% 30%, #000 0%, transparent 72%),
+      radial-gradient(ellipse 42% 52% at 86% 10%, #000 0%, transparent 70%);
+    -webkit-mask-composite: source-over;
+    mask-composite: add;
+  }
+  .bg .g-pink {
+    --gc: rgba(250, 74, 158, 0.18);
+    -webkit-mask-image:
+      radial-gradient(ellipse 50% 72% at 20% 78%, #000 0%, transparent 74%),
+      radial-gradient(ellipse 60% 78% at 64% 62%, #000 0%, transparent 76%);
+    mask-image:
+      radial-gradient(ellipse 50% 72% at 20% 78%, #000 0%, transparent 74%),
+      radial-gradient(ellipse 60% 78% at 64% 62%, #000 0%, transparent 76%);
+    -webkit-mask-composite: source-over;
+    mask-composite: add;
+  }
+
+  .lockup {
+    position: relative;
+    z-index: 3;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--inch) * 1.35);
+    padding: calc(var(--inch) * 2.7) calc(var(--inch) * 2.8) calc(var(--inch) * 3.2);
+  }
+
+  .jelly {
+    height: calc(var(--inch) * 26.2);
+    width: auto;
+    display: block;
+    flex: 0 0 auto;
+    filter:
+      drop-shadow(0 0 calc(var(--inch) * 0.16) rgba(186,248,55,.32))
+      drop-shadow(0 0 calc(var(--inch) * 0.28) rgba(250,74,158,.22));
+  }
+
+  .type {
+    min-width: 0;
+    transform: scaleX(0.84);
+    transform-origin: left center;
+  }
+
+  .wordmark {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: calc(var(--inch) * 6.15);
+    line-height: 0.86;
+    letter-spacing: -0.055em;
+    text-transform: uppercase;
+    color: var(--paper);
+  }
+  .wordmark .line { display: block; white-space: nowrap; }
+
+  .glitch {
+    position: relative;
+    isolation: isolate;
+    z-index: 1;
+    color: var(--paper);
+  }
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0; top: 0;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .glitch::before {
+    color: var(--cyan);
+    transform: translate(calc(var(--inch) * -0.075), calc(var(--inch) * 0.02));
+  }
+  .glitch::after {
+    color: var(--pink);
+    transform: translate(calc(var(--inch) * 0.075), calc(var(--inch) * -0.02));
+  }
+
+  .tag {
+    margin: calc(var(--inch) * 1.35) 0 0;
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: calc(var(--inch) * 1.08);
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: rgba(249,249,250,.82);
+    white-space: nowrap;
+  }
+  .tag.glitch::before { color: #5CE1FF; transform: translate(calc(var(--inch) * -0.045), calc(var(--inch) * 0.012)); opacity: 0.8; }
+  .tag.glitch::after { color: #FF5AB0; transform: translate(calc(var(--inch) * 0.045), calc(var(--inch) * -0.012)); opacity: 0.8; }
+
+  .url {
+    position: absolute;
+    z-index: 4;
+    left: 0; right: 0;
+    bottom: calc(var(--inch) * 1.05);
+    margin: 0;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: calc(var(--inch) * 0.34);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(249,249,250,.58);
+  }
+
+  .guides {
+    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 8;
+    pointer-events: none;
+  }
+  body.guides-on .guides { display: block; }
+  .guides .safe {
+    position: absolute;
+    inset: var(--safe);
+    border: calc(var(--inch) * 0.035) dashed rgba(186,248,55,.55);
+  }
+  .guides .cx, .guides .cy {
+    position: absolute;
+    background: rgba(250,74,158,.45);
+  }
+  .guides .cx { left: 50%; top: 0; bottom: 0; width: 2px; transform: translateX(-1px); }
+  .guides .cy { top: 50%; left: 0; right: 0; height: 2px; transform: translateY(-1px); }
+  .guides .label {
+    position: absolute;
+    top: calc(var(--inch) * 0.35); left: calc(var(--inch) * 0.4);
+    font-family: var(--mono);
+    font-size: calc(var(--inch) * 0.22);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lime);
+  }
+
+  body.capture {
+    padding: 0;
+    background: #000;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  body.capture .toolbar,
+  body.capture .rail { display: none; }
+  body.capture .stage { filter: none; }
+
+  @page { size: 72in 36in; margin: 0; }
+  @media print {
+    body { background: #fff; padding: 0; display: block; }
+    .toolbar, .rail, .guides { display: none !important; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; width: 72in; height: 36in; }
+    .banner { width: 72in; height: 36in; --preview-w: 72in; --preview-h: 36in; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print this layout</button>
+  <button type="button" id="guidesBtn" aria-pressed="false">Toggle guides</button>
+  <a href="Banner_6x3ft.pdf">Open print PDF (6×3 ft, 150 DPI)</a>
+  <a href="banner_6x3ft_html_layout.png">Open HTML layout 150 DPI</a>
+  <a href="Banner_6x3ft-150dpi.png">Open Python 150 DPI PNG</a>
+  <a href="Banner_6x3ft-preview.png">Open preview PNG</a>
+</div>
+
+<div class="rail">
+  <strong>Print template · 6 ft × 3 ft landscape</strong>
+  — trim <code>72in × 36in</code> · safe area <code>2in</code> · full-bleed vinyl / fabric.
+  Edit the lockup in this file (wordmark, tagline, URL). Keep live type inside the green dashed guide.
+  Send <code>Banner_6x3ft.pdf</code> (150 DPI print, 72in × 36in),
+  <code>banner_6x3ft_html_layout.png</code> (HTML + SVG at 150 DPI, 10800×5400),
+  or <code>Banner_6x3ft-150dpi.png</code> (Python 150 DPI).
+  Mascot is vector (<code>assets/jellyfish.svg</code>).
+  Rebuild the HTML layout with <code>./capture_html_layout.sh</code>;
+  rebuild Python prints with <code>python3 render_banner.py</code>.
+</div>
+
+<div class="stage" id="stage">
+  <article class="banner" id="banner" aria-label="Unnatural Intelligence 6 by 3 foot banner">
+    <div class="bg" aria-hidden="true">
+      <div class="wash"></div>
+      <div class="grid">
+        <span class="g g-lime"></span>
+        <span class="g g-pink"></span>
+      </div>
+    </div>
+    <div class="guides" aria-hidden="true">
+      <div class="safe"></div>
+      <div class="cx"></div>
+      <div class="cy"></div>
+      <div class="label">Safe 2in · trim 72×36 in · 6×3 ft</div>
+    </div>
+    <div class="lockup">
+      <img class="jelly" src="assets/jellyfish.svg" alt="Unnatural Intelligence jellyfish mascot">
+      <div class="type">
+        <h1 class="wordmark">
+          <span class="line glitch" data-text="UNNATURAL">UNNATURAL</span>
+          <span class="line glitch" data-text="INTELLIGENCE">INTELLIGENCE</span>
+        </h1>
+        <p class="tag glitch" data-text="GENERATED BY AI · PERFECTED BY HUMANS">Generated by AI · Perfected by humans</p>
+      </div>
+    </div>
+    <p class="url">unnaturalintelligence.club · SAIT student club</p>
+  </article>
+</div>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const dpi = Number(params.get("dpi") || 0);
+  const W = dpi > 0 ? Math.round(72 * dpi) : 1920;
+  const H = dpi > 0 ? Math.round(36 * dpi) : 960;
+  const stage = document.getElementById("stage");
+  const capture = params.has("capture");
+  const showGuides = params.has("guides");
+  if (capture) document.body.classList.add("capture");
+  if (showGuides) document.body.classList.add("guides-on");
+
+  function applyScale() {
+    const pad = capture ? 0 : 48;
+    const availW = Math.max(320, window.innerWidth - pad);
+    const availH = capture ? window.innerHeight : Math.max(240, window.innerHeight - 120);
+    const s = Math.min(availW / W, availH / H, capture ? 10 : 1);
+    stage.style.transform = "scale(" + s + ")";
+    stage.style.marginBottom = capture ? "0" : ((s - 1) * H) + "px";
+  }
+  applyScale();
+  window.addEventListener("resize", applyScale);
+  window.addEventListener("beforeprint", () => {
+    stage.style.transform = "none";
+    stage.style.marginBottom = "0";
+  });
+  window.addEventListener("afterprint", applyScale);
+
+  const guidesBtn = document.getElementById("guidesBtn");
+  guidesBtn.setAttribute("aria-pressed", showGuides ? "true" : "false");
+  guidesBtn.addEventListener("click", () => {
+    const on = document.body.classList.toggle("guides-on");
+    guidesBtn.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+</script>
+</body>
+</html>

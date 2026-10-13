@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 80" fill="none">
+  <defs>
+    <linearGradient id="fl" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#BAF837"/>
+      <stop offset="48%" stop-color="#95B747"/>
+      <stop offset="100%" stop-color="#FA4A9E"/>
+    </linearGradient>
+  </defs>
+  <!-- Left flourish; right side is a true mirror around x=420 so the spark sits in an even gap. -->
+  <path d="M16 34 C 72 8, 118 60, 170 30 C 222 4, 268 58, 318 36"
+        fill="none" stroke="url(#fl)" stroke-width="12" stroke-linecap="round"/>
+  <path d="M38 50 C 88 22, 140 66, 192 46 C 244 24, 290 68, 334 50"
+        fill="none" stroke="url(#fl)" stroke-width="5.5" stroke-linecap="round" opacity="0.75"/>
+  <path d="M522 36 C 572 58, 618 4, 670 30 C 722 60, 768 8, 824 34"
+        fill="none" stroke="url(#fl)" stroke-width="12" stroke-linecap="round"/>
+  <path d="M506 50 C 550 68, 596 24, 648 46 C 700 66, 752 22, 802 50"
+        fill="none" stroke="url(#fl)" stroke-width="5.5" stroke-linecap="round" opacity="0.75"/>
+</svg>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1700" width="11in" height="17in" role="img" aria-label="Tabloid corner ticks" fill="none">
+  <path d="M64 18 H18 V64" fill="none" stroke="#BAF837" stroke-width="5" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M1036 18 H1082 V64" fill="none" stroke="#FA4A9E" stroke-width="5" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M1036 1682 H1082 V1636" fill="none" stroke="#7EC8FF" stroke-width="5" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M64 1682 H18 V1636" fill="none" stroke="#95B747" stroke-width="5" stroke-linecap="square" stroke-linejoin="miter"/>
+</svg>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unnatural Games v1 — Presents — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --paper: #F9F9FA; --olive: #95B747; --ink: #030205; --pink: #FA4A9E;
+    --wine: #591337; --lime: #BAF837; --cyan: #7EC8FF;
+    --muted: rgba(249,249,250,.72);
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; min-height: 100%; }
+  body { background: #12040c; font-family: var(--sans); color: var(--paper); display: flex; justify-content: center; padding: 72px 24px 48px; }
+  .toolbar { position: fixed; top: 16px; right: 16px; z-index: 20; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; max-width: 46vw; font-family: var(--mono); font-size: 12px; }
+  .toolbar a, .toolbar button { cursor: pointer; text-decoration: none; border: 1px solid rgba(186,248,55,.45); background: rgba(3,2,5,.88); color: var(--lime); padding: 8px 12px; font: inherit; }
+  .stage { width: 11in; height: 17in; flex: 0 0 auto; transform-origin: top center; filter: drop-shadow(0 28px 50px rgba(0,0,0,.55)); }
+
+  .poster {
+    width: 11in; height: 17in; overflow: hidden; background: var(--ink); color: var(--paper);
+    display: grid;
+    grid-template-rows: 3.28in 2.22in 4.12in 1.22in 1.62in 4.54in;
+  }
+  .poster > * { min-height: 0; min-width: 0; }
+
+  .mast { position: relative; padding: 0.16in 0.38in 0; overflow: hidden; }
+  .wordmark { width: auto; height: 2.62in; display: block; }
+  .jelly {
+    position: absolute; left: 6.55in; top: 0;
+    width: auto; height: 3.15in;
+  }
+  .presents {
+    position: absolute; left: 0.46in; bottom: 0.04in; margin: 0;
+    font-family: var(--mono); font-weight: 700; font-size: 0.19in;
+    letter-spacing: 0.42em; text-transform: uppercase;
+  }
+
+  .hero { padding: 0.02in 0.46in 0; display: flex; flex-direction: column; justify-content: center; }
+  .hero h1 { margin: 0; font-family: var(--display); font-weight: 700; text-transform: uppercase; line-height: 0.82; letter-spacing: -0.055em; }
+  .hero .u, .hero .g { display: block; color: var(--paper); text-shadow: -0.055in 0.018in 0 var(--cyan), 0.055in -0.016in 0 var(--pink); }
+  .hero .u { font-size: 1.08in; }
+  .hero .g { font-size: 1.34in; }
+
+  .rules {
+    padding: 0.04in 0.42in 0.02in;
+    display: flex; flex-direction: column; justify-content: center; gap: 0.09in;
+  }
+  .rule {
+    height: 0.58in; display: flex; align-items: center; padding: 0 0.18in;
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 0.38in; letter-spacing: -0.03em; line-height: 1;
+    white-space: nowrap;
+  }
+  .rule.a { width: 74%; background: var(--cyan); color: var(--ink); }
+  .rule.b { width: 88%; margin-left: auto; background: var(--pink); color: var(--paper); }
+  .rule.c { width: 92%; margin-left: 6%; background: var(--paper); color: var(--ink); }
+  .rule.d { width: 80%; margin-left: 16%; background: var(--lime); color: var(--ink); }
+  .rule.e { width: 76%; background: var(--pink); color: var(--paper); }
+  .rule.f { width: 86%; margin-left: auto; background: var(--cyan); color: var(--ink); }
+
+  .purpose { padding: 0.06in 0.46in 0; display: flex; flex-direction: column; justify-content: center; }
+  .purpose h2, .fact h3, .contact h3 {
+    margin: 0 0 0.05in; font-family: var(--mono); font-weight: 700;
+    font-size: 0.095in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--pink);
+  }
+  .purpose p { margin: 0; font-size: 0.168in; line-height: 1.28; font-weight: 500; }
+
+  .facts {
+    padding: 0 0.42in; display: grid; grid-template-columns: 1.05fr 1.2fr 1.35fr 1.15fr; gap: 0.1in;
+  }
+  .fact { border-top: 0.055in solid var(--lime); padding-top: 0.08in; }
+  .fact.where { border-color: var(--pink); }
+  .fact.type { border-color: var(--cyan); }
+  .fact.who { border-color: var(--olive); }
+  .fact .big { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.28in; letter-spacing: -0.035em; line-height: 0.92; }
+  .fact .sub { margin-top: 0.05in; font-size: 0.125in; line-height: 1.25; color: var(--muted); font-weight: 500; }
+
+  .foot {
+    padding: 0.08in 0.42in 0.26in;
+    display: grid; grid-template-rows: 1.28in 0.78in 1fr; gap: 0.08in;
+  }
+  .jellies { display: flex; align-items: flex-end; gap: 0.28in; }
+  .jellies img { width: 1.12in; height: 1.24in; object-fit: contain; }
+  .url-lockup { display: flex; align-items: center; gap: 0.12in; }
+  .dash { display: block; height: 0.065in; border-radius: 1in; }
+  .dash.lime { width: 0.52in; background: var(--lime); }
+  .dash.pink { width: 0.26in; background: var(--pink); }
+  .url { font-family: var(--mono); font-weight: 700; font-size: 0.2in; letter-spacing: 0.035em; text-transform: uppercase; }
+  .club-line { margin-top: 0.04in; font-family: var(--mono); font-weight: 700; font-size: 0.13in; letter-spacing: 0.18em; text-transform: uppercase; color: var(--olive); }
+  .dock { display: flex; justify-content: space-between; align-items: flex-end; gap: 0.16in; }
+  .contact .line { font-size: 0.125in; line-height: 1.35; font-weight: 500; }
+  .contact code { font-family: var(--mono); font-size: 0.112in; color: var(--lime); }
+  .marks { display: flex; align-items: flex-end; gap: 0.08in; }
+  .logo-card { background: #fff; border-radius: 0.05in; padding: 0.06in 0.07in; display: flex; align-items: center; justify-content: center; }
+  .logo-card img { width: 1.72in; height: auto; display: block; }
+  .logo-card.sait img { width: 1.28in; }
+  .qr { width: 0.98in; text-align: center; }
+  .qr .box { background: #fff; border-radius: 0.05in; padding: 0.045in; width: 0.98in; height: 0.98in; }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr .cap { margin-top: 0.03in; font-family: var(--mono); font-size: 0.075in; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); }
+
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    body { background: #fff; padding: 0; display: block; }
+    .toolbar { display: none; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <a href="index.html">Ideas</a>
+  <a href="v2-scoreboard.html">2 Scoreboard</a>
+  <a href="v3-ticket.html">3 Ticket</a>
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+</div>
+<div class="stage" id="stage">
+<div class="poster">
+  <header class="mast">
+    <img class="wordmark" src="assets/wordmark-glitch.svg" alt="Unnatural Intelligence">
+    <img class="jelly" src="assets/jellyfish-gradient.svg" alt="">
+    <p class="presents">Presents</p>
+  </header>
+
+  <section class="hero">
+    <h1>
+      <span class="u">Unnatural</span>
+      <span class="g">Games</span>
+    </h1>
+  </section>
+
+  <section class="rules" aria-label="How the night works">
+    <div class="rule a">One board</div>
+    <div class="rule b">One language model</div>
+    <div class="rule c">One room. One team.</div>
+    <div class="rule d">You argue. You vote.</div>
+    <div class="rule e">It plays. It explains.</div>
+    <div class="rule f">Beginners welcome</div>
+  </section>
+
+  <section class="purpose">
+    <h2>Purpose · <span data-field="pillar">Build pillar</span></h2>
+    <p data-field="purpose"></p>
+  </section>
+
+  <section class="facts">
+    <div class="fact when">
+      <h3>When</h3>
+      <div class="big" data-field="date">Mondays</div>
+      <div class="sub" data-field="time">6:00 – 8:00 PM</div>
+    </div>
+    <div class="fact where">
+      <h3>Where</h3>
+      <div class="big" data-field="room">Room TBA</div>
+      <div class="sub" data-field="place">SAIT campus</div>
+    </div>
+    <div class="fact type">
+      <h3>Type</h3>
+      <div class="big" data-field="type">Student club</div>
+      <div class="sub" data-field="typeDetail"></div>
+    </div>
+    <div class="fact who">
+      <h3>Who</h3>
+      <div class="big">Free</div>
+      <div class="sub" data-field="whoDetail"></div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="jellies">
+      <img src="assets/jellyfish-lime.svg" alt="">
+      <img src="assets/jellyfish-pink.svg" alt="">
+      <img src="assets/jellyfish-cyan.svg" alt="">
+      <img src="assets/jellyfish-paper.svg" alt="">
+    </div>
+    <div class="url-lockup">
+      <span class="dash lime"></span>
+      <span class="dash pink"></span>
+      <div>
+        <div class="url" data-field="url">unnaturalintelligence.club</div>
+        <div class="club-line">SAIT student club</div>
+      </div>
+    </div>
+    <div class="dock">
+      <div class="contact">
+        <h3>Contact</h3>
+        <div class="line">Email <code id="contact-email" data-field="email"></code></div>
+        <div class="line">Discord <code id="contact-discord" data-field="discord"></code></div>
+        <div class="line" data-field="cost"></div>
+        <div class="line" data-field="stakes"></div>
+      </div>
+      <div class="marks">
+        <div class="logo-card"><img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs"></div>
+        <div class="logo-card sait"><img src="assets/sait-logo.png" alt="SAIT"></div>
+        <div class="qr"><div class="box" id="qr"></div><div class="cap">Discord</div></div>
+      </div>
+    </div>
+  </footer>
+</div>
+</div>
+<script src="copy.js"></script>
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: GAMES_COPY.email,
+  contactDiscord: GAMES_COPY.discord,
+  qrUrl: GAMES_COPY.discordUrl
+});
+</script>
+</body>
+</html>

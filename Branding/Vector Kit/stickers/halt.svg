@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 340" role="img" aria-label="Halt sticker" fill="none">
+  <rect width="300" height="340" rx="28" fill="#BAF837"/>
+  <rect x="86" y="48" width="42" height="168" rx="8" fill="#030205"/>
+  <rect x="172" y="48" width="42" height="168" rx="8" fill="#030205"/>
+  <g transform="translate(104.3 272.0)">  <path fill="#030205" d="M2 0V-30.56H7.56V-18.29H18.99V-30.56H24.53V0H18.99V-12.88H7.56V0Z M25.31 0 34.75 -30.56H41.89L51.33 0H45.18L43.3 -6.67H33.25L31.3 0ZM34.75 -11.71H41.86L40.96 -14.87Q40.32 -17.21 39.69 -19.63Q39.06 -22.05 38.34 -24.9Q37.62 -22.05 36.97 -19.63Q36.32 -17.21 35.67 -14.87Z M52.12 0V-30.56H57.68V-5.41H69.89V0Z M70.1 -25.14V-30.56H91.95V-25.14H83.81V0H78.26V-25.14Z"/></g>
+</svg>

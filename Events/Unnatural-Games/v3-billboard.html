@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unnatural Games v3 — Billboard — Unnatural Intelligence</title>
+<!--
+  EDIT BEFORE saitsa.com/Poster-Submission
+  Date below is the first Monday after Clubs Fall Showcase (Oct 13–14, 2026).
+  Replace the room line once SECC assigns it. One event, not a locked weekly series.
+  Do not restyle the Saitsa Clubs logo. Do not add the official SAIT logo.
+  Print: Chrome → Tabloid 11×17, margins none, background graphics on.
+-->
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --paper: #F9F9FA; --olive: #95B747; --ink: #030205; --pink: #FA4A9E;
+    --wine: #591337; --lime: #BAF837; --cyan: #7EC8FF;
+    --muted: rgba(249,249,250,.74);
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; min-height: 100%; }
+  body { background: #12040c; font-family: var(--sans); color: var(--paper); display: flex; justify-content: center; padding: 72px 24px 48px; }
+  .toolbar { position: fixed; top: 16px; right: 16px; z-index: 20; display: flex; gap: 8px; font-family: var(--mono); font-size: 12px; }
+  .toolbar a, .toolbar button { cursor: pointer; text-decoration: none; border: 1px solid rgba(186,248,55,.45); background: rgba(3,2,5,.88); color: var(--lime); padding: 8px 12px; font: inherit; }
+  .stage { width: 11in; height: 17in; flex: 0 0 auto; transform-origin: top center; filter: drop-shadow(0 28px 50px rgba(0,0,0,.55)); }
+
+  .poster {
+    width: 11in; height: 17in; overflow: hidden; background: var(--ink);
+    display: grid;
+    grid-template-rows: 0.78in 3.72in 2.55in 2.55in 2.55in 4.85in;
+  }
+
+  .head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.16in 0.36in 0;
+  }
+  .brand { display: flex; align-items: center; gap: 0.1in; }
+  .brand img { width: 0.46in; height: 0.54in; object-fit: contain; display: block; }
+  .brand-name { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.19in; line-height: 0.9; letter-spacing: -0.03em; }
+  .brand-name small { display: block; margin-top: 0.03in; font-family: var(--mono); font-weight: 400; font-size: 0.08in; letter-spacing: 0.12em; color: var(--muted); }
+  .chip {
+    font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--lime); color: var(--ink); padding: 0.07in 0.1in; font-weight: 700;
+  }
+
+  .hero { padding: 0 0.36in 0.08in; display: flex; flex-direction: column; justify-content: flex-end; }
+  .kicker { margin: 0 0 0.04in; font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.14em; text-transform: uppercase; color: var(--olive); }
+  .title {
+    margin: 0; font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 1.42in; line-height: 0.76; letter-spacing: -0.06em;
+  }
+  .title .l1 { color: var(--lime); }
+  .title .l2 {
+    display: block; color: transparent;
+    -webkit-text-stroke: 0.02in var(--pink);
+  }
+  .squiggle { width: 4.6in; height: 0.38in; margin-top: 0.06in; display: block; }
+  .purpose { margin: 0.08in 0 0; font-size: 0.175in; line-height: 1.25; font-weight: 500; max-width: 10.1in; }
+  .purpose strong { color: var(--lime); }
+
+  .band { display: grid; grid-template-columns: 1.7in 1fr; align-items: center; padding: 0.22in 0.36in; color: var(--ink); min-height: 0; }
+  .band .n { font-family: var(--display); font-size: 0.72in; letter-spacing: -0.05em; line-height: 0.8; }
+  .band h2 { margin: 0; font-family: var(--display); text-transform: uppercase; font-size: 0.58in; letter-spacing: -0.045em; line-height: 0.85; }
+  .band p { margin: 0.06in 0 0; font-size: 0.165in; line-height: 1.25; font-weight: 600; max-width: 7.4in; }
+  .band.argue { background: var(--pink); }
+  .band.vote { background: var(--lime); }
+  .band.listen { background: var(--cyan); }
+
+  .dock {
+    background: var(--wine);
+    padding: 0.16in 0.32in 0.18in;
+    display: grid;
+    grid-template-rows: 0.48in 1.05in 1fr;
+    gap: 0.12in;
+  }
+  .pills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.08in; }
+  .pills span {
+    font-family: var(--mono); font-size: 0.085in; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 700;
+    background: var(--ink); color: var(--lime); text-align: center;
+    display: flex; align-items: center; justify-content: center; padding: 0.06in 0.04in;
+  }
+  .meta { display: grid; grid-template-columns: 1fr 1.25fr 1.15fr; gap: 0.12in; align-content: center; }
+  .dock h3 { margin: 0 0 0.02in; font-family: var(--mono); font-size: 0.08in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lime); }
+  .dock .big { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.3in; letter-spacing: -0.03em; line-height: 0.95; }
+  .dock .sub { font-size: 0.12in; font-weight: 600; margin-top: 0.04in; color: rgba(249,249,250,.78); line-height: 1.25; }
+  .foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 0.14in; }
+  .contact { font-size: 0.12in; line-height: 1.35; font-weight: 600; }
+  .contact h3 { color: var(--cyan); }
+  .contact code { font-family: var(--mono); font-size: 0.1in; color: var(--lime); }
+  .marks { display: flex; align-items: flex-end; gap: 0.1in; }
+  .logo-card { background: #fff; width: 2.2in; padding: 0.06in 0.08in; display: flex; align-items: center; justify-content: center; }
+  .logo-card img { width: 100%; height: auto; display: block; }
+  .qr { width: 1.2in; text-align: center; }
+  .qr .box { background: #fff; padding: 0.04in; width: 1.2in; height: 1.2in; }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr .cap { font-family: var(--mono); font-size: 0.065in; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cyan); margin-top: 0.03in; }
+
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    body { background: #fff; padding: 0; display: block; }
+    .toolbar { display: none; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+  <a href="index.html">all ideas</a>
+</div>
+<div class="stage" id="stage">
+<div class="poster">
+  <header class="head">
+    <div class="brand">
+      <img src="../../Branding/Vector Kit/marks/jellyfish-mini-gradient.svg" alt="">
+      <div class="brand-name">Unnatural<br>Intelligence<small>SAIT student club · Saitsa</small></div>
+    </div>
+    <div class="chip">Student Club · Game night</div>
+  </header>
+
+  <section class="hero">
+    <p class="kicker">Purpose · one board, one model, one room</p>
+    <h1 class="title"><span class="l1">Unnatural</span><span class="l2">Games</span></h1>
+    <img class="squiggle" src="../../charter/assets/revamp/header-squiggle.svg" alt="">
+    <p class="purpose">You don’t need to know how to play. <strong>You need an opinion.</strong> Chess against a language model. The crowd votes every human move.</p>
+  </section>
+
+  <article class="band argue">
+    <div class="n">01</div>
+    <div>
+      <h2>Argue.</h2>
+      <p>Casual players name a move. Stronger players explain why it’s wrong. Three minutes, then we vote.</p>
+    </div>
+  </article>
+  <article class="band vote">
+    <div class="n">02</div>
+    <div>
+      <h2>Vote.</h2>
+      <p>Show of hands or a QR poll. The room is a single team. The winning idea is the move we play.</p>
+    </div>
+  </article>
+  <article class="band listen">
+    <div class="n">03</div>
+    <div>
+      <h2>Listen.</h2>
+      <p>It moves, then says why. The moderator reads that out loud. That’s the funny part.</p>
+    </div>
+  </article>
+
+  <footer class="dock">
+    <div class="pills">
+      <span>Beginners welcome</span>
+      <span>All SAIT programs</span>
+      <span>No prizes · no alcohol</span>
+    </div>
+    <section class="meta">
+      <div>
+        <h3>When</h3>
+        <div class="big">Mon Oct 19</div>
+        <div class="sub">6:00 – 8:00 PM · 2026</div>
+      </div>
+      <div>
+        <h3>Where</h3>
+        <div class="big">SAIT campus</div>
+        <div class="sub">Room posted on Discord</div>
+      </div>
+      <div>
+        <h3>Type</h3>
+        <div class="big">Student Club</div>
+        <div class="sub">Social game night · free · on campus</div>
+      </div>
+    </section>
+    <div class="foot">
+      <div class="contact">
+        <h3>Contact</h3>
+        <div>Email <code id="contact-email"></code></div>
+        <div>Discord <code id="contact-discord"></code></div>
+        <div>15 min welcome · 90 min match · debrief</div>
+      </div>
+      <div class="marks">
+        <div class="logo-card"><img src="../../Branding/SaitsaStudentClubsPrimaryLogo.svg" alt="Saitsa Student Clubs"></div>
+        <div class="qr"><div class="box" id="qr"></div><div class="cap">Scan Discord</div></div>
+      </div>
+    </div>
+  </footer>
+</div>
+</div>
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: "unnaturalintelligencesait@gmail.com",
+  contactDiscord: "discord.gg/hcsQFRNUEa",
+  qrUrl: "https://discord.gg/hcsQFRNUEa"
+});
+</script>
+</body>
+</html>

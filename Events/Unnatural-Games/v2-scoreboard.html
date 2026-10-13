@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unnatural Games v2 — Scoreboard — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --paper: #F9F9FA; --olive: #95B747; --ink: #030205; --pink: #FA4A9E;
+    --wine: #591337; --lime: #BAF837; --cyan: #7EC8FF;
+    --muted: rgba(249,249,250,.74);
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; min-height: 100%; }
+  body { background: #12040c; font-family: var(--sans); color: var(--paper); display: flex; justify-content: center; padding: 72px 24px 48px; }
+  .toolbar { position: fixed; top: 16px; right: 16px; z-index: 20; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; max-width: 46vw; font-family: var(--mono); font-size: 12px; }
+  .toolbar a, .toolbar button { cursor: pointer; text-decoration: none; border: 1px solid rgba(186,248,55,.45); background: rgba(3,2,5,.88); color: var(--lime); padding: 8px 12px; font: inherit; }
+  .stage { width: 11in; height: 17in; flex: 0 0 auto; transform-origin: top center; filter: drop-shadow(0 28px 50px rgba(0,0,0,.55)); }
+
+  .poster {
+    width: 11in; height: 17in; overflow: hidden; background: var(--ink); color: var(--paper);
+    display: grid;
+    grid-template-rows: 2.28in 2.05in 5.22in 0.92in 1.78in 4.75in;
+  }
+  .poster > * { min-height: 0; min-width: 0; overflow: hidden; }
+
+  .mast {
+    display: flex; align-items: flex-end; gap: 0.16in;
+    padding: 0.14in 0.36in 0;
+  }
+  .wordmark { width: auto; height: 1.62in; display: block; }
+  .presents {
+    margin: 0.03in 0 0; font-family: var(--mono); font-weight: 700;
+    font-size: 0.15in; letter-spacing: 0.38em; text-transform: uppercase;
+  }
+  .jelly { width: auto; height: 1.95in; display: block; margin-bottom: 0.18in; }
+
+  .hero { padding: 0 0.38in; display: flex; flex-direction: column; justify-content: center; }
+  .eyebrow { margin: 0 0 0.06in; font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cyan); }
+  .hero h1 { margin: 0; font-family: var(--display); font-weight: 700; text-transform: uppercase; line-height: 0.8; letter-spacing: -0.055em; }
+  .hero .u, .hero .g { display: block; text-shadow: -0.045in 0.014in 0 var(--cyan), 0.045in -0.014in 0 var(--pink); }
+  .hero .u { font-size: 0.92in; color: var(--lime); }
+  .hero .g { font-size: 0.92in; color: var(--paper); }
+
+  .match {
+    display: grid; grid-template-columns: 2.72in 1fr 2.72in; gap: 0.12in;
+    padding: 0.08in 0.28in 0.1in; min-height: 0;
+  }
+  .side { padding: 0.22in 0.18in 0.2in; display: flex; flex-direction: column; min-height: 0; }
+  .side .kicker { font-family: var(--mono); font-weight: 700; font-size: 0.1in; letter-spacing: 0.14em; text-transform: uppercase; }
+  .side h2 { margin: 0.06in 0 0; font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.62in; letter-spacing: -0.045em; line-height: 0.84; }
+  .side p { margin: 0.14in 0 0; font-size: 0.168in; line-height: 1.28; font-weight: 600; }
+  .side .tag { margin-top: auto; padding-top: 0.16in; font-family: var(--mono); font-weight: 700; font-size: 0.105in; letter-spacing: 0.08em; text-transform: uppercase; }
+  .side.humans { background: var(--lime); color: var(--ink); }
+  .side.model { background: var(--pink); color: var(--paper); }
+  .side.model .kicker { color: rgba(249,249,250,.8); }
+
+  .board-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.1in; min-width: 0; }
+  .board {
+    width: 4.42in; height: 4.42in; display: block;
+    border: 0.045in solid var(--lime); background: var(--paper);
+  }
+  .board-cap { font-family: var(--mono); font-weight: 700; font-size: 0.1in; letter-spacing: 0.14em; text-transform: uppercase; color: var(--lime); }
+
+  .stakes { display: grid; grid-template-columns: 1fr 1fr; }
+  .stake { display: flex; flex-direction: column; justify-content: center; gap: 0.04in; padding: 0 0.32in; }
+  .stake .lab { font-family: var(--mono); font-weight: 700; font-size: 0.11in; letter-spacing: 0.14em; text-transform: uppercase; }
+  .stake .txt { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.28in; letter-spacing: -0.03em; line-height: 0.92; }
+  .stake.win { background: var(--lime); color: var(--ink); }
+  .stake.lose { background: var(--ink); color: var(--paper); border-top: 0.055in solid var(--pink); }
+  .stake.lose .lab { color: var(--pink); }
+
+  .facts {
+    padding: 0.12in 0.36in 0; display: grid; grid-template-columns: 1.05fr 1.15fr 1.4fr 1.15fr; gap: 0.1in;
+  }
+  .fact h3, .purpose-line, .contact h3 {
+    margin: 0 0 0.04in; font-family: var(--mono); font-weight: 700;
+    font-size: 0.09in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lime);
+  }
+  .fact .big { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.26in; letter-spacing: -0.035em; line-height: 0.92; }
+  .fact .sub { margin-top: 0.04in; font-size: 0.12in; line-height: 1.25; color: var(--muted); font-weight: 500; }
+  .purpose-line { grid-column: 1 / -1; color: var(--pink); margin: 0; }
+  .facts p { grid-column: 1 / -1; margin: -0.02in 0 0.06in; font-size: 0.145in; line-height: 1.28; font-weight: 500; }
+
+  .foot {
+    padding: 0.02in 0.36in 0.24in;
+    display: grid; grid-template-rows: auto 0.7in 1fr; gap: 0.08in; align-content: end;
+  }
+  .jellies { display: flex; align-items: flex-end; gap: 0.22in; }
+  .jellies img { width: 0.78in; height: 0.88in; object-fit: contain; }
+  .url-lockup { display: flex; align-items: center; gap: 0.1in; }
+  .dash { display: block; height: 0.055in; border-radius: 1in; }
+  .dash.lime { width: 0.42in; background: var(--lime); }
+  .dash.pink { width: 0.22in; background: var(--pink); }
+  .url { font-family: var(--mono); font-weight: 700; font-size: 0.17in; letter-spacing: 0.03em; text-transform: uppercase; }
+  .club-line { margin-top: 0.03in; font-family: var(--mono); font-weight: 700; font-size: 0.11in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--olive); }
+  .dock { display: flex; justify-content: space-between; align-items: flex-end; gap: 0.14in; }
+  .contact .line { font-size: 0.12in; line-height: 1.32; font-weight: 500; }
+  .contact code { font-family: var(--mono); font-size: 0.108in; color: var(--lime); }
+  .marks { display: flex; align-items: flex-end; gap: 0.08in; }
+  .logo-card { background: #fff; border-radius: 0.05in; padding: 0.055in 0.06in; display: flex; align-items: center; justify-content: center; }
+  .logo-card img { width: 1.62in; height: auto; display: block; }
+  .logo-card.sait img { width: 1.22in; }
+  .qr { width: 0.92in; text-align: center; }
+  .qr .box { background: #fff; border-radius: 0.05in; padding: 0.04in; width: 0.92in; height: 0.92in; }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr .cap { margin-top: 0.03in; font-family: var(--mono); font-size: 0.07in; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); }
+
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    body { background: #fff; padding: 0; display: block; }
+    .toolbar { display: none; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <a href="index.html">Ideas</a>
+  <a href="v1-presents.html">1 Presents</a>
+  <a href="v3-ticket.html">3 Ticket</a>
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+</div>
+<div class="stage" id="stage">
+<div class="poster">
+  <header class="mast">
+    <div>
+      <img class="wordmark" src="assets/wordmark-glitch.svg" alt="Unnatural Intelligence">
+      <p class="presents">Presents</p>
+    </div>
+    <img class="jelly" src="assets/jellyfish-gradient.svg" alt="">
+  </header>
+
+  <section class="hero">
+    <p class="eyebrow">Student club · <span data-field="pillar">Build pillar</span> · one screen</p>
+    <h1>
+      <span class="u">Unnatural</span>
+      <span class="g">Games</span>
+    </h1>
+  </section>
+
+  <section class="match">
+    <article class="side humans">
+      <div class="kicker">The room</div>
+      <h2>Humans</h2>
+      <p>One team. Argue the move, then vote — show of hands or a QR poll. Three minutes. Strong players can explain. Beginners still count.</p>
+      <div class="tag">No chess rating required</div>
+    </article>
+    <div class="board-wrap">
+      <svg class="board" viewBox="0 0 160 160" role="img" aria-label="Chessboard with the room on lime and the model on pink">
+        <rect width="160" height="160" fill="#F9F9FA"/>
+        <g fill="#591337">
+          <rect x="20" y="0" width="20" height="20"/><rect x="60" y="0" width="20" height="20"/><rect x="100" y="0" width="20" height="20"/><rect x="140" y="0" width="20" height="20"/>
+          <rect x="0" y="20" width="20" height="20"/><rect x="40" y="20" width="20" height="20"/><rect x="80" y="20" width="20" height="20"/><rect x="120" y="20" width="20" height="20"/>
+          <rect x="20" y="40" width="20" height="20"/><rect x="60" y="40" width="20" height="20"/><rect x="100" y="40" width="20" height="20"/><rect x="140" y="40" width="20" height="20"/>
+          <rect x="0" y="60" width="20" height="20"/><rect x="40" y="60" width="20" height="20"/><rect x="80" y="60" width="20" height="20"/><rect x="120" y="60" width="20" height="20"/>
+          <rect x="20" y="80" width="20" height="20"/><rect x="60" y="80" width="20" height="20"/><rect x="100" y="80" width="20" height="20"/><rect x="140" y="80" width="20" height="20"/>
+          <rect x="0" y="100" width="20" height="20"/><rect x="40" y="100" width="20" height="20"/><rect x="80" y="100" width="20" height="20"/><rect x="120" y="100" width="20" height="20"/>
+          <rect x="20" y="120" width="20" height="20"/><rect x="60" y="120" width="20" height="20"/><rect x="100" y="120" width="20" height="20"/><rect x="140" y="120" width="20" height="20"/>
+          <rect x="0" y="140" width="20" height="20"/><rect x="40" y="140" width="20" height="20"/><rect x="80" y="140" width="20" height="20"/><rect x="120" y="140" width="20" height="20"/>
+        </g>
+        <rect x="80" y="80" width="20" height="20" fill="#BAF837"/>
+        <g fill="#FA4A9E">
+          <circle cx="10" cy="10" r="7"/><circle cx="70" cy="10" r="7"/><circle cx="90" cy="10" r="7"/><circle cx="150" cy="10" r="7"/>
+          <circle cx="10" cy="30" r="6.2"/><circle cx="50" cy="30" r="6.2"/><circle cx="110" cy="30" r="6.2"/><circle cx="150" cy="30" r="6.2"/>
+        </g>
+        <g fill="#BAF837">
+          <circle cx="10" cy="130" r="6.2"/><circle cx="30" cy="130" r="6.2"/><circle cx="50" cy="130" r="6.2"/><circle cx="110" cy="130" r="6.2"/><circle cx="130" cy="130" r="6.2"/><circle cx="150" cy="130" r="6.2"/>
+          <circle cx="10" cy="150" r="7"/><circle cx="70" cy="150" r="7"/><circle cx="90" cy="150" r="7"/><circle cx="150" cy="150" r="7"/>
+        </g>
+        <circle cx="90" cy="90" r="7.4" fill="#030205" stroke="#BAF837" stroke-width="2.4"/>
+      </svg>
+      <div class="board-cap">The voted move</div>
+    </div>
+    <article class="side model">
+      <div class="kicker">The screen</div>
+      <h2>Model</h2>
+      <p>One language model plays the other side and says why. A moderator reads the reasoning out loud. That is usually the funny part.</p>
+      <div class="tag">ChatGPT or the backup engine</div>
+    </article>
+  </section>
+
+  <section class="stakes">
+    <div class="stake win"><span class="lab">If we win</span><span class="txt" data-field="stakesWin"></span></div>
+    <div class="stake lose"><span class="lab">If it wins</span><span class="txt" data-field="stakesLose"></span></div>
+  </section>
+
+  <section class="facts">
+    <p class="purpose-line">Purpose</p>
+    <p data-field="purpose"></p>
+    <div class="fact">
+      <h3>When</h3>
+      <div class="big" data-field="date"></div>
+      <div class="sub" data-field="time"></div>
+    </div>
+    <div class="fact">
+      <h3>Where</h3>
+      <div class="big" data-field="room"></div>
+      <div class="sub" data-field="place"></div>
+    </div>
+    <div class="fact">
+      <h3>Type</h3>
+      <div class="big" data-field="type"></div>
+      <div class="sub" data-field="typeDetail"></div>
+    </div>
+    <div class="fact">
+      <h3>Who</h3>
+      <div class="big" data-field="who"></div>
+      <div class="sub" data-field="cost"></div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="jellies">
+      <img src="assets/jellyfish-lime.svg" alt="">
+      <img src="assets/jellyfish-pink.svg" alt="">
+      <img src="assets/jellyfish-cyan.svg" alt="">
+      <img src="assets/jellyfish-paper.svg" alt="">
+    </div>
+    <div class="url-lockup">
+      <span class="dash lime"></span>
+      <span class="dash pink"></span>
+      <div>
+        <div class="url" data-field="url"></div>
+        <div class="club-line">SAIT student club</div>
+      </div>
+    </div>
+    <div class="dock">
+      <div class="contact">
+        <h3>Contact</h3>
+        <div class="line">Email <code id="contact-email" data-field="email"></code></div>
+        <div class="line">Discord <code id="contact-discord" data-field="discord"></code></div>
+        <div class="line" data-field="stakes"></div>
+      </div>
+      <div class="marks">
+        <div class="logo-card"><img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs"></div>
+        <div class="logo-card sait"><img src="assets/sait-logo.png" alt="SAIT"></div>
+        <div class="qr"><div class="box" id="qr"></div><div class="cap">Discord</div></div>
+      </div>
+    </div>
+  </footer>
+</div>
+</div>
+<script src="copy.js"></script>
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: GAMES_COPY.email,
+  contactDiscord: GAMES_COPY.discord,
+  qrUrl: GAMES_COPY.discordUrl
+});
+</script>
+</body>
+</html>

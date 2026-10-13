@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Halt &amp; Restart v2 — Paper rail — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --paper: #F9F9FA;
+    --olive: #95B747;
+    --ink: #030205;
+    --pink: #FA4A9E;
+    --wine: #591337;
+    --lime: #BAF837;
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: #d9d6cf;
+    font-family: var(--sans);
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+    padding: 72px 24px 48px;
+  }
+  .toolbar {
+    position: fixed; top: 16px; right: 16px; z-index: 20;
+    display: flex; gap: 8px; font-family: var(--mono); font-size: 12px;
+  }
+  .toolbar a, .toolbar button {
+    cursor: pointer; text-decoration: none;
+    border: 1px solid var(--ink); background: var(--paper); color: var(--ink);
+    padding: 8px 12px; font: inherit; letter-spacing: 0.04em;
+  }
+  .stage { width: 11in; height: 17in; flex: 0 0 auto; transform-origin: top center; filter: drop-shadow(0 24px 40px rgba(0,0,0,.28)); }
+
+  .poster {
+    width: 11in; height: 17in; overflow: hidden; background: var(--paper);
+    display: grid; grid-template-columns: 2.35in 1fr;
+  }
+  .rail {
+    background: var(--ink); color: var(--paper);
+    padding: 0.38in 0.28in 0.32in;
+    display: flex; flex-direction: column; gap: 0.22in;
+    position: relative;
+  }
+  .rail-jelly {
+    width: 1.7in; height: 1.7in; margin: 0.1in auto 0.1in;
+    background: var(--lime);
+    -webkit-mask: url("assets/jellyfish.png") center / contain no-repeat;
+    mask: url("assets/jellyfish.png") center / contain no-repeat;
+  }
+  .rail-club {
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 0.22in; letter-spacing: -0.03em; line-height: 0.95;
+  }
+  .rail-club small {
+    display: block; margin-top: 0.08in; font-family: var(--mono); font-weight: 400;
+    font-size: 0.09in; letter-spacing: 0.12em; color: rgba(249,249,250,.62);
+  }
+  .rail-meta { margin-top: auto; display: grid; gap: 0.18in; }
+  .rail-meta h3 {
+    margin: 0 0 0.04in; font-family: var(--mono); font-size: 0.095in;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--lime);
+  }
+  .rail-meta .big {
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 0.28in; line-height: 1; letter-spacing: -0.03em;
+  }
+  .rail-meta .sub { margin-top: 0.04in; font-size: 0.12in; color: rgba(249,249,250,.7); font-weight: 600; }
+  .stamp {
+    font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink); background: var(--pink); padding: 0.06in 0.08in; font-weight: 700; text-align: center;
+  }
+
+  .sheet { padding: 0.38in 0.4in 0.32in 0.38in; display: flex; flex-direction: column; justify-content: space-between; gap: 0.14in; min-width: 0; height: 17in; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 0.115in; letter-spacing: 0.18em; text-transform: uppercase; color: var(--wine);
+  }
+  .title {
+    margin: 0; font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 1.12in; line-height: 0.84; letter-spacing: -0.045em;
+  }
+  .title .halt { color: var(--ink); }
+  .title .amp { color: var(--pink); }
+  .title .restart { display: block; color: transparent; -webkit-text-stroke: 0.024in var(--ink); }
+  .purpose { margin: 0; font-size: 0.175in; line-height: 1.28; max-width: 7.2in; }
+  .purpose strong { color: var(--wine); }
+  .purpose em { color: var(--pink); font-style: normal; font-weight: 700; }
+
+  .tasks { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.08in; }
+  .tasks li {
+    display: grid; grid-template-columns: 0.58in 1fr; gap: 0.12in; align-items: center;
+    border: 0.018in solid var(--ink); padding: 0.12in 0.14in; background: #fff;
+  }
+  .tasks li.grand { background: var(--pink); color: var(--paper); border-color: var(--pink); }
+  .tasks .n {
+    font-family: var(--mono); font-weight: 700; font-size: 0.16in; letter-spacing: 0.04em;
+  }
+  .tasks li.grand .n { color: var(--lime); }
+  .tasks p { margin: 0; font-size: 0.165in; line-height: 1.2; font-weight: 600; }
+  .tasks small { display: block; margin-top: 0.03in; font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.06em; font-weight: 400; }
+
+  .models { display: grid; grid-template-columns: 1fr 1fr; gap: 0.12in; }
+  .model { border: 0.018in solid var(--ink); padding: 0.14in; background: #fff; min-height: 1.35in; }
+  .model.pierre { box-shadow: 0.08in 0.08in 0 var(--lime); }
+  .model.daniil { box-shadow: 0.08in 0.08in 0 var(--pink); }
+  .model .ver { font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.14em; text-transform: uppercase; color: #555; margin-bottom: 0.04in; }
+  .model h3 { margin: 0 0 0.06in; font-family: var(--display); text-transform: uppercase; font-size: 0.28in; letter-spacing: -0.03em; }
+  .model p { margin: 0; font-size: 0.125in; line-height: 1.3; }
+  .pierre h3 { color: #3d5a12; }
+  .daniil h3 { color: var(--wine); }
+
+  .play { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.08in; }
+  .play article { background: var(--ink); color: var(--paper); padding: 0.1in 0.1in 0.12in; min-height: 1.28in; }
+  .play .n { font-family: var(--mono); font-size: 0.09in; color: var(--lime); letter-spacing: 0.12em; margin-bottom: 0.05in; }
+  .play h4 { margin: 0 0 0.05in; font-size: 0.135in; text-transform: uppercase; letter-spacing: -0.02em; }
+  .play p { margin: 0; font-size: 0.105in; line-height: 1.28; color: rgba(249,249,250,.78); }
+
+  .prize {
+    background: var(--lime); color: var(--ink); padding: 0.14in 0.16in;
+    display: grid; grid-template-columns: auto 1fr; gap: 0.16in; align-items: center;
+  }
+  .prize h3 { margin: 0; font-family: var(--display); text-transform: uppercase; font-size: 0.26in; letter-spacing: -0.03em; line-height: 0.95; }
+  .prize p { margin: 0; font-size: 0.14in; line-height: 1.3; font-weight: 600; }
+
+  .foot {
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 0.12in;
+  }
+  .contact h5 { margin: 0 0 0.05in; font-family: var(--mono); font-size: 0.095in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--wine); }
+  .contact .line { font-size: 0.13in; line-height: 1.35; }
+  .contact code { font-family: var(--mono); font-size: 0.12in; }
+  .marks { display: flex; align-items: flex-end; gap: 0.08in; }
+  .logo-card {
+    background: #fff; border: 0.014in solid var(--ink); width: 1.55in; padding: 0.06in;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-card.sait { width: 1.28in; }
+  .logo-card img { width: 100%; height: auto; display: block; }
+  .qr { width: 1.12in; text-align: center; }
+  .qr .box { background: #fff; border: 0.014in solid var(--ink); padding: 0.05in; width: 1.12in; height: 1.12in; }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr .cap { font-family: var(--mono); font-size: 0.08in; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.04in; }
+
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    body { background: #fff; padding: 0; display: block; }
+    .toolbar { display: none; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+  <a href="Halt%20%26%20Restart%20Poster%20v2%20Paper%20(11%C3%9717).pdf">Open PDF</a>
+  <a href="halt-restart.html">v1</a>
+  <a href="halt-restart-v3.html">v3</a>
+</div>
+<div class="stage" id="stage">
+<div class="poster">
+  <aside class="rail">
+    <div class="stamp">Student Club</div>
+    <div class="rail-jelly" aria-hidden="true"></div>
+    <div class="rail-club">Unnatural<br>Intelligence<small>SAIT · Saitsa</small></div>
+    <div class="rail-meta">
+      <div>
+        <h3>When</h3>
+        <div class="big">Fri Sept 18</div>
+        <div class="sub">3:00 – 5:00 PM</div>
+      </div>
+      <div>
+        <h3>Where</h3>
+        <div class="big">Location TBD</div>
+        <div class="sub">SAIT campus · Calgary · room on Discord</div>
+      </div>
+      <div>
+        <h3>Type</h3>
+        <div class="big">Student Club</div>
+        <div class="sub">All programs · drop in</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="sheet">
+    <div class="eyebrow">Live prompting lab · Fall 2026 · Purpose: prompt two human AIs</div>
+    <h1 class="title"><span class="halt">Halt <span class="amp">&amp;</span></span><span class="restart">Restart</span></h1>
+    <p class="purpose">You are the <strong>Prompter</strong>. <em>Pierre</em> and <em>Daniil</em> are the rival AIs. Write hyper-specific instructions. If the model drifts, halt it and start over. Adapt to the AI.</p>
+
+    <ol class="tasks">
+      <li><span class="n">T01</span><p>Move a ping pong ball from Cup A to be inside Cup B</p></li>
+      <li><span class="n">T02</span><p>Pick up a napkin with chopsticks</p></li>
+      <li><span class="n">T03</span><p>Stack 6 items in some way that they stand for 10 seconds</p></li>
+      <li><span class="n">T04</span><p>Sort 5 objects by size, shape, weight, or colour</p></li>
+      <li class="grand"><span class="n">T05</span><p>Draw a jellyfish<small>Grand prize · $25 gift card</small></p></li>
+    </ol>
+
+    <section class="models">
+      <article class="model pierre">
+        <div class="ver">Model 01 · v0.9-clarifier</div>
+        <h3>Pierre</h3>
+        <p><b>Will not move until every noun is defined.</b> Vague verbs pause the run. If you say “it,” he waits for a name.</p>
+      </article>
+      <article class="model daniil">
+        <div class="ver">Model 02 · v0.9-literal</div>
+        <h3>Daniil</h3>
+        <p><b>Follows the prompt word for word.</b> Will not infer missing steps. Vague verbs get the most literal reading in the room.</p>
+      </article>
+    </section>
+
+    <section class="play">
+      <article><div class="n">01</div><h4>Pick a rival</h4><p>Walk up to Pierre or Daniil. One model per attempt. They only hear the prompt you speak.</p></article>
+      <article><div class="n">02</div><h4>Write it tight</h4><p>Name the objects, order, grip, and stop point. Implied common sense does not count.</p></article>
+      <article><div class="n">03</div><h4>They execute</h4><p>The AI performs the physical task as prompted. Do not grab the props unless you halt.</p></article>
+      <article><div class="n">04</div><h4>Halt. Restart.</h4><p>If it is not doing the task as intended, say HALT. Freeze. Rewrite. Restart.</p></article>
+      <article><div class="n">05</div><h4>Adapt. Win.</h4><p>Each model behaves differently. Change your instructions to match.</p></article>
+    </section>
+
+    <section class="prize">
+      <h3>Prizes</h3>
+      <p>Edible eyeballs (candy!), fun polaroids, stickers and a $25 giftcard for the best prompter!</p>
+    </section>
+
+    <footer class="foot">
+      <div class="contact">
+        <h5>Show up · Contact</h5>
+        <div class="line"><b>Unnatural Intelligence</b> — SAIT student club</div>
+        <div class="line">Email <code id="contact-email"></code></div>
+        <div class="line">Discord <code id="contact-discord"></code></div>
+      </div>
+      <div class="marks">
+        <div class="logo-card"><img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs"></div>
+        <div class="logo-card sait"><img src="assets/sait-logo.png" alt="SAIT"></div>
+        <div class="qr"><div class="box" id="qr"></div><div class="cap">Scan Discord</div></div>
+      </div>
+    </footer>
+  </div>
+</div>
+</div>
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: "unnaturalintelligencesait@gmail.com",
+  contactDiscord: "discord.gg/hcsQFRNUEa",
+  qrUrl: "https://discord.gg/hcsQFRNUEa"
+});
+</script>
+</body>
+</html>

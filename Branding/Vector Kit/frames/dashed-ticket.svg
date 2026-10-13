@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 560" role="img" aria-label="Dashed ticket frame" fill="none">
+  <rect width="400" height="560" fill="#030205"/>
+  <rect x="16" y="16" width="368" height="528" fill="none" stroke="#BAF837" stroke-width="3" stroke-dasharray="10 8" opacity="0.55"/>
+</svg>

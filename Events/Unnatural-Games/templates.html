@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fact bar templates — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --paper: #F9F9FA; --olive: #95B747; --ink: #030205; --pink: #FA4A9E;
+    --wine: #591337; --lime: #BAF837; --cyan: #7EC8FF;
+    --muted: rgba(249,249,250,.72);
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; }
+  body {
+    background: #12040c; color: var(--paper); font-family: var(--sans);
+    padding: 72px 24px 64px;
+  }
+  .toolbar {
+    position: fixed; top: 16px; right: 16px; z-index: 20;
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;
+    max-width: min(720px, 92vw);
+    font-family: var(--mono); font-size: 12px;
+  }
+  .toolbar a, .toolbar button, .toolbar select {
+    cursor: pointer; text-decoration: none;
+    border: 1px solid rgba(186,248,55,.45);
+    background: rgba(3,2,5,.92); color: var(--lime);
+    padding: 8px 12px; font: inherit;
+  }
+  .toolbar label { display: flex; align-items: center; gap: 6px; color: var(--paper); }
+  .stage {
+    width: 11in; height: 17in; margin: 0 auto;
+    transform-origin: top center;
+    filter: drop-shadow(0 28px 50px rgba(0,0,0,.55));
+  }
+  .sheet {
+    position: relative; width: 11in; height: 17in; overflow: hidden;
+    background: var(--ink); color: var(--paper);
+  }
+  .grid-layer, .border-layer {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  .grid-layer { z-index: 1; }
+  .border-layer { z-index: 3; }
+  .grid-layer img, .border-layer img { width: 100%; height: 100%; display: block; }
+  .grid-layer.tile { background-repeat: repeat; background-size: 2in 2in; }
+  .content {
+    position: relative; z-index: 2; height: 100%;
+    padding: 0.48in 0.42in 0.46in;
+    display: flex; flex-direction: column;
+  }
+  .kicker {
+    margin: 0 0 0.08in;
+    font-family: var(--mono); font-weight: 700; font-size: 0.13in;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--lime);
+  }
+  h1 {
+    margin: 0; font-family: var(--display); font-weight: 700;
+    font-size: 0.72in; line-height: 0.86; letter-spacing: -0.045em;
+    text-transform: uppercase;
+  }
+  h1 span { color: var(--pink); }
+  .deck {
+    margin: 0.14in 0 0.28in; max-width: 8.6in;
+    font-size: 0.16in; line-height: 1.35; font-weight: 500; color: var(--muted);
+  }
+  .caption {
+    margin: 0.08in 0 0.22in;
+    font-family: var(--mono); font-weight: 700; font-size: 0.1in;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--olive);
+  }
+  .strip {
+    display: grid;
+    grid-template-columns: 1.05fr 1.2fr 1.35fr 1.15fr;
+    gap: 0.1in;
+  }
+  .fact { border-top: 0.055in solid var(--lime); padding-top: 0.08in; min-width: 0; }
+  .fact.where { border-color: var(--pink); }
+  .fact.type { border-color: var(--cyan); }
+  .fact.who { border-color: var(--olive); }
+  .fact h3 {
+    margin: 0 0 0.05in; min-height: 0.14in;
+    font-family: var(--mono); font-weight: 700;
+    font-size: 0.095in; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--pink);
+  }
+  .fact .big {
+    min-height: 0.3in;
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 0.28in; letter-spacing: -0.035em; line-height: 0.92;
+  }
+  .fact .sub {
+    margin-top: 0.05in; min-height: 0.18in;
+    font-size: 0.125in; line-height: 1.25; color: var(--muted); font-weight: 500;
+  }
+  [contenteditable="true"]:focus { outline: 1px solid rgba(186,248,55,.7); outline-offset: 2px; }
+  [contenteditable="true"]:empty::before {
+    content: attr(data-placeholder);
+    color: rgba(249,249,250,.32);
+  }
+  .swatches {
+    margin-top: auto; display: flex; gap: 0.28in; list-style: none; padding: 0.16in 0 0;
+  }
+  .swatches li {
+    display: flex; align-items: center; gap: 0.08in;
+    font-family: var(--mono); font-weight: 700; font-size: 0.11in;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .swatches i { width: 0.36in; height: 0.08in; display: block; }
+  .swatches .lime { background: var(--lime); }
+  .swatches .pink { background: var(--pink); }
+  .swatches .cyan { background: var(--cyan); }
+  .swatches .olive { background: var(--olive); }
+  .sheet-note {
+    margin: 0.1in 0 0;
+    font-family: var(--mono); font-size: 0.095in; letter-spacing: 0.04em;
+    color: rgba(249,249,250,.55);
+  }
+
+  .specimens { max-width: 1100px; margin: 48px auto 0; }
+  .specimens h2 {
+    margin: 36px 0 8px; font-family: var(--mono); font-size: 12px;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--pink);
+  }
+  .specimens .hint { margin: 0 0 16px; color: var(--muted); font-size: 14px; line-height: 1.45; max-width: 70ch; }
+  .gallery { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .gallery.wide { grid-template-columns: 1fr; }
+  figure { margin: 0; background: rgba(3,2,5,.55); border: 1px solid rgba(186,248,55,.2); }
+  figure a { color: inherit; text-decoration: none; }
+  .mini {
+    background: var(--ink); display: grid; place-items: center; padding: 16px; min-height: 140px;
+  }
+  .mini.portrait { aspect-ratio: 11 / 17; padding: 0; }
+  .mini.portrait img { width: 100%; height: 100%; display: block; }
+  .mini.split {
+    background-image: linear-gradient(90deg, #BAF837 0 25%, #FA4A9E 25% 50%, #591337 50% 75%, #030205 75%);
+    padding: 0; min-height: 180px;
+  }
+  .mini.split img, .mini.ink img { width: 100%; height: auto; display: block; }
+  .mini.ink { background: var(--ink); padding: 18px 12px; }
+  figcaption { padding: 10px 12px 12px; border-top: 1px solid rgba(186,248,55,.12); }
+  figcaption strong { display: block; font-size: 14px; }
+  figcaption code {
+    display: block; margin-top: 4px; font-family: var(--mono); font-size: 11px;
+    color: var(--olive); word-break: break-all;
+  }
+
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .toolbar, .specimens { display: none !important; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="toolbar">
+    <label>Grid
+      <select id="grid-select">
+        <option value="assets/overlays/grid-overlay-tabloid.svg">Inch grid · lime</option>
+        <option value="assets/overlays/grid-overlay-tabloid-paper.svg">Inch grid · paper</option>
+        <option value="tile:assets/overlays/grid-overlay-lime.svg">Tile · lime</option>
+        <option value="tile:assets/overlays/grid-overlay-pink.svg">Tile · pink</option>
+        <option value="tile:assets/overlays/grid-overlay-cyan.svg">Tile · cyan</option>
+        <option value="tile:assets/overlays/grid-overlay-olive.svg">Tile · olive</option>
+        <option value="tile:assets/overlays/grid-overlay-paper.svg">Tile · paper</option>
+        <option value="none">None</option>
+      </select>
+    </label>
+    <label>Border
+      <select id="border-select">
+        <option value="assets/frames/tabloid-dashed-lime.svg">Dashed lime</option>
+        <option value="assets/frames/tabloid-double.svg">Double lime + pink</option>
+        <option value="assets/frames/tabloid-corner-ticks.svg">Corner ticks</option>
+        <option value="assets/frames/tabloid-segmented.svg">Four colours</option>
+        <option value="assets/frames/tabloid-fact-rules.svg">Fact-bar rules</option>
+        <option value="assets/frames/tabloid-paper-hairline.svg">Paper hairline</option>
+        <option value="none">None</option>
+      </select>
+    </label>
+    <button type="button" onclick="window.print()">Print 11×17</button>
+    <a href="index.html">Posters</a>
+  </div>
+
+  <div class="stage" id="stage">
+    <article class="sheet">
+      <div class="grid-layer" id="grid-layer"></div>
+      <div class="content">
+        <p class="kicker">Unnatural Intelligence · tabloid template</p>
+        <h1>Fact <span>bars</span></h1>
+        <p class="deck">The coloured rule is the bar. Lime, pink, cyan, then olive — when, where, type, who. Labels stay pink, the same as the Presents poster. Type into either row. The grid and the border are transparent, so they sit on the ink instead of covering it.</p>
+
+        <section class="strip" aria-label="Worked example">
+          <div class="fact when">
+            <h3 contenteditable="true">When</h3>
+            <div class="big" contenteditable="true">Mondays</div>
+            <div class="sub" contenteditable="true">6:00 – 8:00 PM</div>
+          </div>
+          <div class="fact where">
+            <h3 contenteditable="true">Where</h3>
+            <div class="big" contenteditable="true">Room TBA</div>
+            <div class="sub" contenteditable="true">SAIT campus</div>
+          </div>
+          <div class="fact type">
+            <h3 contenteditable="true">Type</h3>
+            <div class="big" contenteditable="true">Student club</div>
+            <div class="sub" contenteditable="true">Social game night · live AI demo</div>
+          </div>
+          <div class="fact who">
+            <h3 contenteditable="true">Who</h3>
+            <div class="big" contenteditable="true">Free</div>
+            <div class="sub" contenteditable="true">Every program · beginners welcome</div>
+          </div>
+        </section>
+        <p class="caption">Worked example · Presents poster</p>
+
+        <section class="strip" aria-label="Blank template">
+          <div class="fact when">
+            <h3 contenteditable="true">When</h3>
+            <div class="big" contenteditable="true" data-placeholder="Date"></div>
+            <div class="sub" contenteditable="true" data-placeholder="Time"></div>
+          </div>
+          <div class="fact where">
+            <h3 contenteditable="true">Where</h3>
+            <div class="big" contenteditable="true" data-placeholder="Room"></div>
+            <div class="sub" contenteditable="true" data-placeholder="Campus"></div>
+          </div>
+          <div class="fact type">
+            <h3 contenteditable="true">Type</h3>
+            <div class="big" contenteditable="true" data-placeholder="Event"></div>
+            <div class="sub" contenteditable="true" data-placeholder="What it is"></div>
+          </div>
+          <div class="fact who">
+            <h3 contenteditable="true">Who</h3>
+            <div class="big" contenteditable="true" data-placeholder="Audience"></div>
+            <div class="sub" contenteditable="true" data-placeholder="Who it’s for"></div>
+          </div>
+        </section>
+        <p class="caption">Blank template · click a line and type</p>
+
+        <ul class="swatches">
+          <li><i class="lime"></i> When</li>
+          <li><i class="pink"></i> Where</li>
+          <li><i class="cyan"></i> Type</li>
+          <li><i class="olive"></i> Who</li>
+        </ul>
+        <p class="sheet-note">Outlined copies live in the vector kit: fact-bars/, patterns/grid-overlay-*, frames/tabloid-*. This sheet is 11×17. Borders are inset so a no-bleed print keeps the frame.</p>
+      </div>
+      <div class="border-layer" id="border-layer"></div>
+    </article>
+  </div>
+
+  <section class="specimens">
+    <h2>Outlined fact bars</h2>
+    <p class="hint">These SVGs are the same strip with the type converted to paths, so a print shop does not need the fonts. The transparent files have no background ink. A PNG with the same name sits beside every SVG in assets/. Inch-sized sheets are 300 DPI.</p>
+    <div class="gallery wide">
+      <figure>
+        <a href="assets/fact-bars/strip.svg"><div class="mini ink"><img src="assets/fact-bars/strip.svg" alt="Fact bar strip on ink"></div></a>
+        <figcaption><strong>Strip on ink</strong><code>fact-bars/strip.svg</code></figcaption>
+      </figure>
+      <figure>
+        <a href="assets/fact-bars/strip-clear.svg"><div class="mini ink"><img src="assets/fact-bars/strip-clear.svg" alt="Transparent fact bar strip"></div></a>
+        <figcaption><strong>Strip, transparent</strong><code>fact-bars/strip-clear.svg</code></figcaption>
+      </figure>
+      <figure>
+        <a href="assets/fact-bars/scaffold.svg"><div class="mini ink"><img src="assets/fact-bars/scaffold.svg" alt="Fact bar scaffold"></div></a>
+        <figcaption><strong>Scaffold · rules and labels</strong><code>fact-bars/scaffold.svg</code></figcaption>
+      </figure>
+    </div>
+    <div class="gallery" style="margin-top:16px">
+      <figure>
+        <a href="assets/fact-bars/when.svg"><div class="mini ink"><img src="assets/fact-bars/when.svg" alt="When bar"></div></a>
+        <figcaption><strong>When</strong><code>fact-bars/when.svg</code></figcaption>
+      </figure>
+      <figure>
+        <a href="assets/fact-bars/where.svg"><div class="mini ink"><img src="assets/fact-bars/where.svg" alt="Where bar"></div></a>
+        <figcaption><strong>Where</strong><code>fact-bars/where.svg</code></figcaption>
+      </figure>
+      <figure>
+        <a href="assets/fact-bars/type.svg"><div class="mini ink"><img src="assets/fact-bars/type.svg" alt="Type bar"></div></a>
+        <figcaption><strong>Type</strong><code>fact-bars/type.svg</code></figcaption>
+      </figure>
+      <figure>
+        <a href="assets/fact-bars/who.svg"><div class="mini ink"><img src="assets/fact-bars/who.svg" alt="Who bar"></div></a>
+        <figcaption><strong>Who</strong><code>fact-bars/who.svg</code></figcaption>
+      </figure>
+    </div>
+
+    <h2>Tabloid borders</h2>
+    <p class="hint">11×17 frames with a clear interior. Drop one over a poster. Strokes sit inside the trim.</p>
+    <div class="gallery">
+      <figure>
+        <a href="assets/frames/tabloid-dashed-lime.svg"><div class="mini portrait"><img src="assets/frames/tabloid-dashed-lime.svg" alt="Dashed lime border"></div></a>
+        <figcaption><strong>Dashed lime</strong><code>frames/tabloid-dashed-lime.svg</code></figcaption>
+      </figure>
+      <figure>
+        <a href="assets/frames/tabloid-double.svg"><div class="mini portrait"><img src="assets/frames/tabloid-double.svg" alt="Double lime and pink border"></div></a>
+        <figcaption><strong>Double lime + pink</strong><code>frames/tabloid-double.svg</code></figcaption>
+      </figure>
+      <figure>
+        <a href="assets/frames/tabloid-corner-ticks.svg"><div class="mini portrait"><img src="assets/frames/tabloid-corner-ticks.svg" alt="Corner ticks"></div></a>
+        <figcaption><strong>Corner ticks</strong><code>frames/tabloid-corner-ticks.svg</code></figcaption>
+      </figure>
+      <figure>
+        <a href="assets/frames/tabloid-segmented.svg"><div class="mini portrait"><img src="assets/frames/tabloid-segmented.svg" alt="Four-colour border"></div></a>
+        <figcaption><strong>Four colours</strong><code>frames/tabloid-segmented.svg</code></figcaption>
+      </figure>
+      <figure>
+        <a href="assets/frames/tabloid-fact-rules.svg"><div class="mini portrait"><img src="assets/frames/tabloid-fact-rules.svg" alt="Fact-bar rules border"></div></a>
+        <figcaption><strong>Fact-bar rules</strong><code>frames/tabloid-fact-rules.svg</code></figcaption>
+      </figure>
+      <figure>
+        <a href="assets/frames/tabloid-paper-hairline.svg"><div class="mini portrait"><img src="assets/frames/tabloid-paper-hairline.svg" alt="Paper hairline"></div></a>
+        <figcaption><strong>Paper hairline</strong><code>frames/tabloid-paper-hairline.svg</code></figcaption>
+      </figure>
+    </div>
+
+    <h2>Transparent grids</h2>
+    <p class="hint">No background fill. The tiles repeat. The tabloid files are a half-inch alignment grid with a dashed 0.5 in safe margin. The split field behind each tile is only there so you can see the strokes.</p>
+    <div class="gallery">
+      <figure>
+        <a href="assets/overlays/grid-overlay-lime.svg"><div class="mini split"><img src="assets/overlays/grid-overlay-lime.svg" alt="Lime grid overlay"></div></a>
+        <figcaption><strong>Tile · lime</strong><code>patterns/grid-overlay-lime.svg</code></figcaption>
+      </figure>
+      <figure>
+        <a href="assets/overlays/grid-overlay-pink.svg"><div class="mini split"><img src="assets/overlays/grid-overlay-pink.svg" alt="Pink grid overlay"></div></a>
+        <figcaption><strong>Tile · pink</strong><code>patterns/grid-overlay-pink.svg</code></figcaption>
+      </figure>
+      <figure>
+        <a href="assets/overlays/grid-overlay-cyan.svg"><div class="mini split"><img src="assets/overlays/grid-overlay-cyan.svg" alt="Cyan grid overlay"></div></a>
+        <figcaption><strong>Tile · cyan</strong><code>patterns/grid-overlay-cyan.svg</code></figcaption>
+      </figure>
+      <figure>
+        <a href="assets/overlays/grid-overlay-olive.svg"><div class="mini split"><img src="assets/overlays/grid-overlay-olive.svg" alt="Olive grid overlay"></div></a>
+        <figcaption><strong>Tile · olive</strong><code>patterns/grid-overlay-olive.svg</code></figcaption>
+      </figure>
+      <figure>
+        <a href="assets/overlays/grid-overlay-paper.svg"><div class="mini split"><img src="assets/overlays/grid-overlay-paper.svg" alt="Paper grid overlay"></div></a>
+        <figcaption><strong>Tile · paper</strong><code>patterns/grid-overlay-paper.svg</code></figcaption>
+      </figure>
+      <figure>
+        <a href="assets/overlays/grid-overlay-tabloid.svg"><div class="mini portrait"><img src="assets/overlays/grid-overlay-tabloid.svg" alt="Tabloid lime grid"></div></a>
+        <figcaption><strong>11×17 · lime</strong><code>patterns/grid-overlay-tabloid.svg</code></figcaption>
+      </figure>
+      <figure>
+        <a href="assets/overlays/grid-overlay-tabloid-paper.svg"><div class="mini portrait"><img src="assets/overlays/grid-overlay-tabloid-paper.svg" alt="Tabloid paper grid"></div></a>
+        <figcaption><strong>11×17 · paper</strong><code>patterns/grid-overlay-tabloid-paper.svg</code></figcaption>
+      </figure>
+    </div>
+  </section>
+
+<script>
+(function () {
+  const gridLayer = document.getElementById("grid-layer");
+  const borderLayer = document.getElementById("border-layer");
+  const gridSelect = document.getElementById("grid-select");
+  const borderSelect = document.getElementById("border-select");
+
+  function apply() {
+    const grid = gridSelect.value;
+    const border = borderSelect.value;
+    gridLayer.classList.toggle("tile", grid.startsWith("tile:"));
+    gridLayer.style.backgroundImage = "none";
+    gridLayer.replaceChildren();
+    if (grid.startsWith("tile:")) {
+      gridLayer.style.backgroundImage = "url(" + grid.slice(5) + ")";
+    } else if (grid !== "none") {
+      const img = document.createElement("img");
+      img.alt = "";
+      img.src = grid;
+      gridLayer.appendChild(img);
+    }
+    borderLayer.replaceChildren();
+    if (border !== "none") {
+      const img = document.createElement("img");
+      img.alt = "";
+      img.src = border;
+      borderLayer.appendChild(img);
+    }
+  }
+
+  const params = new URLSearchParams(location.search);
+  if (params.get("grid")) gridSelect.value = params.get("grid");
+  if (params.get("border")) borderSelect.value = params.get("border");
+  gridSelect.addEventListener("change", apply);
+  borderSelect.addEventListener("change", apply);
+  apply();
+
+  const stage = document.getElementById("stage");
+  const W = 11 * 96;
+  const H = 17 * 96;
+  function fit() {
+    const s = Math.min(1, (window.innerWidth - 48) / W);
+    stage.style.transform = "scale(" + s + ")";
+    stage.style.marginBottom = ((s - 1) * H) + "px";
+  }
+  fit();
+  window.addEventListener("resize", fit);
+  window.addEventListener("beforeprint", function () {
+    stage.style.transform = "none";
+    stage.style.marginBottom = "0";
+  });
+  window.addEventListener("afterprint", fit);
+})();
+</script>
+</body>
+</html>

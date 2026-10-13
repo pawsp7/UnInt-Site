@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Ticket icon" fill="none">
+  <rect width="64" height="64" rx="14" fill="#030205"/>
+
+  <path d="M10 22 h44 a6 6 0 0 1 0 20 H10 a6 6 0 0 1 0 -20Z" fill="#BAF837"/>
+  <path d="M24 22 v20" stroke="#030205" stroke-width="2" stroke-dasharray="2 3"/>
+  <circle cx="17" cy="32" r="3" fill="#030205"/>
+</svg>

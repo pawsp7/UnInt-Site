@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Unnatural Intelligence – Rival AI Prompting Challenge</title>
+
+  <style>
+    /* UNI Palette */
+    :root {
+      --uni-white: #F9F9FA;
+      --uni-green: #95B747;
+      --uni-black: #030205;
+      --uni-pink: #FAA49E;
+      --uni-maroon: #591337;
+      --uni-lime: #BAF837;
+    }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: var(--uni-black);
+      color: var(--uni-white);
+      padding: 40px;
+    }
+
+    .poster {
+      max-width: 900px;
+      margin: 0 auto;
+      border: 6px solid var(--uni-green);
+      padding: 32px;
+      background: var(--uni-black);
+    }
+
+    .logo {
+      width: 160px;
+      margin: 0 auto 20px auto;
+      display: block;
+    }
+
+    .club-name {
+      text-align: center;
+      font-size: 2.4rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--uni-green);
+      margin-bottom: 8px;
+    }
+
+    .tagline {
+      text-align: center;
+      font-size: 1.1rem;
+      color: var(--uni-pink);
+    }
+
+    .event-title {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--uni-white);
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 1.1rem;
+      color: var(--uni-lime);
+      margin-top: 8px;
+    }
+
+    .section {
+      margin-top: 28px;
+      padding-top: 12px;
+      border-top: 2px solid var(--uni-maroon);
+    }
+
+    .section h2 {
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--uni-green);
+      margin-bottom: 10px;
+    }
+
+    .section p,
+    .section ul {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: var(--uni-white);
+    }
+
+    .section ul {
+      list-style: none;
+      margin-top: 6px;
+    }
+
+    .section ul li::before {
+      content: "▹ ";
+      color: var(--uni-lime);
+    }
+
+    .highlight {
+      color: var(--uni-pink);
+      font-weight: 600;
+    }
+
+    .ai-names {
+      color: var(--uni-lime);
+      font-weight: 600;
+    }
+
+    .info-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    .info-card {
+      flex: 1 1 260px;
+      border: 2px solid var(--uni-green);
+      padding: 12px 14px;
+      border-radius: 6px;
+      background: var(--uni-maroon);
+      color: var(--uni-white);
+    }
+
+    .info-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--uni-white);
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 1rem;
+    }
+
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--uni-pink);
+    }
+
+    .cta {
+      margin-top: 10px;
+      font-size: 1rem;
+      color: var(--uni-lime);
+      font-weight: 600;
+    }
+
+    /* Print Mode */
+    @media print {
+      body {
+        background: #ffffff;
+        color: #000000;
+        padding: 0;
+      }
+      .poster {
+        border-color: #000000;
+        background: #ffffff;
+      }
+      .club-name,
+      .event-title,
+      .section h2,
+      .cta {
+        color: #000000;
+      }
+      .subtitle,
+      .ai-names,
+      .highlight {
+        color: #000000;
+      }
+      .info-card {
+        background: #ffffff;
+        border-color: #000000;
+        color: #000000;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="poster">
+
+    <!-- Jellyfish Logo -->
+    <img src="jellyfish-logo.png" alt="Unnatural Intelligence Logo" class="logo" />
+
+    <div class="club-name">Unnatural Intelligence</div>
+    <div class="tagline">SAIT AI Club – Experimental Prompts & Strange Behaviors</div>
+
+    <div class="event-title">Rival AI Prompting Challenge</div>
+    <div class="subtitle">Can you bend Pierre & Daniil to your will… without breaking the rules?</div>
+
+    <section class="section">
+      <h2>Core idea</h2>
+      <p>
+        You’re the <span class="highlight">Prompter</span>. Your mission: guide a rival AI to complete a weirdly specific task—
+        exactly as intended. If the AI drifts or misunderstands, you must <span class="highlight">halt</span>, reset, and adapt.
+      </p>
+      <p style="margin-top: 8px;">
+        Each AI has a personality: <span class="ai-names">Pierre</span> and <span class="ai-names">Daniil</span>. Learn how they “think,”
+        adjust your prompting style, and coax them into success.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Sample tasks</h2>
+      <ul>
+        <li>Pick up napkins with chopsticks in a simulated environment.</li>
+        <li>Sort fictional snacks by “vibe” using a rubric you invent.</li>
+        <li>Assemble a mysterious gadget using only metaphors.</li>
+        <li>Make the AI roleplay as a confused robot but still output a perfect checklist.</li>
+        <li>[Placeholder Task] Coordinate a virtual tea ceremony with strict timing rules.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>Event details</h2>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-label">Date & time</div>
+          <div class="info-value">Friday, September 18 · 3:00 PM – 5:00 PM</div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Location</div>
+          <div class="info-value">TBD – Placeholder Room Name</div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Who can join?</div>
+          <div class="info-value">SAIT students, AI enthusiasts, curious beginners.</div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">Prizes</div>
+          <div class="info-value">Mystery items + the title of “Rival AI Whisperer”.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      Hosted by Unnatural Intelligence – SAIT AI Club
+      <div class="cta">Placeholder RSVP link: ui-club.example/rival-ai-challenge</div>
+    </footer>
+
+  </div>
+</body>
+</html>

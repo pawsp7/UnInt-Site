@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Untapped spark" fill="none">
+  <defs>
+    <linearGradient id="uni-jelly" x1="10%" y1="4%" x2="90%" y2="92%" gradientUnits="objectBoundingBox">
+    <stop offset="0%" stop-color="#BAF837"/>
+    <stop offset="42%" stop-color="#BAF837"/>
+    <stop offset="58%" stop-color="#FA4A9E"/>
+    <stop offset="100%" stop-color="#FA4A9E"/>
+  </linearGradient>
+    <pattern id="spk" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M28 0H0V28" fill="none" stroke="#BAF837" stroke-width="1" opacity="0.2"/>
+    </pattern>
+    <clipPath id="spk-clip"><circle cx="200" cy="200" r="200"/></clipPath>
+  </defs>
+  <g clip-path="url(#spk-clip)">
+    <rect width="400" height="400" fill="#030205"/>
+    <rect width="400" height="400" fill="url(#spk)"/>
+  </g>
+  <g transform="translate(200.0 168.0) rotate(0) scale(4.6000)"><path d="M0 -20 L6.5 -4 L0 0 L-6.5 -4 Z" fill="#BAF837"/></g>
+  <g transform="translate(200.0 168.0) rotate(45) scale(4.6000)"><path d="M0 -20 L6.5 -4 L0 0 L-6.5 -4 Z" fill="#FA4A9E"/></g>
+  <g transform="translate(200.0 168.0) rotate(90) scale(4.6000)"><path d="M0 -20 L6.5 -4 L0 0 L-6.5 -4 Z" fill="#95B747"/></g>
+  <g transform="translate(200.0 168.0) rotate(135) scale(4.6000)"><path d="M0 -20 L6.5 -4 L0 0 L-6.5 -4 Z" fill="#7EC8FF"/></g>
+  <g transform="translate(200.0 168.0) rotate(180) scale(4.6000)"><path d="M0 -20 L6.5 -4 L0 0 L-6.5 -4 Z" fill="#BAF837"/></g>
+  <g transform="translate(200.0 168.0) rotate(225) scale(4.6000)"><path d="M0 -20 L6.5 -4 L0 0 L-6.5 -4 Z" fill="#FA4A9E"/></g>
+  <g transform="translate(200.0 168.0) rotate(270) scale(4.6000)"><path d="M0 -20 L6.5 -4 L0 0 L-6.5 -4 Z" fill="#95B747"/></g>
+  <g transform="translate(200.0 168.0) rotate(315) scale(4.6000)"><path d="M0 -20 L6.5 -4 L0 0 L-6.5 -4 Z" fill="#7EC8FF"/></g>
+  <g transform="translate(150.6 322.0)">  <path fill="#BAF837" d="M6.82 0.26Q5.06 0.26 3.75 -0.48Q2.45 -1.21 1.73 -2.53Q1.02 -3.85 1.02 -5.58V-16.01H3.87V-5.84Q3.87 -4.44 4.67 -3.52Q5.47 -2.6 6.82 -2.6Q8.17 -2.6 8.97 -3.51Q9.77 -4.43 9.77 -5.84V-16.01H12.62V-5.58Q12.62 -3.85 11.9 -2.53Q11.18 -1.21 9.88 -0.48Q8.57 0.26 6.82 0.26Z M14.08 0V-16.01H17.14L21.67 -7.82Q21.92 -7.37 22.33 -6.54Q22.75 -5.71 23.17 -4.86Q23.14 -5.79 23.13 -6.69Q23.12 -7.58 23.12 -8.09V-16.01H26.02V0H22.95L18.85 -7.41Q18.53 -7.96 18.03 -8.94Q17.52 -9.93 16.93 -11.15Q16.96 -9.89 16.98 -8.92Q16.99 -7.94 16.99 -7.42V0Z M26.89 -13.17V-16.01H38.34V-13.17H34.08V0H31.17V-13.17Z M38.25 0 43.2 -16.01H46.94L51.88 0H48.66L47.68 -3.49H42.41L41.39 0ZM43.2 -6.13H46.92L46.45 -7.79Q46.12 -9.01 45.79 -10.28Q45.46 -11.55 45.08 -13.04Q44.7 -11.55 44.36 -10.28Q44.02 -9.01 43.68 -7.79Z M52.43 0V-16.01H57.99Q59.57 -16.01 60.72 -15.37Q61.88 -14.73 62.51 -13.55Q63.14 -12.36 63.14 -10.75Q63.14 -9.14 62.5 -7.97Q61.86 -6.79 60.7 -6.14Q59.54 -5.5 57.95 -5.5H55.34V0ZM55.34 -8.27H57.8Q58.95 -8.27 59.62 -8.94Q60.29 -9.61 60.29 -10.75Q60.29 -11.9 59.62 -12.57Q58.95 -13.23 57.8 -13.23H55.34Z M64.05 0V-16.01H69.61Q71.19 -16.01 72.35 -15.37Q73.5 -14.73 74.13 -13.55Q74.76 -12.36 74.76 -10.75Q74.76 -9.14 74.12 -7.97Q73.49 -6.79 72.32 -6.14Q71.16 -5.5 69.57 -5.5H66.96V0ZM66.96 -8.27H69.42Q70.57 -8.27 71.24 -8.94Q71.92 -9.61 71.92 -10.75Q71.92 -11.9 71.24 -12.57Q70.57 -13.23 69.42 -13.23H66.96Z M75.67 0V-16.01H85.78V-13.17H78.59V-9.46H85.24V-6.7H78.59V-2.84H85.78V0Z M91.82 0H86.84V-16.01H91.87Q93.99 -16.01 95.54 -15.03Q97.09 -14.05 97.93 -12.26Q98.77 -10.46 98.77 -8.01Q98.77 -5.55 97.93 -3.75Q97.09 -1.96 95.54 -0.98Q93.98 0 91.82 0ZM89.75 -2.78H91.66Q93.8 -2.78 94.82 -4.14Q95.84 -5.49 95.84 -8.01Q95.84 -10.54 94.82 -11.88Q93.79 -13.22 91.69 -13.22H89.75Z"/></g>
+</svg>

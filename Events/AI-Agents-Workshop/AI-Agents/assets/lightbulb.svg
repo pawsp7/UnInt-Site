@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Lightbulb icon" fill="none">
+  <rect width="64" height="64" rx="14" fill="#030205"/>
+  <g stroke="#BAF837" stroke-width="3.2" stroke-linecap="round">
+    <path d="M32 7 V14"/>
+    <path d="M16 14 L21.5 19.5"/>
+    <path d="M48 14 L42.5 19.5"/>
+    <path d="M8 32 H15"/>
+    <path d="M56 32 H49"/>
+  </g>
+  <path d="M22 32
+           a10 12 0 1 1 20 0
+           c0 4.2-2.2 7.4-4.4 10.2
+           H26.4
+           C24.2 39.4 22 36.2 22 32 Z"
+        fill="none" stroke="#BAF837" stroke-width="3.2" stroke-linejoin="round"/>
+  <path d="M27.2 44.8 H36.8" stroke="#BAF837" stroke-width="3.2" stroke-linecap="round"/>
+  <rect x="25.2" y="48" width="13.6" height="7.2" rx="2.4" fill="#FA4A9E"/>
+</svg>

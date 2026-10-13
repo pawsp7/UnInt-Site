@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Node icon" fill="none">
+  <rect width="64" height="64" rx="14" fill="#030205"/>
+
+  <rect x="18" y="18" width="28" height="28" rx="6" fill="none" stroke="#BAF837" stroke-width="2.5"/>
+  <circle cx="32" cy="32" r="5" fill="#FA4A9E"/>
+  <circle cx="18" cy="18" r="3.5" fill="#95B747"/>
+  <circle cx="46" cy="18" r="3.5" fill="#7EC8FF"/>
+  <circle cx="46" cy="46" r="3.5" fill="#F9F9FA"/>
+  <circle cx="18" cy="46" r="3.5" fill="#BAF837"/>
+</svg>

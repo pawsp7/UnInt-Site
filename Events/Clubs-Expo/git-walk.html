@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>git walk — print kit — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+  :root {
+    --paper: #F9F9FA; --ink: #030205; --pink: #FA4A9E; --lime: #BAF837;
+    --wine: #591337; --cyan: #7EC8FF;
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; }
+  body { background: #14040c; color: var(--paper); font-family: var(--sans); line-height: 1.4; }
+  .toolbar {
+    position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px;
+    padding: 12px 16px; font-family: var(--mono); font-size: 12px;
+    background: rgba(3,2,5,.92); border-bottom: 1px solid rgba(186,248,55,.28);
+  }
+  .toolbar a, .toolbar button {
+    color: var(--lime); border: 1px solid rgba(186,248,55,.45);
+    background: transparent; padding: 8px 12px; font: inherit; cursor: pointer; text-decoration: none;
+  }
+  .sheet {
+    width: 8.5in; min-height: 11in; margin: 24px auto; padding: 0.42in;
+    background: var(--ink); border: 1px solid rgba(186,248,55,.35); color: var(--paper);
+  }
+  .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lime); margin: 0 0 8px; }
+  h1 { font-family: var(--display); text-transform: uppercase; letter-spacing: -0.03em; font-size: 28px; margin: 0 0 8px; }
+  h1 span { color: var(--pink); }
+  h2 { font-family: var(--display); text-transform: uppercase; letter-spacing: -0.02em; font-size: 18px; margin: 0 0 10px; }
+  p { margin: 0 0 10px; }
+  ol, ul { margin: 0 0 12px; padding-left: 1.2em; }
+  li { margin: 0 0 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0 14px; }
+  th, td { border-bottom: 1px solid rgba(249,249,250,.14); padding: 7px 6px; text-align: left; vertical-align: top; }
+  th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lime); font-weight: 400; }
+  code { font-family: var(--mono); color: var(--lime); font-size: 12px; }
+  .say { background: var(--lime); color: var(--ink); padding: 10px 12px; font-weight: 700; margin: 12px 0; }
+  pre {
+    margin: 0 0 10px; padding: 10px 12px; background: #0a0408;
+    border: 1px solid rgba(186,248,55,.3); color: var(--lime);
+    font-family: var(--mono); font-size: 12px; white-space: pre-wrap;
+  }
+  .foot { font-family: var(--mono); font-size: 11px; color: rgba(249,249,250,.5); margin-top: 16px; }
+  .cut { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pink); margin: 0 0 10px; }
+  .tents { display: grid; grid-template-rows: 1fr 1fr; gap: 0.28in; min-height: 10in; }
+  .tent {
+    border: 1px dashed rgba(186,248,55,.55);
+    display: grid; grid-template-rows: 1fr 1fr;
+    min-height: 4.7in;
+  }
+  .tent .face, .tent .back {
+    padding: 0.28in 0.32in;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .tent .back {
+    border-top: 1px dotted rgba(249,249,250,.28);
+    color: rgba(249,249,250,.78);
+  }
+  .tent .n { font-family: var(--mono); font-size: 13px; letter-spacing: 0.18em; color: var(--lime); margin: 0 0 6px; }
+  .tent h3 {
+    font-family: var(--display); text-transform: uppercase; letter-spacing: -0.03em;
+    font-size: 34px; margin: 0 0 4px; line-height: 0.95;
+  }
+  .tent .git { font-family: var(--mono); color: var(--pink); font-size: 16px; margin: 0 0 10px; }
+  .tent .do { font-size: 16px; margin: 0; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.18in; }
+  .slop, .blank, .hash, .spine {
+    border: 1px dashed rgba(250,74,158,.55);
+    padding: 0.18in 0.2in;
+    min-height: 2.15in;
+  }
+  .slop .tag, .blank .tag, .hash .tag, .spine .tag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--pink); margin: 0 0 8px;
+  }
+  .slop p { font-size: 14px; margin: 0; }
+  .blank .line {
+    border-bottom: 1px solid rgba(249,249,250,.35);
+    height: 22px; margin-top: 10px;
+  }
+  .hashes { display: flex; flex-wrap: wrap; gap: 8px; font-family: var(--mono); color: var(--lime); font-size: 18px; }
+  .hashes span { border: 1px solid rgba(186,248,55,.4); padding: 6px 10px; }
+  .good { font-family: var(--mono); color: var(--lime); font-size: 13px; }
+  @media print {
+    .toolbar { display: none; }
+    body { background: #fff; }
+    .sheet { margin: 0; border: 0; width: auto; min-height: 0; page-break-after: always; }
+    .sheet:last-child { page-break-after: auto; }
+  }
+</style>
+</head>
+<body>
+<nav class="toolbar">
+  <a href="table-concepts.html#git-walk">Back to concepts</a>
+  <a href="#staff">Staff</a>
+  <a href="#signs">Signs</a>
+  <a href="#slop">Slop cards</a>
+  <a href="#blanks">Blanks</a>
+  <button type="button" onclick="window.print()">Print this kit</button>
+</nav>
+
+<article class="sheet" id="staff">
+  <p class="kicker">Booth staff · Compile pipeline · ~60 seconds</p>
+  <h1>git walk <span>— one commit</span></h1>
+  <p>Teach one idea: a commit is a snapshot plus a message <em>they</em> wrote. No install. No GitHub account. The four Compile Pipeline stations are the commands.</p>
+  <div class="say">Say: “Git is save-points with a note. Walk the line.”</div>
+  <table>
+    <thead><tr><th>Sign</th><th>Git</th><th>Do</th></tr></thead>
+    <tbody>
+      <tr><td><code>01 INPUT</code></td><td><code>working tree</code></td><td>One line on a card, or pick an AI-slop card.</td></tr>
+      <tr><td><code>02 HALT</code></td><td><code>git add</code></td><td>Cross out the generic voice. Only kept words may enter.</td></tr>
+      <tr><td><code>03 HUMAN_FINISH</code></td><td><code>git commit</code></td><td>8 words or fewer. Stamp a 4-char hash. Clip into the binder (<code>git log</code>).</td></tr>
+      <tr><td><code>04 OUTPUT</code></td><td><code>git push</code></td><td>Sticker + QR. “That’s shipping. You’re on <code>main</code>.”</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Do not teach</strong> clone, rebase, merge, SSH, or GitHub signup. If they ask “what is git?”: save-points with a note. If they ask “what is a commit?”: the snapshot you just named.</p>
+  <p><strong>Good messages</strong> to pin at 03: <code>fix lab 4 tone</code> · <code>ask about Thursday shift</code> · <code>cut the hope-this-finds-you</code></p>
+  <p>If they want to touch a real repo (optional, 90 seconds). Seed lives in <code>git-walk-seed/</code>:</p>
+  <pre>git add README.md
+git commit -m "your eight words"
+git log -1 --oneline</pre>
+  <p class="foot">Unnatural Intelligence · Halt generic. Restart human. · unnaturalintelligence.club</p>
+</article>
+
+<article class="sheet" id="signs">
+  <p class="cut">Sheet 2 · cut the dashed boxes · fold on the dotted line · stand in a binder clip</p>
+  <div class="tents">
+    <div class="tent">
+      <div class="face">
+        <p class="n">01</p>
+        <h3>Input</h3>
+        <p class="git">working tree</p>
+        <p class="do">Write one line you might actually send — or pick an AI-slop card.</p>
+      </div>
+      <div class="back">
+        <p class="git">git status</p>
+        <p class="do">Staff: “What’s dirty? That’s the working tree. Nothing is saved yet.”</p>
+      </div>
+    </div>
+    <div class="tent">
+      <div class="face">
+        <p class="n">02</p>
+        <h3>Halt</h3>
+        <p class="git">git add</p>
+        <p class="do">Cross out anything that sounds generic. Only the kept words may enter the repo.</p>
+      </div>
+      <div class="back">
+        <p class="git">git add</p>
+        <p class="do">Staff: “Add is the choice. You decide what gets in. The rest stays unstaged.”</p>
+      </div>
+    </div>
+  </div>
+</article>
+
+<article class="sheet">
+  <p class="cut">Sheet 3 · cut · fold · stand</p>
+  <div class="tents">
+    <div class="tent">
+      <div class="face">
+        <p class="n">03</p>
+        <h3>Human finish</h3>
+        <p class="git">git commit</p>
+        <p class="do">Rewrite the leftover into 8 words or fewer that sound like you.</p>
+      </div>
+      <div class="back">
+        <p class="git">git commit -m "…"</p>
+        <p class="do">Staff stamps a 4-character hash. Clip the card into the monster binder. That binder is <code>git log</code>.</p>
+      </div>
+    </div>
+    <div class="tent">
+      <div class="face">
+        <p class="n">04</p>
+        <h3>Output</h3>
+        <p class="git">git push</p>
+        <p class="do">Take a sticker. Scan the QR. You just shipped.</p>
+      </div>
+      <div class="back">
+        <p class="git">git push origin main</p>
+        <p class="do">Staff: “That’s shipping. You’re on main. The binder is yesterday’s commits if you want to look.”</p>
+      </div>
+    </div>
+  </div>
+</article>
+
+<article class="sheet" id="slop">
+  <p class="cut">Sheet 4 · cut into 6 AI-slop cards · leave a stack at 01 INPUT</p>
+  <div class="cards">
+    <div class="slop">
+      <p class="tag">AI slop · working tree</p>
+      <p>I hope this email finds you well I wanted to reach out regarding…</p>
+    </div>
+    <div class="slop">
+      <p class="tag">AI slop · working tree</p>
+      <p>In today’s rapidly evolving digital landscape, AI empowers students to…</p>
+    </div>
+    <div class="slop">
+      <p class="tag">AI slop · working tree</p>
+      <p>Please find attached my comprehensive reflections on the assignment.</p>
+    </div>
+    <div class="slop">
+      <p class="tag">AI slop · working tree</p>
+      <p>I am writing to express my keen interest in this exciting opportunity.</p>
+    </div>
+    <div class="slop">
+      <p class="tag">AI slop · working tree</p>
+      <p>Leveraging synergies, we can optimize outcomes and unlock our potential.</p>
+    </div>
+    <div class="slop">
+      <p class="tag">AI slop · working tree</p>
+      <p>As someone passionate about innovation, I thrive in fast-paced environments.</p>
+    </div>
+  </div>
+  <p class="foot">If they write their own line at 01, skip the slop pile. Slop is only the fast lane.</p>
+</article>
+
+<article class="sheet" id="blanks">
+  <p class="cut">Sheet 5 · blanks for 01 · hashes + examples for 03 · spine for the binder</p>
+  <div class="cards">
+    <div class="blank">
+      <p class="tag">working tree</p>
+      <p>One sentence you might actually send:</p>
+      <div class="line"></div><div class="line"></div><div class="line"></div>
+    </div>
+    <div class="blank">
+      <p class="tag">working tree</p>
+      <p>One sentence you might actually send:</p>
+      <div class="line"></div><div class="line"></div><div class="line"></div>
+    </div>
+    <div class="blank">
+      <p class="tag">commit message · ≤ 8 words</p>
+      <p class="good">fix lab 4 tone</p>
+      <p class="good">ask about Thursday shift</p>
+      <p class="good">cut the hope-this-finds-you</p>
+      <p class="good">sound like me, not the model</p>
+    </div>
+    <div class="hash">
+      <p class="tag">stamp / clip these hashes</p>
+      <div class="hashes">
+        <span>a3f1</span><span>9c0e</span><span>b72d</span>
+        <span>e14a</span><span>0c88</span><span>f5b2</span>
+        <span>71d9</span><span>c4e0</span>
+      </div>
+    </div>
+    <div class="spine">
+      <p class="tag">clip to the monster binder</p>
+      <h2 style="margin:0 0 6px">$ git log --oneline</h2>
+      <p>Newest card on top. This is the booth history. Visitors may read. Do not let them take a card — that is the log.</p>
+    </div>
+    <div class="spine">
+      <p class="tag">optional laptop card · tape to the bezel</p>
+      <pre style="margin:0"># change README so it sounds like you
+git add README.md
+git commit -m "your eight words"
+git log -1 --oneline</pre>
+    </div>
+  </div>
+  <p class="foot">Print 2–3 copies of sheets 4–5. One copy of the signs is enough. Staff sheet stays behind the table.</p>
+</article>
+</body>
+</html>

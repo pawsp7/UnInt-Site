@@ -1,0 +1,4 @@
+fonttools
+cairosvg
+Pillow
+reportlab

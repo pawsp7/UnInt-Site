@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Halt &amp; Restart v3 — Arcade ticket — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --paper: #F9F9FA;
+    --olive: #95B747;
+    --ink: #030205;
+    --pink: #FA4A9E;
+    --wine: #591337;
+    --lime: #BAF837;
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: #1a0510;
+    font-family: var(--sans); color: var(--paper);
+    display: flex; justify-content: center; padding: 72px 24px 48px;
+  }
+  .toolbar {
+    position: fixed; top: 16px; right: 16px; z-index: 20;
+    display: flex; gap: 8px; font-family: var(--mono); font-size: 12px;
+  }
+  .toolbar a, .toolbar button {
+    cursor: pointer; text-decoration: none;
+    border: 1px solid rgba(186,248,55,.45); background: rgba(3,2,5,.88); color: var(--lime);
+    padding: 8px 12px; font: inherit; letter-spacing: 0.04em;
+  }
+  .stage { width: 11in; height: 17in; flex: 0 0 auto; transform-origin: top center; filter: drop-shadow(0 28px 50px rgba(0,0,0,.55)); }
+
+  .poster {
+    position: relative; width: 11in; height: 17in; overflow: hidden; background: var(--ink);
+    display: flex; flex-direction: column; justify-content: space-between; padding: 0.28in 0.36in 0.3in; gap: 0.14in;
+  }
+  .poster::before {
+    content: ""; position: absolute; inset: 0.12in;
+    border: 0.04in dashed rgba(186,248,55,.35); pointer-events: none; z-index: 2;
+  }
+  .jelly-bg {
+    position: absolute; right: -0.8in; top: 2.4in; width: 6.2in; height: 6.2in; z-index: 0;
+    background: var(--pink); opacity: 0.14;
+    -webkit-mask: url("assets/jellyfish.png") center / contain no-repeat;
+    mask: url("assets/jellyfish.png") center / contain no-repeat;
+  }
+
+  .ticket {
+    position: relative; z-index: 3;
+    background: var(--lime); color: var(--ink);
+    display: grid; grid-template-columns: 1.6fr 1.4fr 1.2fr auto;
+    gap: 0.12in; align-items: center;
+    padding: 0.14in 0.2in; border-radius: 0.08in;
+  }
+  .ticket h3 { margin: 0 0 0.02in; font-family: var(--mono); font-size: 0.095in; letter-spacing: 0.16em; text-transform: uppercase; }
+  .ticket .big { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.26in; letter-spacing: -0.03em; line-height: 1; }
+  .ticket .sub { font-size: 0.12in; font-weight: 700; margin-top: 0.03in; }
+  .ticket .type {
+    background: var(--ink); color: var(--lime); padding: 0.08in 0.12in;
+    font-family: var(--mono); font-size: 0.11in; letter-spacing: 0.12em; text-transform: uppercase; text-align: center;
+  }
+
+  .top { position: relative; z-index: 3; display: grid; grid-template-columns: 1.35fr 0.85fr; gap: 0.18in; align-items: end; }
+  .brand { display: flex; align-items: center; gap: 0.12in; margin-bottom: 0.1in; }
+  .brand-mark {
+    width: 0.55in; height: 0.55in; background: var(--lime);
+    -webkit-mask: url("assets/jellyfish.png") center / 86% no-repeat;
+    mask: url("assets/jellyfish.png") center / 86% no-repeat;
+  }
+  .brand-name { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.22in; line-height: 0.92; letter-spacing: -0.03em; }
+  .brand-name small { display: block; margin-top: 0.04in; font-family: var(--mono); font-weight: 400; font-size: 0.095in; letter-spacing: 0.14em; color: rgba(249,249,250,.6); }
+  .title { margin: 0; font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 1.18in; line-height: 0.84; letter-spacing: -0.045em; }
+  .title .l1 { color: var(--lime); }
+  .title .amp { color: var(--pink); }
+  .title .l2 { display: block; color: transparent; -webkit-text-stroke: 0.024in var(--paper); }
+  .purpose { margin: 0.14in 0 0; font-size: 0.175in; line-height: 1.28; }
+  .purpose strong { color: var(--lime); }
+  .purpose em { color: var(--pink); font-style: normal; font-weight: 700; }
+  .jelly-hero {
+    width: 2.9in; height: 2.9in; justify-self: end;
+    background: var(--paper);
+    -webkit-mask: url("assets/jellyfish.png") center / contain no-repeat;
+    mask: url("assets/jellyfish.png") center / contain no-repeat;
+  }
+
+  .mid { position: relative; z-index: 3; display: grid; grid-template-columns: 1.15fr 1fr; gap: 0.16in; }
+  .spine { position: relative; padding-left: 0.22in; display: grid; gap: 0.1in; }
+  .spine::before {
+    content: ""; position: absolute; left: 0.055in; top: 0.12in; bottom: 0.12in; width: 0.03in; background: var(--olive);
+  }
+  .step { position: relative; padding-left: 0.12in; }
+  .step::before {
+    content: ""; position: absolute; left: -0.195in; top: 0.08in; width: 0.12in; height: 0.12in; background: var(--lime); border-radius: 50%;
+  }
+  .step:nth-child(even)::before { background: var(--pink); }
+  .step .n { font-family: var(--mono); font-size: 0.095in; letter-spacing: 0.14em; color: var(--lime); }
+  .step h4 { margin: 0.02in 0 0.04in; font-family: var(--display); text-transform: uppercase; font-size: 0.2in; letter-spacing: -0.02em; }
+  .step p { margin: 0; font-size: 0.13in; line-height: 1.28; color: rgba(249,249,250,.72); }
+
+  .models { display: grid; gap: 0.12in; }
+  .model {
+    display: grid; grid-template-columns: 0.82in 1fr; gap: 0.12in; align-items: center;
+    background: rgba(249,249,250,.05); border: 1px solid rgba(249,249,250,.14); padding: 0.14in; border-radius: 0.08in;
+  }
+  .pierre { border-color: rgba(186,248,55,.5); }
+  .daniil { border-color: rgba(250,74,158,.5); }
+  .face {
+    width: 0.82in; height: 0.82in; border-radius: 50%; background: var(--wine);
+    display: grid; place-items: center;
+  }
+  .face i {
+    display: block; width: 0.64in; height: 0.64in;
+    -webkit-mask: url("assets/jellyfish.png") center / contain no-repeat;
+    mask: url("assets/jellyfish.png") center / contain no-repeat;
+  }
+  .pierre .face i { background: var(--lime); }
+  .daniil .face i { background: var(--pink); }
+  .ver { font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(249,249,250,.55); }
+  .model h3 { margin: 0.02in 0 0.04in; font-family: var(--display); text-transform: uppercase; font-size: 0.28in; letter-spacing: -0.03em; }
+  .pierre h3 { color: var(--lime); }
+  .daniil h3 { color: var(--pink); }
+  .model p { margin: 0; font-size: 0.125in; line-height: 1.3; color: rgba(249,249,250,.78); }
+
+  .board { position: relative; z-index: 3; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.1in; }
+  .card {
+    background: rgba(249,249,250,.05); border: 1px solid rgba(149,183,71,.35);
+    padding: 0.12in 0.12in 0.14in; min-height: 1.35in;
+  }
+  .card.wide { grid-column: span 2; background: linear-gradient(90deg, rgba(250,74,158,.28), rgba(89,19,55,.7)); border-color: var(--pink); }
+  .card .n { font-family: var(--mono); font-size: 0.11in; color: var(--lime); letter-spacing: 0.12em; }
+  .card h4 { margin: 0.06in 0 0; font-size: 0.165in; line-height: 1.22; font-weight: 700; }
+  .card.wide h4 { font-family: var(--display); text-transform: uppercase; font-size: 0.28in; letter-spacing: -0.03em; }
+  .card.wide .n { color: var(--lime); }
+  .card .tag { display: inline-block; margin-top: 0.08in; font-family: var(--mono); font-size: 0.1in; background: var(--lime); color: var(--ink); padding: 0.03in 0.08in; font-weight: 700; letter-spacing: 0.06em; }
+
+  .prize {
+    position: relative; z-index: 3;
+    background: var(--olive); color: var(--ink); padding: 0.14in 0.18in; border-radius: 0.08in;
+  }
+  .prize h3 { margin: 0 0 0.04in; font-family: var(--mono); font-size: 0.11in; letter-spacing: 0.16em; text-transform: uppercase; }
+  .prize p { margin: 0; font-size: 0.175in; font-weight: 700; line-height: 1.25; }
+
+  .foot {
+    position: relative; z-index: 3;
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 0.14in;
+  }
+  .contact h5 { margin: 0 0 0.05in; font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--pink); }
+  .contact .line { font-size: 0.135in; line-height: 1.35; }
+  .contact code { font-family: var(--mono); font-size: 0.125in; color: var(--lime); }
+  .marks { display: flex; align-items: flex-end; gap: 0.08in; }
+  .logo-card {
+    background: #fff; border-radius: 0.06in; width: 1.55in; padding: 0.06in;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-card.sait { width: 1.28in; }
+  .logo-card img { width: 100%; height: auto; display: block; }
+  .qr { width: 1.12in; text-align: center; }
+  .qr .box { background: #fff; border-radius: 0.06in; padding: 0.05in; width: 1.12in; height: 1.12in; }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr .cap { font-family: var(--mono); font-size: 0.085in; letter-spacing: 0.1em; text-transform: uppercase; color: var(--lime); margin-top: 0.04in; }
+
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    body { background: #fff; padding: 0; display: block; }
+    .toolbar { display: none; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+  <a href="Halt%20%26%20Restart%20Poster%20v3%20Arcade%20(11%C3%9717).pdf">Open PDF</a>
+  <a href="halt-restart.html">v1</a>
+  <a href="halt-restart-v2.html">v2</a>
+</div>
+<div class="stage" id="stage">
+<div class="poster">
+  <div class="jelly-bg" aria-hidden="true"></div>
+
+  <section class="ticket">
+    <div><h3>When</h3><div class="big">Fri Sept 18</div><div class="sub">3:00 – 5:00 PM</div></div>
+    <div><h3>Where</h3><div class="big">Location TBD</div><div class="sub">SAIT campus · Calgary · Discord for room</div></div>
+    <div><h3>Type</h3><div class="big">Student Club</div><div class="sub">All programs · drop in</div></div>
+    <div class="type">Admit one<br>prompter</div>
+  </section>
+
+  <section class="top">
+    <div>
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div class="brand-name">Unnatural<br>Intelligence<small>SAIT student club · Saitsa</small></div>
+      </div>
+      <h1 class="title"><span class="l1">Halt <span class="amp">&amp;</span></span><span class="l2">Restart</span></h1>
+      <p class="purpose">Purpose: a live prompting lab. You are the <strong>Prompter</strong>. <em>Pierre</em> and <em>Daniil</em> are the rival AIs. Write hyper-specific instructions. If the model drifts, halt and restart. Adapt to the AI.</p>
+    </div>
+    <div class="jelly-hero" aria-hidden="true"></div>
+  </section>
+
+  <section class="mid">
+    <div class="spine">
+      <article class="step"><div class="n">01</div><h4>Pick a rival</h4><p>Walk up to Pierre or Daniil. One model per attempt. They only hear the prompt you speak.</p></article>
+      <article class="step"><div class="n">02</div><h4>Write it tight</h4><p>Name the objects, order, grip, and stop point. Implied common sense does not count.</p></article>
+      <article class="step"><div class="n">03</div><h4>They execute</h4><p>The AI performs the physical task as prompted. Do not grab the props unless you halt.</p></article>
+      <article class="step"><div class="n">04</div><h4>Halt. Restart.</h4><p>If it is not doing the task as intended, say HALT. Freeze. Rewrite. Restart from a clean prompt.</p></article>
+      <article class="step"><div class="n">05</div><h4>Adapt. Win.</h4><p>Each model behaves differently. Change your instructions to match.</p></article>
+    </div>
+    <div class="models">
+      <article class="model pierre">
+        <div class="face"><i></i></div>
+        <div>
+          <div class="ver">Model 01 · v0.9-eager</div>
+          <h3>Pierre</h3>
+          <p><b>Starts before you finish the sentence.</b> Fast, cheerful, and likely to complete a nearby task that was not the task.</p>
+        </div>
+      </article>
+      <article class="model daniil">
+        <div class="face"><i></i></div>
+        <div>
+          <div class="ver">Model 02 · v0.9-literal</div>
+          <h3>Daniil</h3>
+          <p><b>Follows the prompt word for word.</b> Will not infer missing steps. Vague verbs get the most literal reading in the room.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="board">
+    <article class="card"><div class="n">T01</div><h4>Move a ping pong ball from Cup A to be inside Cup B</h4></article>
+    <article class="card"><div class="n">T02</div><h4>Pick up a napkin with chopsticks</h4></article>
+    <article class="card"><div class="n">T03</div><h4>Stack 6 items so they stand for 10 seconds</h4></article>
+    <article class="card"><div class="n">T04</div><h4>Sort 5 objects by size, shape, weight, or colour</h4></article>
+    <article class="card wide"><div class="n">T05 · Grand prize</div><h4>Draw a jellyfish</h4><span class="tag">$25 gift card</span></article>
+  </section>
+
+  <section class="prize">
+    <h3>Prizes</h3>
+    <p>Edible eyeballs (candy!), fun polaroids, stickers and a $25 giftcard for the best prompter!</p>
+  </section>
+
+  <footer class="foot">
+    <div class="contact">
+      <h5>Show up · Contact</h5>
+      <div class="line"><b>Unnatural Intelligence</b> — SAIT student club</div>
+      <div class="line">Email <code id="contact-email"></code></div>
+      <div class="line">Discord <code id="contact-discord"></code></div>
+    </div>
+    <div class="marks">
+      <div class="logo-card"><img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs"></div>
+      <div class="logo-card sait"><img src="assets/sait-logo.png" alt="SAIT"></div>
+      <div class="qr"><div class="box" id="qr"></div><div class="cap">Scan Discord</div></div>
+    </div>
+  </footer>
+</div>
+</div>
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: "unnaturalintelligencesait@gmail.com",
+  contactDiscord: "discord.gg/hcsQFRNUEa",
+  qrUrl: "https://discord.gg/hcsQFRNUEa"
+});
+</script>
+</body>
+</html>

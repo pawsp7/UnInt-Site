@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 80" preserveAspectRatio="none" role="img" aria-label="Glitch bars" fill="none">
+  <rect x="6" y="8" width="82" height="6" fill="#7EC8FF"/>
+  <rect x="18" y="18" width="82" height="6" fill="#FA4A9E"/>
+  <rect x="12" y="28" width="88" height="6" fill="#F9F9FA"/>
+  <rect x="16" y="38" width="84" height="6" fill="#BAF837"/>
+  <rect x="7" y="48" width="83" height="6" fill="#FA4A9E"/>
+  <rect x="15" y="58" width="85" height="6" fill="#7EC8FF"/>
+</svg>

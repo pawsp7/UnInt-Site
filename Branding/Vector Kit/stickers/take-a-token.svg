@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Take a token" fill="none">
+  <defs>
+    <linearGradient id="uni-jelly" x1="10%" y1="4%" x2="90%" y2="92%" gradientUnits="objectBoundingBox">
+    <stop offset="0%" stop-color="#BAF837"/>
+    <stop offset="42%" stop-color="#BAF837"/>
+    <stop offset="58%" stop-color="#FA4A9E"/>
+    <stop offset="100%" stop-color="#FA4A9E"/>
+  </linearGradient>
+    <pattern id="tok" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M28 0H0V28" fill="none" stroke="#95B747" stroke-width="1" opacity="0.28"/>
+    </pattern>
+    <clipPath id="tok-clip"><rect width="400" height="400" rx="200.0"/></clipPath>
+  </defs>
+  <g clip-path="url(#tok-clip)">
+    <rect width="400" height="400" fill="#030205"/>
+    <rect width="400" height="400" fill="url(#tok)"/>
+  </g>
+  <g transform="translate(200.00 176.00) scale(4.1000) translate(-32.00 -32.00)">
+
+  <circle cx="32" cy="32" r="18" fill="none" stroke="#BAF837" stroke-width="3"/>
+  <rect x="24" y="24" width="16" height="16" rx="3" fill="none" stroke="#FA4A9E" stroke-width="2.5"/>
+  <circle cx="32" cy="32" r="3" fill="#BAF837"/>
+  </g>
+  <g transform="translate(120.8 304.0)">  <path fill="#F9F9FA" d="M4.27 0V-11.11H0.83V-13.14H9.97V-11.11H6.53V0Z M13.83 0 17.14 -13.14H20.04L23.37 0H21.07L20.35 -3.19H16.85L16.13 0ZM17.27 -5.02H19.93L19.14 -8.55Q18.94 -9.43 18.8 -10.14Q18.65 -10.85 18.6 -11.18Q18.55 -10.85 18.4 -10.14Q18.26 -9.43 18.06 -8.57Z M27.77 0V-13.14H30.02V-7.78H31.57L34.07 -13.14H36.5L33.55 -6.88L36.64 0H34.14L31.55 -5.81H30.02V0Z M41.18 0V-13.14H49.07V-11.16H43.4V-7.74H48.44V-5.83H43.4V-1.98H49.07V0Z M66.63 0 69.94 -13.14H72.84L76.17 0H73.87L73.15 -3.19H69.65L68.93 0ZM70.07 -5.02H72.73L71.94 -8.55Q71.74 -9.43 71.6 -10.14Q71.45 -10.85 71.4 -11.18Q71.35 -10.85 71.2 -10.14Q71.06 -9.43 70.86 -8.57Z M96.67 0V-11.11H93.23V-13.14H102.37V-11.11H98.93V0Z M111 0.18Q109.11 0.18 108 -0.9Q106.9 -1.98 106.9 -3.89V-9.25Q106.9 -11.16 108 -12.24Q109.11 -13.32 111 -13.32Q112.89 -13.32 114 -12.24Q115.1 -11.16 115.1 -9.27V-3.89Q115.1 -1.98 114 -0.9Q112.89 0.18 111 0.18ZM111 -1.8Q111.92 -1.8 112.39 -2.29Q112.85 -2.79 112.85 -3.71V-9.43Q112.85 -10.35 112.39 -10.84Q111.92 -11.34 111 -11.34Q110.08 -11.34 109.61 -10.84Q109.15 -10.35 109.15 -9.43V-3.71Q109.15 -2.79 109.61 -2.29Q110.08 -1.8 111 -1.8Z M120.17 0V-13.14H122.42V-7.78H123.97L126.47 -13.14H128.9L125.95 -6.88L129.04 0H126.54L123.95 -5.81H122.42V0Z M133.58 0V-13.14H141.47V-11.16H135.8V-7.74H140.84V-5.83H135.8V-1.98H141.47V0Z M146.5 0V-13.14H149.25L152.9 -2.52Q152.85 -3.1 152.8 -3.88Q152.74 -4.66 152.7 -5.47Q152.65 -6.28 152.65 -6.91V-13.14H154.7V0H151.95L148.33 -10.62Q148.37 -10.1 148.42 -9.36Q148.48 -8.62 148.51 -7.85Q148.55 -7.07 148.55 -6.43V0Z"/></g>
+</svg>

@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Halt &amp; Restart — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; font-style: normal; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; }
+
+  :root {
+    --paper: #F9F9FA;
+    --olive: #95B747;
+    --ink: #030205;
+    --pink: #FA4A9E;
+    --wine: #591337;
+    --lime: #BAF837;
+    --muted: rgba(249, 249, 250, 0.72);
+    --display: "Inter Display", "Inter", "Helvetica Neue", Arial, sans-serif;
+    --sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; min-height: 100%; }
+
+  body {
+    background: #12040c;
+    background-image:
+      radial-gradient(circle at 12% 8%, rgba(250, 74, 158, 0.18), transparent 42%),
+      radial-gradient(circle at 88% 92%, rgba(186, 248, 55, 0.14), transparent 46%);
+    font-family: var(--sans);
+    color: var(--paper);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: auto;
+    padding: 72px 24px 48px;
+  }
+
+  .toolbar {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    gap: 10px;
+    z-index: 20;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .toolbar button {
+    cursor: pointer;
+    border: 1px solid rgba(186, 248, 55, 0.45);
+    background: rgba(3, 2, 5, 0.88);
+    color: var(--lime);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font: inherit;
+    letter-spacing: 0.04em;
+  }
+  .toolbar button:hover { background: rgba(186, 248, 55, 0.14); }
+
+  .stage {
+    width: 11in;
+    height: 17in;
+    flex: 0 0 auto;
+    transform-origin: top center;
+    filter: drop-shadow(0 28px 50px rgba(0, 0, 0, 0.55));
+  }
+
+  .poster {
+    position: relative;
+    width: 11in;
+    height: 17in;
+    overflow: hidden;
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.4in 0.46in 0.36in;
+    gap: 0.16in;
+  }
+
+  .poster::before {
+    content: "";
+    position: absolute;
+    inset: 0.16in;
+    border: 0.018in solid rgba(186, 248, 55, 0.28);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .bg { position: absolute; inset: 0; pointer-events: none; }
+  .bg .wash-a {
+    position: absolute;
+    width: 8.2in; height: 8.2in;
+    left: -3.1in; top: -2.6in;
+    background: radial-gradient(circle, rgba(250, 74, 158, 0.28), transparent 68%);
+  }
+  .bg .wash-b {
+    position: absolute;
+    width: 8.6in; height: 8.6in;
+    right: -3.4in; top: 4.2in;
+    background: radial-gradient(circle, rgba(186, 248, 55, 0.16), transparent 66%);
+  }
+  .bg .wash-c {
+    position: absolute;
+    width: 6.4in; height: 6.4in;
+    left: -1.8in; bottom: -2.4in;
+    background: radial-gradient(circle, rgba(89, 19, 55, 0.9), transparent 70%);
+  }
+  .bg .grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(186, 248, 55, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(186, 248, 55, 0.05) 1px, transparent 1px);
+    background-size: 0.28in 0.28in;
+    mask-image: radial-gradient(ellipse at 50% 28%, black 22%, transparent 78%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 28%, black 22%, transparent 78%);
+  }
+  .jelly-ghost {
+    position: absolute;
+    background: var(--pink);
+    -webkit-mask: url("assets/jellyfish.png") center / contain no-repeat;
+    mask: url("assets/jellyfish.png") center / contain no-repeat;
+    opacity: 0.12;
+  }
+  .jelly-ghost.a { width: 6.4in; height: 6.4in; right: -1.5in; top: 1.05in; background: var(--lime); opacity: 0.14; }
+  .jelly-ghost.b { width: 2.4in; height: 2.4in; left: -0.35in; bottom: 3.4in; background: var(--olive); opacity: 0.22; transform: rotate(-18deg); }
+
+  .header, .hero, .models, .rules, .tasks, .meta, .footer { position: relative; z-index: 3; }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.2in;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.16in;
+  }
+  .brand-mark {
+    width: 0.72in;
+    height: 0.72in;
+    background: var(--lime);
+    -webkit-mask: url("assets/jellyfish.png") center / 86% no-repeat;
+    mask: url("assets/jellyfish.png") center / 86% no-repeat;
+    flex: 0 0 auto;
+  }
+  .brand-name {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 0.28in;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    line-height: 0.92;
+  }
+  .brand-name small {
+    display: block;
+    margin-top: 0.05in;
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 0.105in;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+  }
+  .sys {
+    font-family: var(--mono);
+    font-size: 0.105in;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: right;
+    color: var(--muted);
+    line-height: 1.55;
+    border: 1px solid rgba(250, 74, 158, 0.45);
+    padding: 0.08in 0.14in;
+    background: rgba(89, 19, 55, 0.55);
+  }
+  .sys b { color: var(--pink); font-weight: 700; }
+
+  .hero {
+    position: relative;
+    min-height: 4.55in;
+    padding-right: 3.1in;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.135in;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--lime);
+    display: flex;
+    align-items: center;
+    gap: 0.12in;
+    margin-bottom: 0.14in;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 0.42in;
+    height: 0.04in;
+    background: linear-gradient(90deg, var(--lime), var(--pink));
+  }
+  .title {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.22in;
+    line-height: 0.88;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+  }
+  .title .l1 { display: block; color: var(--lime); }
+  .title .amp {
+    color: var(--pink);
+    font-style: normal;
+    -webkit-text-stroke: 0;
+  }
+  .title .l2 {
+    display: block;
+    color: transparent;
+    -webkit-text-stroke: 0.026in var(--paper);
+  }
+  .tagline {
+    margin: 0.2in 0 0;
+    font-size: 0.21in;
+    line-height: 1.28;
+    font-weight: 500;
+    max-width: 6.4in;
+  }
+  .tagline strong { color: var(--lime); font-weight: 700; }
+  .tagline em { color: var(--pink); font-style: normal; font-weight: 700; }
+
+  .hero-art {
+    position: absolute;
+    right: -0.15in;
+    top: 0.05in;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .hero-jelly {
+    width: 3.55in;
+    height: 3.55in;
+    background: var(--paper);
+    -webkit-mask: url("assets/jellyfish.png") center / contain no-repeat;
+    mask: url("assets/jellyfish.png") center / contain no-repeat;
+    filter: drop-shadow(0 0 0.18in rgba(250, 74, 158, 0.55));
+  }
+  .bubble {
+    font-family: var(--mono);
+    font-size: 0.115in;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    background: var(--lime);
+    padding: 0.08in 0.12in;
+    border-radius: 0.08in;
+    position: relative;
+    margin-bottom: 0.16in;
+    box-shadow: 0.05in 0.05in 0 var(--pink);
+  }
+  .bubble::after {
+    content: "";
+    position: absolute;
+    left: 0.55in;
+    bottom: -0.12in;
+    border: 0.08in solid transparent;
+    border-top-color: var(--lime);
+    border-bottom: 0;
+  }
+
+  .models {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.18in;
+  }
+  .model {
+    display: grid;
+    grid-template-columns: 0.95in 1fr;
+    gap: 0.14in;
+    align-items: center;
+    background: rgba(249, 249, 250, 0.04);
+    border: 1px solid rgba(249, 249, 250, 0.12);
+    border-radius: 0.1in;
+    padding: 0.16in 0.18in;
+  }
+  .model.pierre { border-color: rgba(186, 248, 55, 0.45); }
+  .model.daniil { border-color: rgba(250, 74, 158, 0.5); }
+  .model-face {
+    width: 0.95in;
+    height: 0.95in;
+    border-radius: 50%;
+    background: var(--wine);
+    display: grid;
+    place-items: center;
+  }
+  .model-face i {
+    display: block;
+    width: 0.78in;
+    height: 0.78in;
+    -webkit-mask: url("assets/jellyfish.png") center / contain no-repeat;
+    mask: url("assets/jellyfish.png") center / contain no-repeat;
+  }
+  .pierre .model-face i { background: var(--lime); }
+  .daniil .model-face i { background: var(--pink); }
+  .model h3 {
+    margin: 0 0 0.04in;
+    font-family: var(--display);
+    font-size: 0.3in;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .model .ver {
+    font-family: var(--mono);
+    font-size: 0.1in;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.06in;
+  }
+  .pierre h3 { color: var(--lime); }
+  .daniil h3 { color: var(--pink); }
+  .model p {
+    margin: 0;
+    font-size: 0.135in;
+    line-height: 1.32;
+    color: var(--muted);
+  }
+  .model p b { color: var(--paper); font-weight: 600; }
+
+  .rules {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.1in;
+  }
+  .rule {
+    background: rgba(249, 249, 250, 0.035);
+    border-top: 0.04in solid var(--olive);
+    padding: 0.14in 0.12in 0.16in;
+    min-height: 1.72in;
+  }
+  .rule:nth-child(2n) { border-top-color: var(--pink); }
+  .rule:nth-child(3n) { border-top-color: var(--lime); }
+  .rule .n {
+    font-family: var(--mono);
+    font-size: 0.11in;
+    letter-spacing: 0.16em;
+    color: var(--lime);
+    margin-bottom: 0.08in;
+  }
+  .rule h4 {
+    margin: 0 0 0.08in;
+    font-family: var(--display);
+    font-size: 0.175in;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    line-height: 1.05;
+  }
+  .rule p {
+    margin: 0;
+    font-size: 0.125in;
+    line-height: 1.32;
+    color: var(--muted);
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: 1.35fr 0.9fr;
+    gap: 0.18in;
+    align-items: stretch;
+  }
+  .panel {
+    background: rgba(249, 249, 250, 0.04);
+    border: 1px solid rgba(149, 183, 71, 0.28);
+    border-radius: 0.1in;
+    padding: 0.18in 0.2in 0.2in;
+  }
+  .panel.prize {
+    background: linear-gradient(180deg, rgba(250, 74, 158, 0.22), rgba(89, 19, 55, 0.55));
+    border-color: rgba(250, 74, 158, 0.5);
+  }
+  .kicker {
+    margin: 0 0 0.12in;
+    font-family: var(--mono);
+    font-size: 0.115in;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--olive);
+  }
+  .panel.prize .kicker { color: var(--lime); }
+  .tasks ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.08in;
+  }
+  .tasks li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.1in;
+    align-items: baseline;
+    font-size: 0.155in;
+    line-height: 1.3;
+  }
+  .tasks li code {
+    font-family: var(--mono);
+    font-size: 0.11in;
+    color: var(--ink);
+    background: var(--lime);
+    padding: 0.02in 0.07in;
+    border-radius: 0.03in;
+  }
+  .tasks li.grand code {
+    background: var(--pink);
+    color: var(--paper);
+  }
+  .tasks li.grand small {
+    display: block;
+    margin-top: 0.02in;
+    font-family: var(--mono);
+    font-size: 0.1in;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--pink);
+  }
+  .prize h3 {
+    margin: 0 0 0.1in;
+    font-family: var(--display);
+    font-size: 0.34in;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    line-height: 0.95;
+  }
+  .prize p {
+    margin: 0;
+    font-size: 0.15in;
+    line-height: 1.35;
+    color: var(--muted);
+  }
+  .prize p b { color: var(--paper); }
+
+  .meta {
+    display: grid;
+    grid-template-columns: 1.1fr 1.2fr 0.9fr;
+    gap: 0.16in;
+    background: var(--lime);
+    color: var(--ink);
+    border-radius: 0.1in;
+    padding: 0.18in 0.22in;
+  }
+  .meta h3 {
+    margin: 0 0 0.06in;
+    font-family: var(--mono);
+    font-size: 0.105in;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .meta .big {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 0.32in;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .meta .sub {
+    margin-top: 0.05in;
+    font-size: 0.14in;
+    font-weight: 600;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 0.14in;
+  }
+  .marks {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.1in;
+    flex: 0 0 auto;
+  }
+  .logo-card {
+    background: #fff;
+    border-radius: 0.06in;
+    width: 2.05in;
+    height: auto;
+    padding: 0.07in 0.08in;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+  }
+  .logo-card.sait { width: 1.7in; }
+  .logo-card svg,
+  .logo-card img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    display: block;
+  }
+  .contact { min-width: 0; flex: 1; }
+  .contact h5 {
+    margin: 0 0 0.08in;
+    font-family: var(--mono);
+    font-size: 0.115in;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--pink);
+  }
+  .contact .line { font-size: 0.155in; line-height: 1.4; }
+  .contact .line b { font-weight: 700; }
+  .contact .line span { color: var(--muted); }
+  .contact code { font-family: var(--mono); font-size: 0.145in; color: var(--lime); }
+  .fine {
+    margin-top: 0.08in;
+    font-family: var(--mono);
+    font-size: 0.095in;
+    letter-spacing: 0.04em;
+    color: rgba(249, 249, 250, 0.48);
+    line-height: 1.45;
+  }
+  .qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.05in;
+    width: 1.28in;
+    flex: 0 0 auto;
+  }
+  .qr .box {
+    background: #fff;
+    padding: 0.06in;
+    border-radius: 0.08in;
+    width: 1.28in;
+    height: 1.28in;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr .cap {
+    font-family: var(--mono);
+    font-size: 0.1in;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lime);
+    text-align: center;
+  }
+
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    body { background: #fff; display: block; overflow: visible; padding: 0; }
+    .toolbar { display: none; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+  <a href="Halt%20%26%20Restart%20Poster%20(11%C3%9717).pdf" style="color:inherit;text-decoration:none;border:1px solid rgba(186,248,55,.45);background:rgba(3,2,5,.88);color:#BAF837;padding:8px 12px;letter-spacing:.04em">Open PDF</a>
+  <button type="button" onclick="location.href='halt-restart-v2.html'">v2 paper</button>
+  <button type="button" onclick="location.href='halt-restart-v3.html'">v3 arcade</button>
+</div>
+
+<div class="stage" id="stage">
+<div class="poster" id="poster">
+
+  <div class="bg" aria-hidden="true">
+    <div class="wash-a"></div>
+    <div class="wash-b"></div>
+    <div class="wash-c"></div>
+    <div class="grid"></div>
+    <div class="jelly-ghost a"></div>
+    <div class="jelly-ghost b"></div>
+  </div>
+
+  <header class="header">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <div class="brand-name">
+        Unnatural<br>Intelligence
+        <small>Generated by AI · Perfected by humans</small>
+      </div>
+    </div>
+    <div class="sys">
+      <b>system</b> models=pierre,daniil<br>
+      mode=physical_execution<br>
+      on_error=<b>HALT → RESTART</b>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Student Club · Live prompting lab · Fall 2026</div>
+      <h1 class="title">
+        <span class="l1">Halt <span class="amp">&amp;</span></span>
+        <span class="l2">Restart</span>
+      </h1>
+      <p class="tagline">
+        You are the <strong>Prompter</strong>. <em>Pierre</em> and <em>Daniil</em> are the AIs.
+        Write hyper-specific instructions. If the model drifts, halt it and start over.
+        Adapt to the AI. The tightest prompt takes the prize.
+      </p>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="bubble">specify or it will improvise</div>
+      <div class="hero-jelly"></div>
+    </div>
+  </section>
+
+  <section class="models">
+    <article class="model pierre">
+      <div class="model-face"><i></i></div>
+      <div>
+        <div class="ver">Model 01 · v0.9-clarifier</div>
+        <h3>Pierre</h3>
+        <p><b>Will not move until every noun is defined.</b> Be clear, be specific. If you say “it,” he waits for a name.</p>
+      </div>
+    </article>
+    <article class="model daniil">
+      <div class="model-face"><i></i></div>
+      <div>
+        <div class="ver">Model 02 · v0.9-literal</div>
+        <h3>Daniil</h3>
+        <p><b>Follows the prompt word for word.</b> Will not infer missing steps. Vague verbs get the most literal reading in the room.</p>
+      </div>
+    </article>
+  </section>
+
+  <section class="rules">
+    <article class="rule">
+      <div class="n">01</div>
+      <h4>Pick an AI</h4>
+      <p>Walk up to Pierre or Daniil. They only hear the prompt you speak.</p>
+    </article>
+    <article class="rule">
+      <div class="n">02</div>
+      <h4>Write it tight</h4>
+      <p>Name the objects, order, grip, and stop point. Implied common sense does not exist.</p>
+    </article>
+    <article class="rule">
+      <div class="n">03</div>
+      <h4>They execute</h4>
+      <p>The AI perform the physical task as prompted.</p>
+    </article>
+    <article class="rule">
+      <div class="n">04</div>
+      <h4>Halt. Restart.</h4>
+      <p>If they are not doing the task as intended, say <b style="color:#FA4A9E">HALT</b>. Freeze. Rewrite. Restart.</p>
+    </article>
+    <article class="rule">
+      <div class="n">05</div>
+      <h4>Adapt. Win.</h4>
+      <p>Each model behaves differently. Change your instructions to match. When a judge calls success — you get a prize.</p>
+    </article>
+  </section>
+
+  <div class="split">
+    <section class="panel tasks">
+      <p class="kicker">Task queue · five physical tasks</p>
+      <ul>
+        <li><code>T01</code> Move a ping pong ball from one cup to another</li>
+        <li><code>T02</code> Put the duck in his home</li>
+        <li><code>T03</code> Sort 5 objects by size - without describing size</li>
+        <li><code>T04</code> Pick up a napkin with chopsticks</li>
+        <li class="grand"><code>T05</code> <span>Draw a jellyfish<small>Grand prize · $25 gift card</small></span></li>
+      </ul>
+    </section>
+    <section class="panel prize">
+      <p class="kicker">Prize on success</p>
+      <h3>Prizes</h3>
+      <p>Edible eyeballs (candy!) </p>
+        <p>Fun polaroids </p> 
+        <p>Stickers</p>
+        <p>AND a <b>$25 giftcard</b> for the best prompter!</p>
+    </section>
+  </div>
+
+  <section class="meta">
+    <div>
+      <h3>When</h3>
+      <div class="big">Fri Sept 18</div>
+      <div class="sub">4:00 – 7:00 PM</div>
+    </div>
+    <div>
+      <h3>Where</h3>
+      <div class="big">Location</div>
+      <div class="sub">SAIT Campus · Heritage Hall · AA128</div>
+    </div>
+    <div>
+      <h3>Type</h3>
+      <div class="big">Student Club</div>
+      <div class="sub">All programs · No coding · Drop-in</div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="contact">
+      <h5>· Contact</h5>
+      <div class="line"><b>Unnatural Intelligence</b> <span>— SAIT student club</span></div>
+      <div class="line"><span>Email</span> <code id="contact-email"></code></div>
+      <div class="line"><span>Discord</span> <code id="contact-discord"></code></div>
+      <p class="fine">
+        Bring a voice and creativity, not a laptop.
+        <br>
+        Explore and learn about AI, with the model standing right infront of you.</p>
+      
+    </div>
+    <div class="marks">
+      <div class="logo-card">
+        <img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs">
+      </div>
+      <div class="logo-card sait">
+        <img src="assets/sait-logo.png" alt="SAIT">
+      </div>
+      <div class="qr">
+        <div class="box" id="qr"></div>
+        <div class="cap">Scan Discord</div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</div>
+
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: "unnaturalintelligencesait@gmail.com",
+  contactDiscord: "discord.gg/hcsQFRNUEa",
+  qrUrl: "https://discord.gg/hcsQFRNUEa"
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 248" role="img" aria-label="Unnatural Intelligence jellyfish (simplified)" fill="none">
+  <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <path stroke-width="11" d="M38 98 C38 42 68 26 100 26 C132 26 162 42 162 98"/>
+    <path stroke-width="11" d="M38 98 Q48 124 58 100 Q70 128 84 98 Q100 126 116 98 Q130 128 142 100 Q152 124 162 98"/>
+    <path stroke-width="9" d="M48 120 C28 140 24 164 38 182 C46 194 38 204 28 210"/>
+    <path stroke-width="8" d="M64 132 C48 158 46 184 58 202 C64 212 52 222 44 226"/>
+    <path stroke-width="7" d="M80 146 C74 172 72 192 78 208"/>
+    <path stroke-width="11" d="M94 148 C88 188 84 218 92 230 C96 236 86 238 80 236"/>
+    <path stroke-width="11" d="M106 148 C112 188 116 218 108 230 C104 236 114 238 120 236"/>
+    <path stroke-width="7" d="M120 146 C126 172 128 192 122 208"/>
+    <path stroke-width="8" d="M136 132 C152 158 154 184 142 202 C136 212 148 222 156 226"/>
+    <path stroke-width="9" d="M152 120 C172 140 176 164 162 182 C154 194 162 204 172 210"/>
+  </g>
+</svg>
