@@ -1,0 +1,86 @@
+@font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+@font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+@font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+@font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+@font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+@font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+@font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+:root {
+  --paper: #F9F9FA;
+  --olive: #95B747;
+  --ink: #030205;
+  --pink: #FA4A9E;
+  --wine: #591337;
+  --lime: #BAF837;
+  --cyan: #7EC8FF;
+  --muted: rgba(249, 249, 250, 0.72);
+  --display: "Inter Display", Inter, sans-serif;
+  --sans: Inter, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  background: #12040c;
+  font-family: var(--sans);
+  color: var(--paper);
+}
+img { max-width: 100%; }
+
+.toolbar {
+  position: fixed; top: 16px; right: 16px; z-index: 20;
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;
+  max-width: min(640px, calc(100vw - 32px));
+  font-family: var(--mono); font-size: 12px;
+}
+.toolbar a, .toolbar button {
+  cursor: pointer; text-decoration: none;
+  border: 1px solid rgba(186, 248, 55, 0.45);
+  background: rgba(3, 2, 5, 0.9); color: var(--lime);
+  padding: 8px 12px; font: inherit;
+}
+
+.stage {
+  flex: 0 0 auto;
+  transform-origin: top center;
+  filter: drop-shadow(0 28px 50px rgba(0, 0, 0, 0.55));
+}
+
+.wave {
+  display: flex; align-items: flex-end; gap: 0.045in; height: 0.72in;
+}
+.wave span {
+  flex: 1 1 auto;
+  min-width: 0;
+  background: var(--lime);
+  border-radius: 0.03in 0.03in 0 0;
+  display: block;
+}
+.wave span:nth-child(odd) { background: var(--pink); }
+.wave span:nth-child(3n) { background: var(--cyan); }
+
+.logo-card {
+  background: #fff; border-radius: 0.05in;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0.05in 0.06in;
+}
+.logo-card img { width: 1.35in; height: auto; display: block; }
+.logo-card.sait img { width: 1.05in; }
+.qr { text-align: center; }
+.qr .box {
+  background: #fff; border-radius: 0.05in; padding: 0.04in;
+  width: 1.02in; height: 1.02in;
+}
+.qr .box svg { width: 100%; height: 100%; display: block; }
+.qr .cap {
+  font-family: var(--mono); font-size: 0.08in; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--lime); margin-top: 0.04in;
+}
+
+@media print {
+  body { background: #fff; padding: 0 !important; display: block !important; }
+  .toolbar { display: none !important; }
+  .stage { transform: none !important; margin: 0 !important; filter: none !important; }
+}

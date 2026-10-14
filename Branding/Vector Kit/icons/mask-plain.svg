@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Human finish icon" fill="none">
+
+  <path d="M16 40 C16 20 48 20 48 40 C48 50 40 54 32 54 C24 54 16 50 16 40Z" fill="#030205" stroke="#F9F9FA" stroke-width="2"/>
+  <path d="M32 22 V54" stroke="#F9F9FA" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="24" cy="36" r="3" fill="#BAF837"/>
+  <circle cx="40" cy="36" r="3" fill="#FA4A9E"/>
+</svg>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Eye icon" fill="none">
+  <rect width="64" height="64" rx="14" fill="#030205"/>
+  <path d="M8 32 C16 18 48 18 56 32 C48 46 16 46 8 32Z" fill="#7EC8FF"/>
+  <circle cx="32" cy="32" r="10" fill="#030205"/>
+  <circle cx="32" cy="32" r="6" fill="#BAF837"/>
+  <circle cx="35" cy="29" r="2" fill="#F9F9FA"/>
+</svg>

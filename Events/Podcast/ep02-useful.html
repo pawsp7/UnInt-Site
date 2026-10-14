@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>So Useful — podcast poster — Unnatural Intelligence</title>
+<link rel="stylesheet" href="kit.css">
+<style>
+  body { display: flex; justify-content: center; padding: 72px 24px 48px; color: var(--ink); }
+  .stage { width: 11in; height: 17in; }
+
+  .poster {
+    position: relative;
+    width: 11in; height: 17in; overflow: hidden;
+    background: var(--paper); color: var(--ink);
+    display: flex; flex-direction: column;
+  }
+  .head {
+    background: var(--ink); color: var(--paper);
+    display: flex; align-items: center; gap: 0.14in;
+    padding: 0.26in 0.4in;
+  }
+  .head img.mark { width: 0.62in; height: 0.68in; object-fit: contain; }
+  .club {
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 0.26in; line-height: 0.88; letter-spacing: -0.03em;
+  }
+  .club small {
+    display: block; margin-top: 0.05in;
+    font-family: var(--mono); font-weight: 400; font-size: 0.1in;
+    letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase;
+  }
+  .chip {
+    margin-left: auto;
+    background: var(--lime); color: var(--ink);
+    font-family: var(--mono); font-weight: 700; font-size: 0.13in;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.1in 0.14in;
+  }
+
+  .body {
+    flex: 1; display: flex; flex-direction: column; gap: 0.16in;
+    padding: 0.28in 0.42in 0.22in;
+    position: relative;
+  }
+  .kicker {
+    margin: 0;
+    font-family: var(--mono); font-size: 0.12in; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--wine);
+  }
+  .title {
+    margin: 0;
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 2.05in; line-height: 0.76; letter-spacing: -0.06em;
+    position: relative; z-index: 1;
+  }
+  .title .so { display: block; color: var(--ink); }
+  .title .useful {
+    display: block; color: var(--pink);
+    font-size: 1.85in;
+  }
+  .lead {
+    margin: 0; max-width: 8.2in;
+    font-size: 0.22in; line-height: 1.28; font-weight: 500;
+    position: relative; z-index: 1;
+  }
+  .lead em { font-style: normal; font-weight: 700; color: var(--wine); }
+  .lead strong { color: var(--pink); }
+
+  .stamp {
+    position: absolute; right: 0.36in; top: 1.55in; z-index: 2;
+    width: 1.85in; height: 1.85in; border-radius: 50%;
+    border: 0.055in solid var(--ink);
+    background: var(--lime);
+    display: grid; place-items: center;
+    transform: rotate(14deg);
+    text-align: center;
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 0.28in; line-height: 0.86; letter-spacing: -0.03em;
+    box-shadow: 0.08in 0.08in 0 var(--pink);
+  }
+  .stamp small {
+    display: block; margin-top: 0.04in;
+    font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.08em; font-weight: 700;
+  }
+
+  .playlist {
+    background: var(--ink); color: var(--paper);
+    border-radius: 0.1in;
+    padding: 0.08in 0.22in;
+    position: relative; z-index: 1;
+  }
+  .playlist header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 0.12in 0 0.04in;
+  }
+  .playlist header h2 {
+    margin: 0; font-family: var(--mono); font-size: 0.12in;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--lime);
+  }
+  .playlist header span { font-family: var(--mono); font-size: 0.11in; color: var(--pink); letter-spacing: 0.08em; }
+  .track {
+    display: grid; grid-template-columns: 0.72in 1fr auto; gap: 0.14in; align-items: center;
+    padding: 0.14in 0;
+    border-top: 1px solid rgba(249, 249, 250, 0.14);
+  }
+  .track .num {
+    font-family: var(--display); font-size: 0.4in; color: var(--lime); letter-spacing: -0.04em; line-height: 1;
+  }
+  .track h3 {
+    margin: 0;
+    font-family: var(--display); text-transform: uppercase;
+    font-size: 0.32in; letter-spacing: -0.03em; line-height: 0.95;
+  }
+  .track p { margin: 0.04in 0 0; font-size: 0.15in; line-height: 1.25; color: var(--muted); }
+  .track .side {
+    font-family: var(--mono); font-size: 0.11in; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--cyan); text-align: right;
+  }
+  .track img { width: 0.48in; height: 0.48in; display: block; justify-self: end; }
+
+  .quote {
+    margin: 0;
+    background: var(--lime); color: var(--ink);
+    padding: 0.14in 0.2in;
+    display: flex; align-items: center; justify-content: space-between; gap: 0.16in;
+  }
+  .quote p {
+    margin: 0;
+    font-family: var(--display); font-weight: 700;
+    font-size: 0.38in; letter-spacing: -0.03em; line-height: 0.95;
+    text-transform: lowercase;
+  }
+  .quote .wave { height: 0.48in; width: 2.6in; flex: 0 0 2.6in; }
+
+  .dock {
+    background: var(--ink); color: var(--paper);
+    padding: 0.18in 0.36in 0.2in;
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 0.16in;
+  }
+  .meta { display: grid; grid-template-columns: 1.3fr 1.7fr 1.2fr; gap: 0.14in; margin-bottom: 0.12in; }
+  .meta h3 {
+    margin: 0 0 0.03in;
+    font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pink);
+  }
+  .meta .big { font-family: var(--display); text-transform: uppercase; font-size: 0.22in; letter-spacing: -0.03em; line-height: 1; }
+  .meta .sub { margin-top: 0.03in; font-size: 0.12in; color: var(--muted); }
+  .contact { font-size: 0.13in; line-height: 1.35; }
+  .contact code { font-family: var(--mono); color: var(--lime); font-size: 0.12in; }
+  .marks { display: flex; align-items: flex-end; gap: 0.08in; }
+
+  @page { size: 11in 17in; margin: 0; }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+  <a href="index.html">All posters</a>
+  <a href="ep01-hate.html">E01</a>
+  <a href="ep03-finish.html">E03</a>
+  <a href="cards.html">Cards</a>
+</div>
+<div class="stage" id="stage" data-stage data-w="11" data-h="17">
+  <article class="poster">
+    <header class="head">
+      <img class="mark" src="assets/jellyfish-gradient.svg" alt="">
+      <div class="club">Unnatural<br>Intelligence<small>The podcast · SAIT student club</small></div>
+      <div class="chip">S01 · E02</div>
+    </header>
+
+    <div class="body">
+      <p class="kicker">I hate it, but — · episode 02 · the Tuesday one</p>
+      <h1 class="title"><span class="so">So</span><span class="useful">useful</span></h1>
+      <p class="lead">Purpose: take it out of the demo and <em>fold it into the week</em>. The email. The lab. The thing due at midnight. <strong>Workflow, not a slideshow.</strong></p>
+      <div class="stamp">Play it<small>on the bus</small></div>
+
+      <section class="playlist">
+        <header>
+          <h2>Upcoming track list</h2>
+          <span>No homework</span>
+        </header>
+        <article class="track">
+          <div class="num">01</div>
+          <div>
+            <h3>The email</h3>
+            <p>The one you already rewrote four times. Keep the point. Drop the robot voice.</p>
+          </div>
+          <img src="assets/bubble.svg" alt="">
+        </article>
+        <article class="track">
+          <div class="num">02</div>
+          <div>
+            <h3>The lab</h3>
+            <p>Use it on the assignment, then do the human pass before you hand it in.</p>
+          </div>
+          <img src="assets/prompt.svg" alt="">
+        </article>
+        <article class="track">
+          <div class="num">03</div>
+          <div>
+            <h3>The week</h3>
+            <p>If it only works in a workshop, it does not count. Put it on a Tuesday.</p>
+          </div>
+          <img src="assets/spark.svg" alt="">
+        </article>
+      </section>
+
+      <div class="quote">
+        <p>“i hate it but it’s so useful”</p>
+        <div class="wave" data-wave aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <footer class="dock">
+      <div>
+        <div class="meta">
+          <div><h3>Listen</h3><div class="big">Season 1</div><div class="sub">Upcoming</div></div>
+          <div><h3>Where</h3><div class="big">Club site</div><div class="sub">unnaturalintelligence.club</div></div>
+          <div><h3>Type</h3><div class="big">Podcast</div><div class="sub">Student club · free</div></div>
+        </div>
+        <div class="contact">
+          Email <code data-email id="contact-email"></code><br>
+          Discord <code data-discord id="contact-discord"></code>
+        </div>
+      </div>
+      <div class="marks">
+        <div class="logo-card"><img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs"></div>
+        <div class="logo-card sait"><img src="assets/sait-logo.png" alt="SAIT"></div>
+        <div class="qr"><div class="box" id="qr"></div><div class="cap">Scan Discord</div></div>
+      </div>
+    </footer>
+  </article>
+</div>
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: "unnaturalintelligencesait@gmail.com",
+  contactDiscord: "discord.gg/nYeCuXGa47",
+  qrUrl: "https://discord.gg/nYeCuXGa47"
+});
+</script>
+</body>
+</html>

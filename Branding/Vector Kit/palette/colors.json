@@ -1,0 +1,18 @@
+{
+  "paper": "#F9F9FA",
+  "olive": "#95B747",
+  "ink": "#030205",
+  "pink": "#FA4A9E",
+  "wine": "#591337",
+  "lime": "#BAF837",
+  "cyan": "#7EC8FF",
+  "gradient": {
+    "from": "#BAF837",
+    "to": "#FA4A9E"
+  },
+  "fonts": {
+    "display": "Inter Display",
+    "sans": "Inter",
+    "mono": "JetBrains Mono"
+  }
+}

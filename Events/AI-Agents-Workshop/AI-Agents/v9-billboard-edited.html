@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agents v9 — Billboard — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --paper: #F9F9FA; --olive: #95B747; --ink: #030205; --pink: #FA4A9E;
+    --wine: #591337; --lime: #BAF837; --cyan: #7EC8FF;
+    --muted: rgba(249,249,250,.72);
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; min-height: 100%; }
+  body { background: #12040c; font-family: var(--sans); color: var(--paper); display: flex; justify-content: center; padding: 72px 24px 48px; }
+  .toolbar { position: fixed; top: 16px; right: 16px; z-index: 20; display: flex; gap: 8px; font-family: var(--mono); font-size: 12px; }
+  .toolbar a, .toolbar button { cursor: pointer; text-decoration: none; border: 1px solid rgba(186,248,55,.45); background: rgba(3,2,5,.88); color: var(--lime); padding: 8px 12px; font: inherit; }
+  .stage { width: 11in; height: 17in; flex: 0 0 auto; transform-origin: top center; filter: drop-shadow(0 28px 50px rgba(0,0,0,.55)); }
+
+  .poster {
+    position: relative; width: 11in; height: 17in; overflow: hidden; background: var(--ink);
+    display: flex; flex-direction: column; justify-content: space-between;
+    padding: 0.28in 0 0;
+  }
+  .poster::before {
+    content: ""; position: absolute; inset: 0.14in 0.14in 0.14in 0.14in;
+    border: 0.016in solid rgba(186,248,55,.22); pointer-events: none; z-index: 4;
+  }
+  .glow {
+    position: absolute; pointer-events: none; z-index: 0;
+    width: 7in; height: 7in; right: -1.6in; top: 1.4in;
+    background: radial-gradient(circle, rgba(250,74,158,.22), transparent 68%);
+  }
+  .grid {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(186, 248, 55, 0.09) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(186, 248, 55, 0.09) 1px, transparent 1px);
+    background-size: 0.28in 0.28in;
+    mask-image: radial-gradient(ellipse at 50% 38%, black 38%, transparent 84%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 38%, black 38%, transparent 84%);
+  }
+  .head, .hero, .trio, .agenda, .dock { position: relative; z-index: 2; }
+
+  .head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 0.42in;
+  }
+  .brand { display: flex; align-items: center; gap: 0.12in; }
+  .brand img { width: 0.58in; height: 0.58in; display: block; }
+  .brand-name { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.22in; line-height: 0.9; letter-spacing: -0.03em; }
+  .brand-name small { display: block; margin-top: 0.04in; font-family: var(--mono); font-weight: 400; font-size: 0.09in; letter-spacing: 0.12em; color: var(--muted); }
+  .chip {
+    font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.12em; text-transform: uppercase;
+    background: var(--lime); color: var(--ink); padding: 0.08in 0.12in; font-weight: 700;
+  }
+
+  .hero {
+    padding: 0.06in 0.42in 0;
+    display: grid; grid-template-columns: minmax(0, 1fr) 3.55in;
+    gap: 0.18in; align-items: center;
+  }
+  .title {
+    margin: 0; font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 1.62in; line-height: 0.80; letter-spacing: -0.055em;
+  }
+  .title .l1 { color: var(--lime); }
+  .title .l2 { color: var(--pink); display: block; font-size: 1.28in; }
+  .title .l3 { display: block; color: transparent; -webkit-text-stroke: 0.02in var(--paper); font-size: 0.92in; margin-top: 0.05in; }
+  .purpose { margin: 0.16in 0 0; font-size: 0.175in; line-height: 1.28; max-width: 6.5in; }
+  .purpose em { color: var(--pink); font-style: normal; font-weight: 700; }
+  .purpose strong { color: var(--lime); }
+
+  .mascot-wrap {
+    width: 3.55in; height: 3.85in;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mascot {
+    width: 3.4in; height: 3.72in; object-fit: contain; object-position: center; display: block;
+    filter: drop-shadow(0 0 0.22in rgba(250,74,158,.4));
+  }
+
+  .trio {
+    padding: 0 0.42in;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.16in;
+  }
+  .card {
+    background: rgba(249,249,250,.05); border: 1px solid rgba(249,249,250,.16);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .card.a { border-color: rgba(126,200,255,.55); }
+  .card.b { border-color: rgba(186,248,55,.55); }
+  .card.c { border-color: rgba(250,74,158,.55); }
+  .card .body { padding: 0.16in 0.16in 0.14in; }
+  .card img { width: 0.72in; height: 0.72in; display: block; margin-bottom: 0.08in; }
+  .card .n { font-family: var(--mono); font-size: 0.08in; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+  .card h3 { margin: 0.04in 0 0.06in; font-family: var(--display); text-transform: uppercase; font-size: 0.34in; letter-spacing: -0.04em; line-height: 0.9; }
+  .card.a h3 { color: var(--cyan); }
+  .card.b h3 { color: var(--lime); }
+  .card.c h3 { color: var(--pink); }
+  .card p { margin: 0 0 0.08in; font-size: 0.135in; line-height: 1.28; color: var(--muted); }
+  .card ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.04in; }
+  .card li { font-size: 0.125in; font-weight: 600; color: var(--paper); padding-left: 0.14in; position: relative; }
+  .card li::before { content: ""; position: absolute; left: 0; top: 0.07in; width: 0.07in; height: 0.07in; }
+  .card.a li::before { background: var(--cyan); }
+  .card.b li::before { background: var(--lime); }
+  .card.c li::before { background: var(--pink); }
+  .card .dur {
+    margin: 0; font-family: var(--mono); font-size: 0.085in; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700;
+    padding: 0.09in 0.14in;
+  }
+  .card.a .dur { background: var(--cyan); color: var(--ink); }
+  .card.b .dur { background: var(--lime); color: var(--ink); }
+  .card.c .dur { background: var(--pink); color: var(--paper); }
+
+  .agenda { padding: 0 0.42in; }
+  .agenda-label {
+    font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--lime); margin: 0 0 0.14in;
+  }
+  .track {
+    position: relative;
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.12in;
+  }
+  .track::before {
+    content: ""; position: absolute; left: 8%; right: 8%; top: 0.22in; height: 0.03in;
+    background: linear-gradient(90deg, var(--lime), var(--pink)); opacity: 0.85;
+  }
+  .stop {
+    position: relative; z-index: 1;
+    background: rgba(249,249,250,.04);
+    border: 1px solid rgba(249,249,250,.12);
+    padding: 0.12in 0.1in 0.14in; text-align: center;
+    min-height: 1.55in;
+  }
+  .stop .dot {
+    width: 0.28in; height: 0.28in; margin: 0 auto 0.1in;
+    border-radius: 50%; background: var(--lime); color: var(--ink);
+    font-family: var(--mono); font-size: 0.1in; font-weight: 700;
+    display: grid; place-items: center;
+  }
+  .stop:nth-child(even) .dot { background: var(--pink); color: var(--paper); }
+  .stop .time { font-family: var(--mono); font-size: 0.085in; letter-spacing: 0.08em; color: var(--lime); text-transform: uppercase; }
+  .stop h4 {
+    margin: 0.05in 0 0.04in; font-family: var(--display); text-transform: uppercase;
+    font-size: 0.165in; letter-spacing: -0.02em; line-height: 1.05;
+  }
+  .stop p { margin: 0; font-size: 0.115in; line-height: 1.25; color: var(--muted); }
+
+  .dock { margin-top: 0.08in; }
+  .meta {
+    display: grid; grid-template-columns: 1fr 1.2fr 1.15fr; gap: 0.12in;
+    background: var(--lime); color: var(--ink);
+    padding: 0.16in 0.42in 0.14in;
+  }
+  .meta h3 { margin: 0 0 0.02in; font-family: var(--mono); font-size: 0.085in; letter-spacing: 0.16em; text-transform: uppercase; }
+  .meta .big { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.3in; letter-spacing: -0.03em; }
+  .meta .sub { font-size: 0.125in; font-weight: 600; margin-top: 0.03in; color: rgba(3,2,5,.72); }
+
+  .foot {
+    background: #fff; color: var(--ink);
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 0.16in; padding: 0.16in 0.42in 0.18in;
+    min-height: 1.18in;
+  }
+  .contact { font-size: 0.12in; line-height: 1.35; }
+  .contact h3 {
+    margin: 0 0 0.04in; font-family: var(--mono); font-size: 0.085in;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--pink);
+  }
+  .contact b { font-weight: 700; }
+  .contact code { font-family: var(--mono); font-size: 0.11in; color: #3d5a12; }
+  .marks { display: flex; align-items: center; gap: 0.1in; flex: 0 0 auto; }
+  .logo-card {
+    background: #fff; border: 0.014in solid var(--ink); border-radius: 0.05in;
+    height: 0.72in; padding: 0.08in 0.1in;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-card.saitsa { width: 1.7in; }
+  .logo-card.sait { width: 1.38in; }
+  .logo-card img { height: 0.5in; width: auto; max-width: 100%; object-fit: contain; display: block; }
+  .qr { display: flex; align-items: center; gap: 0.08in; }
+  .qr .box {
+    background: #fff; border: 0.014in solid var(--ink); border-radius: 0.05in;
+    padding: 0.05in; width: 0.72in; height: 0.72in;
+  }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr .cap {
+    font-family: var(--mono); font-size: 0.075in; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #3d5a12; line-height: 1.3;
+  }
+
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    html, body { width: 11in; height: 17in; min-height: 0; margin: 0; padding: 0; background: #fff; overflow: hidden; display: block; }
+    .toolbar { display: none !important; }
+    .stage { width: 11in; height: 17in; transform: none !important; margin: 0 !important; filter: none; flex: none; }
+    .poster { width: 11in; height: 17in; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+  <a href="AI%20Agents%20Poster%20v9%20Billboard%20(11%C3%9717).pdf">Open PDF</a>
+  <a href="index.html">all</a>
+</div>
+<div class="stage" id="stage">
+<div class="poster">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="grid" aria-hidden="true"></div>
+
+  <header class="head">
+    <div class="brand">
+      <img src="assets/jellyfish-lime.svg" alt="">
+      <div class="brand-name">Unnatural<br>Intelligence<small>SAIT student club · Saitsa</small></div>
+    </div>
+    <div class="chip">Student Club · Lunch &amp; Learn</div>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1 class="title"><span class="l1">AI</span><span class="l2">Agents</span><span class="l3">What? How?</span></h1>
+      <p class="purpose">A friendly two-hour workshop. Chatbots answer. <em>Agents act.</em> <strong>Leave having used one</strong> for studying, a resume, or a project.</p>
+    </div>
+    <div class="mascot-wrap">
+      <img class="mascot" src="../../../Branding/Jellyfish%20Mascot%20Gradient%20Transparent.png" alt="Unnatural Intelligence jellyfish mascot" width="1870" height="2048">
+    </div>
+  </section>
+
+  <section class="trio">
+    <article class="card a">
+      <div class="body">
+        <img src="assets/question.svg" alt="">
+        <h3>What is it</h3>
+        <p>The task, the files, the question — more than the chat window.</p>
+        <ul>
+          <li>Chatbot vs agent</li>
+          <li>Everyday examples</li>
+          <li>Demos you can interrupt</li>
+        </ul>
+      </div>
+      <div class="dur">30 min · What is an agent?</div>
+    </article>
+    <article class="card b">
+      <div class="body">
+        <img src="assets/lightbulb.svg" alt="">
+        <h3>How it works</h3>
+        <p>Pick a next useful step. Choose a tool instead of only talking.</p>
+        <ul>
+          <li>Tools and limits</li>
+          <li>Stay in the loop</li>
+          <li>Don’t let it improvise</li>
+        </ul>
+      </div>
+      <div class="dur">30 min · How they work</div>
+    </article>
+    <article class="card c">
+      <div class="body">
+        <img src="assets/cash.svg" alt="">
+        <h3>How to use it</h3>
+        <p>Call the tool, check the result, loop. Keep a human finish.</p>
+        <ul>
+          <li>Study, resume, or project</li>
+          <li>Keep a human finish</li>
+          <li>Then 15 min Q&amp;A</li>
+        </ul>
+      </div>
+      <div class="dur">30 min · Hands-on</div>
+    </article>
+  </section>
+
+  <section class="agenda">
+    <p class="agenda-label">Schedule</p>
+    <div class="track">
+      <article class="stop"><div class="dot">01</div><div class="time">15 min</div><h4>Welcome</h4><p>Club intro and sign-ups.</p></article>
+      <article class="stop"><div class="dot">02</div><div class="time">30 min</div><h4>What is an agent?</h4><p>Chatbot vs agent, live.</p></article>
+      <article class="stop"><div class="dot">03</div><div class="time">30 min</div><h4>How they work</h4><p>Perceive → decide → act.</p></article>
+      <article class="stop"><div class="dot">04</div><div class="time">30 min</div><h4>Hands-on</h4><p>You drive one on a real task.</p></article>
+      <article class="stop"><div class="dot">05</div><div class="time">15 min</div><h4>Q&amp;A</h4><p>Ask anything.</p></article>
+    </div>
+  </section>
+
+  <footer class="dock">
+    <section class="meta">
+      <div><h3>When</h3><div class="big">Thu Oct 1</div><div class="sub">6:00 – 8:00 PM</div></div>
+      <div><h3>Where</h3><div class="big">MB202</div><div class="sub">Stan Grad Centre · SAIT campus</div></div>
+      <div><h3>Type</h3><div class="big">Student Club</div><div class="sub">Lunch &amp; Learn · free</div></div>
+    </section>
+    <div class="foot">
+      <div class="contact">
+        <h3>Contact</h3>
+        <div><b>Unnatural Intelligence</b> — a SAITSA-ratified student club</div>
+        <div>Email <code id="contact-email"></code></div>
+        <div>Discord <code id="contact-discord"></code></div>
+      </div>
+      <div class="marks">
+        <div class="logo-card saitsa"><img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs"></div>
+        <div class="logo-card sait"><img src="assets/sait-logo.png" alt="SAIT"></div>
+        <div class="qr">
+          <div class="box" id="qr"></div>
+          <div class="cap">Scan<br>Discord</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+</div>
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: "unnaturalintelligencesait@gmail.com",
+  contactDiscord: "discord.gg/hcsQFRNUEa",
+  qrUrl: "https://discord.gg/hcsQFRNUEa"
+});
+</script>
+</body>
+</html>

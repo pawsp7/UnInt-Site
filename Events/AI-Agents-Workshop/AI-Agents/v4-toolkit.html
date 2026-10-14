@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agents v4 — Toolkit — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --paper: #F9F9FA; --olive: #95B747; --ink: #030205; --pink: #FA4A9E;
+    --wine: #591337; --lime: #BAF837; --cyan: #7EC8FF;
+    --muted: rgba(249,249,250,.72);
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: #0a0814;
+    font-family: var(--sans); color: var(--paper);
+    display: flex; justify-content: center; padding: 72px 24px 48px;
+  }
+  .toolbar {
+    position: fixed; top: 16px; right: 16px; z-index: 20;
+    display: flex; gap: 8px; font-family: var(--mono); font-size: 12px;
+  }
+  .toolbar a, .toolbar button {
+    cursor: pointer; text-decoration: none;
+    border: 1px solid rgba(126,200,255,.5); background: rgba(3,2,5,.88); color: var(--cyan);
+    padding: 8px 12px; font: inherit; letter-spacing: 0.04em;
+  }
+  .stage { width: 11in; height: 17in; flex: 0 0 auto; transform-origin: top center; filter: drop-shadow(0 28px 50px rgba(0,0,0,.55)); }
+
+  .poster {
+    position: relative; width: 11in; height: 17in; overflow: hidden; background: var(--ink);
+    display: flex; flex-direction: column; justify-content: flex-start;
+    padding: 0.32in 0.38in 0.28in; gap: 0.14in;
+  }
+  .poster::before {
+    content: ""; position: absolute; inset: 0.12in;
+    border: 0.016in solid rgba(126,200,255,.28); pointer-events: none; z-index: 2;
+  }
+  .flourish {
+    position: absolute; right: 0.2in; top: 4.8in; width: 4.6in; opacity: 0.35; z-index: 0; pointer-events: none;
+  }
+  .header, .hero, .versus, .kit-wrap, .agenda, .tasks, .quote, .meta, .footer { position: relative; z-index: 3; }
+
+  .header { display: flex; justify-content: space-between; align-items: center; gap: 0.16in; }
+  .brand { display: flex; align-items: center; gap: 0.12in; }
+  .brand img.mark { width: 0.62in; height: 0.62in; display: block; }
+  .brand-name { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.24in; line-height: 0.92; letter-spacing: -0.03em; }
+  .brand-name small { display: block; margin-top: 0.04in; font-family: var(--mono); font-weight: 400; font-size: 0.09in; letter-spacing: 0.14em; color: var(--muted); }
+  .badges { display: flex; gap: 0.08in; align-items: center; }
+  .badges img { height: 0.38in; width: auto; display: block; }
+
+  .hero { display: grid; grid-template-columns: 1fr auto; gap: 0.16in; align-items: end; }
+  .eyebrow { font-family: var(--mono); font-size: 0.11in; letter-spacing: 0.18em; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.08in; }
+  .title { margin: 0; font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.98in; line-height: 0.84; letter-spacing: -0.05em; }
+  .title .l1 { color: var(--lime); display: block; }
+  .title .l2 { color: var(--pink); display: block; font-size: 0.62in; }
+  .title .l3 { display: block; color: transparent; -webkit-text-stroke: 0.02in var(--paper); font-size: 0.58in; }
+  .official { margin: 0.08in 0 0; font-family: var(--mono); font-size: 0.1in; color: var(--muted); }
+  .purpose { margin: 0.12in 0 0; font-size: 0.165in; line-height: 1.28; max-width: 7.4in; }
+  .purpose strong { color: var(--lime); }
+  .purpose em { color: var(--pink); font-style: normal; font-weight: 700; }
+  .hero-icon { width: 2.05in; height: 2.05in; display: block; }
+
+  .versus { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0.12in; align-items: stretch; }
+  .vs-card {
+    display: grid; grid-template-columns: 0.78in 1fr; gap: 0.12in; align-items: center;
+    background: rgba(249,249,250,.05); border: 1px solid rgba(249,249,250,.14);
+    padding: 0.12in 0.14in; border-radius: 0.08in;
+  }
+  .vs-card.chat { border-color: rgba(126,200,255,.5); }
+  .vs-card.agent { border-color: rgba(186,248,55,.5); }
+  .vs-card img { width: 0.78in; height: 0.78in; display: block; }
+  .vs-card .n { font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+  .vs-card h3 { margin: 0.02in 0 0.03in; font-family: var(--display); text-transform: uppercase; font-size: 0.26in; letter-spacing: -0.03em; }
+  .chat h3 { color: var(--cyan); }
+  .agent h3 { color: var(--lime); }
+  .vs-card p { margin: 0; font-size: 0.125in; line-height: 1.25; color: var(--muted); }
+  .vs-amp {
+    align-self: center; font-family: var(--display); font-weight: 700; font-size: 0.28in;
+    color: var(--pink); letter-spacing: -0.04em;
+  }
+
+  .kit-wrap { display: flex; flex-direction: column; }
+  .kit-label { font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lime); margin: 0 0 0.08in; }
+  .kit { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.1in; }
+  .tool {
+    background: rgba(249,249,250,.04); border: 1px solid rgba(149,183,71,.3);
+    padding: 0.14in 0.1in 0.16in; min-height: 1.85in; text-align: center;
+  }
+  .tool img { width: 0.78in; height: 0.78in; display: block; margin: 0 auto 0.08in; }
+  .tool h4 { margin: 0 0 0.04in; font-family: var(--display); text-transform: uppercase; font-size: 0.16in; letter-spacing: -0.02em; }
+  .tool p { margin: 0; font-size: 0.11in; line-height: 1.25; color: var(--muted); }
+
+  .agenda { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.08in; }
+  .agenda article {
+    background: rgba(249,249,250,.05); border: 1px solid rgba(126,200,255,.22);
+    padding: 0.12in 0.08in 0.14in; min-height: 1.85in;
+  }
+  .agenda img { width: 0.48in; height: 0.48in; display: block; margin-bottom: 0.08in; }
+  .agenda .n { font-family: var(--mono); font-size: 0.085in; color: var(--cyan); letter-spacing: 0.1em; }
+  .agenda h4 { margin: 0.04in 0 0.04in; font-size: 0.13in; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.15; }
+  .agenda p { margin: 0; font-size: 0.105in; line-height: 1.25; color: var(--muted); }
+
+  .tasks { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr; gap: 0.1in; flex: 1; }
+  .tasks article {
+    background: rgba(249,249,250,.05); border: 1px solid rgba(250,74,158,.28);
+    padding: 0.14in; display: flex; flex-direction: column;
+  }
+  .tasks img { width: 0.48in; height: 0.48in; display: block; margin-bottom: 0.08in; }
+  .tasks .n { font-family: var(--mono); font-size: 0.09in; color: var(--lime); letter-spacing: 0.12em; }
+  .tasks h4 { margin: 0.04in 0 0.04in; font-size: 0.18in; text-transform: uppercase; letter-spacing: -0.02em; }
+  .tasks p { margin: 0; font-size: 0.12in; line-height: 1.28; color: var(--muted); }
+
+  .quote {
+    font-family: var(--mono); font-size: 0.12in; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink); background: var(--lime); padding: 0.1in 0.16in; font-weight: 700;
+    border-radius: 0.06in;
+  }
+  .meta {
+    display: grid; grid-template-columns: 1.15fr 1.35fr 1.2fr;
+    gap: 0.1in; background: var(--cyan); color: var(--ink);
+    padding: 0.12in 0.16in; border-radius: 0.08in;
+  }
+  .meta h3 { margin: 0 0 0.02in; font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.16em; text-transform: uppercase; }
+  .meta .big { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.28in; letter-spacing: -0.03em; line-height: 0.95; }
+  .meta .sub { font-size: 0.12in; font-weight: 700; margin-top: 0.03in; }
+
+  .footer { display: flex; justify-content: space-between; align-items: flex-end; gap: 0.14in; }
+  .contact h5 { margin: 0 0 0.05in; font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--pink); }
+  .contact .line { font-size: 0.125in; line-height: 1.35; }
+  .contact code { font-family: var(--mono); font-size: 0.11in; color: var(--lime); }
+  .fine { margin: 0.05in 0 0; font-size: 0.1in; color: var(--muted); }
+  .marks { display: flex; align-items: flex-end; gap: 0.08in; }
+  .logo-card { background: #fff; border-radius: 0.06in; width: 1.55in; padding: 0.06in; display: flex; align-items: center; justify-content: center; }
+  .logo-card.sait { width: 1.28in; }
+  .logo-card img { width: 100%; height: auto; display: block; }
+  .qr { width: 1.12in; text-align: center; }
+  .qr .box { background: #fff; border-radius: 0.06in; padding: 0.05in; width: 1.12in; height: 1.12in; }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr .cap { font-family: var(--mono); font-size: 0.08in; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); margin-top: 0.04in; }
+
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    body { background: #fff; padding: 0; display: block; }
+    .toolbar { display: none; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+  <a href="AI%20Agents%20Poster%20v4%20Toolkit%20(11%C3%9717).pdf">Open PDF</a>
+  <a href="index.html">all</a>
+</div>
+<div class="stage" id="stage">
+<div class="poster">
+  <img class="flourish" src="assets/tentacle-flourish.svg" alt="">
+
+  <header class="header">
+    <div class="brand">
+      <img class="mark" src="assets/jellyfish-lime.svg" alt="">
+      <div class="brand-name">Unnatural<br>Intelligence<small>Generated by AI · Perfected by humans</small></div>
+    </div>
+    <div class="badges">
+      <img src="assets/workshop.svg" alt="Workshop">
+      <img src="assets/live-lab.svg" alt="Live lab">
+      <img src="assets/member.svg" alt="Member">
+    </div>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Student Club · Lunch &amp; Learn · Kit dump</div>
+      <h1 class="title"><span class="l1">AI</span><span class="l2">Agents</span><span class="l3">What? How? Use.</span></h1>
+      <p class="official">Official title · AI Agents: What? How? &amp; Learning to Use Them</p>
+      <p class="purpose">Purpose: a friendly two-hour workshop that demystifies AI agents. Chatbots answer. <em>Agents act.</em> <strong>No prior experience</strong> — leave having used one for a real task.</p>
+    </div>
+    <img class="hero-icon" src="assets/tentacle.svg" alt="">
+  </section>
+
+  <section class="versus">
+    <article class="vs-card chat">
+      <img src="assets/bubble.svg" alt="">
+      <div>
+        <div class="n">Not this</div>
+        <h3>Chatbot</h3>
+        <p>Answers in the window. Useful. Stops at talk.</p>
+      </div>
+    </article>
+    <div class="vs-amp">vs</div>
+    <article class="vs-card agent">
+      <img src="assets/neural.svg" alt="">
+      <div>
+        <div class="n">This</div>
+        <h3>Agent</h3>
+        <p>Perceives, decides, acts with tools. Then checks.</p>
+      </div>
+    </article>
+  </section>
+
+  <div class="kit-wrap">
+    <p class="kit-label" style="position:relative;z-index:3">The kit · eight tools you will actually meet</p>
+    <section class="kit">
+      <article class="tool"><img src="assets/spark.svg" alt=""><h4>Perceive</h4><p>See the task, the files, the question.</p></article>
+      <article class="tool"><img src="assets/workflow.svg" alt=""><h4>Decide</h4><p>Plan a next useful step.</p></article>
+      <article class="tool"><img src="assets/prompt.svg" alt=""><h4>Act</h4><p>Call a tool. Check the result.</p></article>
+      <article class="tool"><img src="assets/node.svg" alt=""><h4>Tools</h4><p>Search, files, calendar, code.</p></article>
+      <article class="tool"><img src="assets/meter.svg" alt=""><h4>Limits</h4><p>It can drift. Stay in the loop.</p></article>
+      <article class="tool"><img src="assets/mask.svg" alt=""><h4>Human finish</h4><p>Keep the mask of humanity.</p></article>
+      <article class="tool"><img src="assets/token.svg" alt=""><h4>Lean tokens</h4><p>Spend less. Keep what works.</p></article>
+      <article class="tool"><img src="assets/glitch.svg" alt=""><h4>Risks</h4><p>It will improvise. Specify.</p></article>
+    </section>
+  </div>
+
+  <section class="agenda">
+    <article><img src="assets/ticket.svg" alt=""><div class="n">01 · 15 min</div><h4>Welcome</h4><p>Club intro, Learn pillar, sign-ups.</p></article>
+    <article><img src="assets/bubble.svg" alt=""><div class="n">02 · 30 min</div><h4>What is an agent?</h4><p>Chatbot vs agent. Live demos.</p></article>
+    <article><img src="assets/neural.svg" alt=""><div class="n">03 · 30 min</div><h4>How they work</h4><p>Loop, tools, limits, risks.</p></article>
+    <article><img src="assets/prompt.svg" alt=""><div class="n">04 · 30 min</div><h4>Hands-on</h4><p>Study, resume, or a project.</p></article>
+    <article><img src="assets/commit.svg" alt=""><div class="n">05 · 15 min</div><h4>Q&amp;A</h4><p>Open discussion. New members.</p>    </article>
+  </section>
+
+  <section class="tasks">
+    <article><img src="assets/token.svg" alt=""><div class="n">Task A</div><h4>Studying</h4><p>Syllabus to a plan you will actually open next week.</p></article>
+    <article><img src="assets/mask.svg" alt=""><div class="n">Task B</div><h4>Resume</h4><p>Draft with an agent, finish it so it still sounds like you.</p></article>
+    <article><img src="assets/commit.svg" alt=""><div class="n">Task C</div><h4>Project</h4><p>Automate one recurring assignment. Keep only what saves time.</p></article>
+  </section>
+
+  <p class="quote">Stay ahead of the curve · generated by AI, perfected by humans</p>
+
+  <section class="meta">
+    <div><h3>When</h3><div class="big">Thu Oct 1</div><div class="sub">6:00 – 8:00 PM</div></div>
+    <div><h3>Where</h3><div class="big">MB202</div><div class="sub">Stan Grad Centre · SAIT campus</div></div>
+    <div><h3>Type</h3><div class="big">Student Club</div><div class="sub">Lunch &amp; Learn · all programs · free</div></div>
+  </section>
+
+  <footer class="footer">
+    <div class="contact">
+      <h5>Show up · Contact</h5>
+      <div class="line"><b>Unnatural Intelligence</b> — SAIT student club</div>
+      <div class="line">Email <code id="contact-email"></code></div>
+      <div class="line">Discord <code id="contact-discord"></code></div>
+      <p class="fine">Bring a laptop if you have one. On campus · no alcohol.</p>
+    </div>
+    <div class="marks">
+      <div class="logo-card"><img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs"></div>
+      <div class="logo-card sait"><img src="assets/sait-logo.png" alt="SAIT"></div>
+      <div class="qr"><div class="box" id="qr"></div><div class="cap">Scan Discord</div></div>
+    </div>
+  </footer>
+</div>
+</div>
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: "unnaturalintelligencesait@gmail.com",
+  contactDiscord: "discord.gg/hcsQFRNUEa",
+  qrUrl: "https://discord.gg/hcsQFRNUEa"
+});
+</script>
+</body>
+</html>

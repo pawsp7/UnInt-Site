@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>candy git — booth card — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+  :root {
+    --paper: #F9F9FA; --ink: #030205; --pink: #FA4A9E; --lime: #BAF837;
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; }
+  body { background: #14040c; color: var(--paper); font-family: var(--sans); line-height: 1.4; }
+  .toolbar {
+    position: sticky; top: 0; display: flex; justify-content: flex-end; gap: 8px;
+    padding: 12px 16px; font-family: var(--mono); font-size: 12px;
+    background: rgba(3,2,5,.92); border-bottom: 1px solid rgba(186,248,55,.28);
+  }
+  .toolbar a, .toolbar button {
+    color: var(--lime); border: 1px solid rgba(186,248,55,.45);
+    background: transparent; padding: 8px 12px; font: inherit; cursor: pointer; text-decoration: none;
+  }
+  .page {
+    width: 8.5in; min-height: 11in; margin: 24px auto 48px; padding: 0.45in;
+    background: var(--ink); border: 1px solid rgba(186,248,55,.35);
+  }
+  .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lime); margin: 0 0 8px; }
+  h1 { font-family: var(--display); text-transform: uppercase; letter-spacing: -0.03em; font-size: 28px; margin: 0 0 8px; }
+  h1 span { color: var(--pink); }
+  p { margin: 0 0 10px; }
+  ol, ul { margin: 0 0 12px; padding-left: 1.2em; }
+  li { margin: 0 0 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0 14px; }
+  th, td { border-bottom: 1px solid rgba(249,249,250,.14); padding: 7px 6px; text-align: left; vertical-align: top; }
+  th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lime); font-weight: 400; }
+  code { font-family: var(--mono); color: var(--lime); font-size: 12px; }
+  .say { background: var(--lime); color: var(--ink); padding: 10px 12px; font-weight: 700; margin: 12px 0; }
+  .foot { font-family: var(--mono); font-size: 11px; color: rgba(249,249,250,.5); margin-top: 16px; }
+  @media print {
+    .toolbar { display: none; }
+    body { background: #fff; }
+    .page { margin: 0; border: 0; width: auto; min-height: 0; }
+  }
+</style>
+</head>
+<body>
+<nav class="toolbar">
+  <a href="table-concepts.html#candy-git">Back to concepts</a>
+  <button type="button" onclick="window.print()">Print this card</button>
+</nav>
+<article class="page">
+  <p class="kicker">Booth staff · eyeball git · ~45 seconds</p>
+  <h1>candy git <span>— add, commit, push, pull</span></h1>
+  <p>The candy is the file. The sticky is the commit message. The second bin is <code>origin</code>.</p>
+  <div class="say">Say: “Git is save-points with a note. The second bin is the internet.”</div>
+  <table>
+    <thead><tr><th>Command</th><th>Do</th></tr></thead>
+    <tbody>
+      <tr><td><code>git add</code></td><td>Grab an eyeball from the starting container.</td></tr>
+      <tr><td><code>git commit -m "write comment"</code></td><td>Write a comment on a sticky note and put it on the eyeball.</td></tr>
+      <tr><td><code>git push</code></td><td>Put the candy with the sticky note into the 2nd container.</td></tr>
+      <tr><td><code>git pull</code></td><td>Grab somebody else’s eyeball with their commit note.</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Good messages</strong> (8 words or fewer): <code>fix lab 4 tone</code> · <code>ask about Thursday shift</code> · <code>cut the hope-this-finds-you</code></p>
+  <p><strong>Staff</strong></p>
+  <ul>
+    <li>Starting bin stays full. Spare candy lives in a bag under the table.</li>
+    <li>Only pull a candy that already has a note. A bare eyeball is uncommitted — halt.</li>
+    <li>They keep the pulled candy. The one they pushed stays in <code>origin</code> for the next person.</li>
+    <li>If <code>origin</code> is empty at the start of the day, staff seeds three notes so the first visitor can pull.</li>
+  </ul>
+  <p class="foot">Unnatural Intelligence · Halt generic. Restart human. · unnaturalintelligence.club</p>
+</article>
+</body>
+</html>

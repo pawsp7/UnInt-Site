@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Halt icon" fill="none">
+  <rect width="64" height="64" rx="14" fill="#030205"/>
+
+  <rect x="20" y="16" width="8" height="32" rx="2" fill="#BAF837"/>
+  <rect x="36" y="16" width="8" height="32" rx="2" fill="#BAF837"/>
+</svg>

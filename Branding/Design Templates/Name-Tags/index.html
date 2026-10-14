@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Name tags — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --paper: #F9F9FA;
+    --olive: #95B747;
+    --ink: #030205;
+    --pink: #FA4A9E;
+    --wine: #591337;
+    --lime: #BAF837;
+    --cyan: #7EC8FF;
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+    --tag-w: 4in;
+    --tag-h: 3in;
+  }
+
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; }
+  body {
+    background: #14040c;
+    color: var(--paper);
+    font-family: var(--sans);
+    min-height: 100%;
+  }
+
+  .toolbar {
+    position: sticky; top: 0; z-index: 30;
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end;
+    padding: 12px 16px;
+    font-family: var(--mono); font-size: 12px;
+    background: rgba(3,2,5,.94);
+    border-bottom: 1px solid rgba(186,248,55,.28);
+  }
+  .toolbar button, .toolbar a {
+    cursor: pointer; text-decoration: none;
+    border: 1px solid rgba(186,248,55,.45);
+    background: rgba(3,2,5,.88); color: var(--lime);
+    padding: 8px 12px; font: inherit; letter-spacing: 0.04em;
+  }
+  .toolbar button:hover, .toolbar a:hover { background: rgba(186,248,55,.14); }
+  .toolbar button[aria-pressed="true"] {
+    background: var(--lime); color: var(--ink); border-color: var(--lime);
+  }
+
+  .rail {
+    max-width: 1100px; margin: 28px auto 8px; padding: 0 24px;
+    font-family: var(--mono); font-size: 12px; line-height: 1.55;
+    color: rgba(249,249,250,.72);
+  }
+  .rail strong { color: var(--lime); }
+  .rail code { color: var(--pink); }
+  .rail a { color: var(--cyan); }
+
+  .gallery {
+    max-width: 1100px; margin: 12px auto 36px; padding: 0 24px;
+  }
+  .gallery h2 {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--pink); font-weight: 400;
+    margin: 28px 0 12px;
+  }
+  .gallery .row {
+    display: flex; flex-wrap: wrap; gap: 22px;
+  }
+  .gallery .shot {
+    filter: drop-shadow(0 22px 40px rgba(0,0,0,.55));
+  }
+  .gallery figcaption {
+    margin-top: 10px; font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(249,249,250,.55);
+  }
+
+  /* ---- Tag ---- */
+  .tag {
+    position: relative;
+    width: var(--tag-w); height: var(--tag-h);
+    overflow: hidden;
+    background: var(--ink);
+    color: var(--paper);
+    --accent: var(--lime);
+    --accent-dim: rgba(186,248,55,.18);
+  }
+  .tag.exec { --accent: var(--lime); --accent-dim: rgba(186,248,55,.18); }
+  .tag.member { --accent: var(--pink); --accent-dim: rgba(250,74,158,.22); }
+  .tag.clanker { --accent: var(--cyan); --accent-dim: rgba(126,200,255,.22); }
+
+  .bg { position: absolute; inset: 0; pointer-events: none; }
+  .bg .wash {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 90% at 0% 50%, rgba(149,183,71,.32) 0%, rgba(149,183,71,0) 72%),
+      radial-gradient(ellipse 48% 62% at 88% 8%, rgba(186,248,55,.14) 0%, transparent 70%),
+      linear-gradient(90deg, #0d1408 0%, #070a06 42%, #030205 100%);
+  }
+  .tag.member .bg .wash {
+    background:
+      radial-gradient(ellipse 70% 90% at 0% 50%, rgba(89,19,55,.9) 0%, rgba(89,19,55,0) 72%),
+      radial-gradient(ellipse 50% 70% at 18% 110%, rgba(250,74,158,.18) 0%, transparent 70%),
+      linear-gradient(90deg, #1a0812 0%, #0a0408 46%, #030205 100%);
+  }
+  .tag.clanker .bg .wash {
+    background:
+      radial-gradient(ellipse 70% 90% at 0% 50%, rgba(16,48,72,.85) 0%, rgba(16,48,72,0) 72%),
+      radial-gradient(ellipse 48% 62% at 88% 8%, rgba(126,200,255,.14) 0%, transparent 70%),
+      linear-gradient(90deg, #061018 0%, #070a0e 42%, #030205 100%);
+  }
+  .bg .grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(186,248,55,.16) 1.4px, transparent 1.4px),
+      linear-gradient(90deg, rgba(186,248,55,.16) 1.4px, transparent 1.4px);
+    background-size: 0.22in 0.22in;
+    -webkit-mask-image: radial-gradient(ellipse 70% 80% at 20% 30%, #000 0%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 80% at 20% 30%, #000 0%, transparent 75%);
+  }
+  .tag.member .bg .grid {
+    background-image:
+      linear-gradient(rgba(250,74,158,.18) 1.4px, transparent 1.4px),
+      linear-gradient(90deg, rgba(250,74,158,.18) 1.4px, transparent 1.4px);
+  }
+  .tag.clanker .bg .grid {
+    background-image:
+      linear-gradient(rgba(126,200,255,.18) 1.4px, transparent 1.4px),
+      linear-gradient(90deg, rgba(126,200,255,.18) 1.4px, transparent 1.4px);
+  }
+  .scan {
+    display: none;
+    position: absolute; inset: 0; z-index: 3;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      180deg,
+      transparent 0 3px,
+      rgba(126,200,255,.06) 3px 4px
+    );
+    mix-blend-mode: screen;
+  }
+  .tag.clanker .scan { display: block; }
+
+  .jelly-mark {
+    width: 0.4in; height: 0.4in;
+    flex: 0 0 auto;
+    filter: drop-shadow(0 0 0.04in rgba(186,248,55,.35));
+  }
+  .jelly-wash {
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+    right: -0.35in; bottom: -0.45in;
+    width: 2.15in; height: 2.15in;
+    opacity: 0.22;
+  }
+  .tag.lockup .jelly-wash { right: -0.18in; top: 0.62in; bottom: auto; width: 2.05in; height: 2.05in; opacity: 0.34; }
+
+  [contenteditable] { outline: none; }
+  [contenteditable]:focus { background: rgba(186,248,55,.08); }
+
+  /* Ticket */
+  .tag.ticket {
+    display: grid;
+    grid-template-columns: 0.46in 1fr;
+  }
+  .stub {
+    position: relative; z-index: 2;
+    background: var(--accent);
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: space-between;
+    padding: 0.16in 0 0.14in;
+  }
+  .stub .kind {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--display);
+    font-size: 0.38in;
+    letter-spacing: 0.12em;
+    line-height: 1;
+  }
+  .tag.exec .stub .kind { letter-spacing: 0.22em; font-size: 0.42in; }
+  .tag.clanker .stub .kind { font-size: 0.28in; letter-spacing: 0.08em; }
+  .stub .role {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--mono);
+    font-size: 0.08in;
+    letter-spacing: 0.22em;
+    font-weight: 700;
+  }
+  .tag:not(.exec) .stub { justify-content: center; }
+  .stub .perf {
+    position: absolute; right: -0.05in; top: 0.12in; bottom: 0.12in; width: 0.1in;
+    background: radial-gradient(circle, var(--ink) 0.032in, transparent 0.034in);
+    background-size: 0.1in 0.13in;
+    background-repeat: repeat-y;
+    pointer-events: none;
+  }
+  .ticket .face {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column;
+    padding: 0.14in 0.16in 0.12in;
+    min-width: 0;
+  }
+  .ticket .top {
+    display: flex; align-items: center; gap: 0.1in;
+  }
+  .club {
+    font-family: var(--display);
+    font-size: 0.115in;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    transform: scaleX(0.88);
+    transform-origin: left center;
+    min-width: 0;
+  }
+  .chip {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 0.07in;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 0.03in 0.06in;
+    white-space: nowrap;
+  }
+  .chip.mystery {
+    text-shadow: 0.06em 0 var(--cyan), -0.04em 0 rgba(250,74,158,.8);
+  }
+  .identity {
+    flex: 1;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-width: 0;
+    width: 100%;
+    padding: 0.04in 0.06in 0.06in;
+  }
+  .given {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 0.62in;
+    line-height: 0.84;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-align: center;
+    max-width: 100%;
+    width: 100%;
+  }
+  .tag:not(.exec) .given { font-size: 0.72in; }
+  .pronouns {
+    margin: 0.07in 0 0;
+    font-family: var(--mono);
+    font-size: 0.08in;
+    letter-spacing: 0.08em;
+    color: rgba(249,249,250,.72);
+    text-align: center;
+    max-width: 100%;
+    width: 100%;
+  }
+  .title {
+    margin: 0.08in 0 0;
+    font-family: var(--mono);
+    font-size: 0.095in;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-align: center;
+    white-space: nowrap;
+    max-width: 100%;
+    width: 100%;
+  }
+  .foot {
+    display: flex; align-items: center; justify-content: space-between; gap: 0.08in;
+  }
+  .tag:not(.exec) .foot { justify-content: center; }
+  .role-chip {
+    font-family: var(--mono);
+    font-size: 0.09in;
+    letter-spacing: 0.16em;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: var(--accent);
+    color: var(--ink);
+    padding: 0.04in 0.08in;
+  }
+  .url {
+    font-family: var(--mono);
+    font-size: 0.065in;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(249,249,250,.62);
+    text-shadow: 0 0 0.08in #030205, 0 0 0.04in #030205;
+  }
+
+  .blank .given, .blank .title {
+    color: transparent;
+    border-bottom: 1.5px solid rgba(249,249,250,.4);
+    min-height: 0.22in;
+    width: 2.05in;
+    max-width: 100%;
+  }
+  .blank .given { min-height: 0.42in; width: 2.45in; align-self: center; }
+  .blank .title { width: 2.05in; min-height: 0.18in; align-self: center; }
+  .blank-role .lab-role { display: block; }
+  .blank-role .title {
+    color: transparent;
+    border-bottom: 1.5px solid rgba(249,249,250,.4);
+    min-height: 0.18in;
+    width: 2.05in;
+    max-width: 100%;
+    align-self: center;
+  }
+  .line-label {
+    display: none;
+    text-align: center;
+  }
+  .blank .line-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.062in;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(249,249,250,.42);
+    margin: 0.08in 0 0.02in;
+  }
+
+  /* Paper-face tickets — black / blue ballpoint on a light write-in field. */
+  .tag.pen {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .tag.pen.member .bg .wash {
+    background:
+      radial-gradient(ellipse 70% 90% at 0% 50%, rgba(250,74,158,.18) 0%, transparent 70%),
+      radial-gradient(ellipse 48% 62% at 92% 108%, rgba(89,19,55,.1) 0%, transparent 68%),
+      linear-gradient(90deg, #fff4f8 0%, var(--paper) 42%, #ffffff 100%);
+  }
+  .tag.pen.member .bg .grid {
+    background-image:
+      linear-gradient(rgba(250,74,158,.16) 1.4px, transparent 1.4px),
+      linear-gradient(90deg, rgba(250,74,158,.16) 1.4px, transparent 1.4px);
+  }
+  .tag.pen .jelly-wash { opacity: 0.14; }
+  .tag.pen .jelly-mark { filter: none; }
+  .tag.pen .url {
+    color: var(--wine);
+    text-shadow: none;
+  }
+  .tag.pen.ticket .identity {
+    background: #ffffff;
+    border: 1.5px solid rgba(250,74,158,.45);
+    margin: 0.08in 0.02in 0.04in;
+    padding: 0.08in 0.12in 0.1in;
+  }
+  .tag.pen.blank .line-label {
+    color: var(--pink);
+    margin: 0.02in 0 0.04in;
+  }
+  .tag.pen.blank .given {
+    color: var(--ink);
+    background: #ffffff;
+    border: none;
+    border-bottom: 2.5px solid var(--ink);
+    min-height: 0.5in;
+    width: 2.55in;
+  }
+  .tag.pen [contenteditable]:focus { background: rgba(250,74,158,.08); }
+
+  /* Lime paper face — club lime wash, still ballpoint-readable. */
+  .tag.pen-lime {
+    background: #f4fbd4;
+  }
+  .tag.pen-lime.member .bg .wash {
+    background:
+      radial-gradient(ellipse 70% 90% at 0% 50%, rgba(186,248,55,.55) 0%, transparent 70%),
+      radial-gradient(ellipse 48% 62% at 92% 108%, rgba(186,248,55,.22) 0%, transparent 68%),
+      linear-gradient(90deg, #e6f88a 0%, #f4fbd4 46%, #ffffff 100%);
+  }
+  .tag.pen-lime.member .bg .grid {
+    background-image:
+      linear-gradient(rgba(186,248,55,.55) 1.4px, transparent 1.4px),
+      linear-gradient(90deg, rgba(186,248,55,.55) 1.4px, transparent 1.4px);
+  }
+  .tag.pen-lime.ticket .identity { border-color: #7aad14; }
+  .tag.pen-lime .chip { border-color: #6a9a10; color: #3d4e14; }
+  .tag.pen-lime.blank .line-label { color: #4d6418; }
+  .tag.pen-lime .url { color: #3d4e14; }
+  .tag.pen-lime [contenteditable]:focus { background: rgba(186,248,55,.22); }
+
+  /* Olive paper face — field-notes grid from the vector kit. */
+  .tag.pen-olive {
+    background: #f3f6ea;
+  }
+  .tag.pen-olive.member .bg .wash {
+    background:
+      radial-gradient(ellipse 70% 90% at 0% 50%, rgba(149,183,71,.26) 0%, transparent 70%),
+      radial-gradient(ellipse 48% 62% at 92% 108%, rgba(89,19,55,.08) 0%, transparent 68%),
+      linear-gradient(90deg, #e8f0d2 0%, #f3f6ea 48%, #ffffff 100%);
+  }
+  .tag.pen-olive.member .bg .grid {
+    background-image:
+      linear-gradient(rgba(149,183,71,.32) 1.4px, transparent 1.4px),
+      linear-gradient(90deg, rgba(149,183,71,.32) 1.4px, transparent 1.4px);
+  }
+  .tag.pen-olive.ticket .identity { border-color: rgba(149,183,71,.65); }
+  .tag.pen-olive .chip { border-color: var(--olive); color: #3a4a16; }
+  .tag.pen-olive.blank .line-label { color: #5a731c; }
+  .tag.pen-olive .url { color: #3a4a16; }
+  .tag.pen-olive [contenteditable]:focus { background: rgba(149,183,71,.16); }
+
+  /* Ink-frame paper face — cream ticket with a hard ink box for the name. */
+  .tag.pen-ink {
+    background: #faf7f2;
+  }
+  .tag.pen-ink.member .bg .wash {
+    background:
+      radial-gradient(ellipse 55% 70% at 88% 108%, rgba(89,19,55,.08) 0%, transparent 70%),
+      linear-gradient(90deg, #f3eee6 0%, #faf7f2 42%, #ffffff 100%);
+  }
+  .tag.pen-ink.member .bg .grid {
+    background-image:
+      linear-gradient(rgba(3,2,5,.1) 1.4px, transparent 1.4px),
+      linear-gradient(90deg, rgba(3,2,5,.1) 1.4px, transparent 1.4px);
+  }
+  .tag.pen-ink .face {
+    box-shadow: inset 0 0 0 1.5px var(--ink);
+  }
+  .tag.pen-ink.ticket .identity {
+    border: 2px solid var(--ink);
+    background: #ffffff;
+  }
+  .tag.pen-ink .chip {
+    border-color: var(--ink);
+    color: var(--ink);
+    background: #ffffff;
+  }
+  .tag.pen-ink.blank .line-label { color: var(--wine); }
+  .tag.pen-ink .url { color: var(--ink); }
+  .tag.pen-ink [contenteditable]:focus { background: rgba(3,2,5,.06); }
+
+  /* Lockup */
+  .tag.lockup { display: block; }
+  .lockup .face {
+    position: relative; z-index: 1;
+    height: 100%;
+    display: flex; flex-direction: column;
+    padding: 0.16in 0.18in 0.14in;
+  }
+  .lockup .top {
+    display: flex; align-items: flex-start; gap: 0.1in;
+  }
+  .lockup .chips { margin-left: auto; display: flex; gap: 0.06in; }
+  .lockup .chip.solid {
+    background: var(--accent); color: var(--ink); border-color: var(--accent);
+  }
+  .lockup .identity { padding: 0.12in 0.16in 0.08in; }
+  .lockup .given { font-size: 0.68in; }
+  .tag.lockup:not(.exec) .given { font-size: 0.78in; }
+  .lockup .tagline {
+    margin: 0;
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 0.085in;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(249,249,250,.62);
+    text-align: center;
+  }
+  .lockup .foot { margin-top: auto; }
+
+  /* Simple rectangle stickers — 3.5 × 2 in */
+  .tag.sticker, .tag.spec {
+    --tag-w: 3.5in;
+    --tag-h: 2in;
+    width: 3.5in;
+    height: 2in;
+  }
+  .tag.sticker {
+    display: flex;
+    flex-direction: row;
+  }
+  .sticker .bar {
+    position: relative; z-index: 2;
+    flex: 0 0 0.11in;
+    background: var(--accent);
+  }
+  .tag.clanker > .bar {
+    background: repeating-linear-gradient(
+      180deg,
+      var(--cyan) 0 0.07in,
+      var(--ink) 0.07in 0.1in
+    );
+  }
+  .sticker .face {
+    position: relative; z-index: 1;
+    flex: 1;
+    min-width: 0;
+    display: flex; flex-direction: column;
+    padding: 0.1in 0.12in 0.09in 0.13in;
+  }
+  .sticker .top {
+    display: flex; align-items: center; gap: 0.07in;
+  }
+  .sticker .jelly-mark, .spec .jelly-mark {
+    width: 0.26in; height: 0.26in;
+  }
+  .sticker .club, .spec .club {
+    font-size: 0.085in;
+    transform: scaleX(0.92);
+  }
+  .sticker .chip { font-size: 0.065in; padding: 0.025in 0.05in; }
+  .sticker .identity { padding: 0.02in 0.1in 0.04in; }
+  .sticker .given { font-size: 0.44in; }
+  .tag.sticker:not(.exec) .given { font-size: 0.52in; }
+  .sticker .pronouns { font-size: 0.065in; margin-top: 0.05in; }
+  .sticker .title { font-size: 0.075in; margin-top: 0.05in; letter-spacing: 0.1em; }
+  .sticker .role-chip { font-size: 0.07in; padding: 0.03in 0.06in; }
+  .sticker .url { font-size: 0.055in; }
+  .sticker .jelly-wash, .spec .jelly-wash {
+    width: 1.28in; height: 1.28in;
+    right: -0.22in; bottom: -0.28in;
+    opacity: 0.2;
+  }
+  .blank.sticker .given, .blank.spec .given { min-height: 0.32in; width: 2.2in; }
+  .blank.sticker .title, .blank.spec .title { width: 1.9in; min-height: 0.14in; }
+
+  .tag.spec { display: block; }
+  .spec .face {
+    position: relative; z-index: 1;
+    height: 100%;
+    display: flex; flex-direction: column;
+    padding: 0.1in 0.13in 0.1in;
+  }
+  .spec .top {
+    display: flex; align-items: center; gap: 0.07in;
+  }
+  .spec .role-chip { margin-left: auto; font-size: 0.07in; padding: 0.03in 0.06in; }
+  .spec-kicker {
+    margin: 0.1in 0 0;
+    font-family: var(--mono);
+    font-size: 0.07in;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(249,249,250,.48);
+    text-align: center;
+  }
+  .spec-type {
+    margin: 0.02in 0 0;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 0.5in;
+    line-height: 0.86;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    color: var(--accent);
+    white-space: nowrap;
+    text-align: center;
+  }
+  .tag.exec .spec-type {
+    letter-spacing: 0.08em;
+    text-shadow: 0.05em 0 var(--cyan);
+  }
+  .tag.clanker .spec-type,
+  .tag.member:not(.clanker) .spec-type {
+    font-family: var(--mono);
+    font-size: 0.32in;
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+  .tag.member:not(.clanker) .spec-type { font-size: 0.38in; }
+  .spec .identity {
+    flex: 0 0 auto;
+    padding: 0 0.04in;
+    margin-top: auto;
+  }
+  .spec .given { font-size: 0.26in; line-height: 0.9; }
+  .tag.spec:not(.exec) .given { font-size: 0.32in; }
+  .spec .pronouns { font-size: 0.065in; margin-top: 0.04in; }
+  .spec .title { font-size: 0.07in; margin-top: 0.05in; }
+  .spec .rule {
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.55;
+    margin: 0.08in 0 0.08in;
+  }
+  .blank.spec .given { min-height: 0.22in; }
+
+  .guides-layer { display: none; pointer-events: none; }
+  body.guides-on .guides-layer {
+    display: block; position: absolute; inset: 0.1in; z-index: 8;
+    border: 1px dashed rgba(186,248,55,.45);
+  }
+
+  /* Print sheets */
+  .sheet {
+    width: 11in; height: 8.5in;
+    margin: 28px auto;
+    background: #0a0408;
+    color: var(--paper);
+    position: relative;
+    box-shadow: 0 24px 50px rgba(0,0,0,.4);
+  }
+  .sheet-label {
+    position: absolute; top: 0.16in; left: 0.4in; right: 0.4in;
+    display: flex; justify-content: space-between;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--olive);
+  }
+  .sheet-grid {
+    position: absolute; inset: 0.55in 0.7in 0.42in;
+    display: grid;
+    grid-template-columns: var(--tag-w) var(--tag-w);
+    grid-template-rows: var(--tag-h) var(--tag-h);
+    justify-content: space-between;
+    align-content: space-between;
+  }
+  .sheet.pack-2x3 {
+    --tag-w: 3.5in;
+    --tag-h: 2in;
+  }
+  .sheet.pack-2x3 .sheet-grid {
+    inset: 0.5in 0.85in 0.38in;
+    grid-template-columns: 3.5in 3.5in;
+    grid-template-rows: 2in 2in 2in;
+    justify-content: space-around;
+    align-content: space-around;
+  }
+  /* A4 portrait · 10 human fill-in stickers · 7 mm column / 5.5 mm row cut gaps */
+  .sheet.a4 {
+    width: 210mm;
+    height: 297mm;
+    page: a4;
+  }
+  .sheet.pack-a4-2x5 {
+    --tag-w: 3.5in;
+    --tag-h: 2in;
+  }
+  .sheet.pack-a4-2x5 .sheet-label {
+    top: 4.5mm;
+    left: 8mm;
+    right: 8mm;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    gap: 8px;
+    white-space: nowrap;
+  }
+  .sheet.pack-a4-2x5 .sheet-grid {
+    inset: 11mm 8mm 8mm;
+    grid-template-columns: 3.5in 3.5in;
+    grid-template-rows: repeat(5, 2in);
+    justify-content: center;
+    align-content: center;
+    column-gap: 7mm;
+    row-gap: 5.5mm;
+  }
+  .sheet.pack-a4-2x5 .crop {
+    width: 2.5mm;
+    height: 2.5mm;
+  }
+  .sheet.pack-a4-2x5 .crop.tl { left: -3mm; top: -3mm; }
+  .sheet.pack-a4-2x5 .crop.tr { right: -3mm; top: -3mm; }
+  .sheet.pack-a4-2x5 .crop.bl { left: -3mm; bottom: -3mm; }
+  .sheet.pack-a4-2x5 .crop.br { right: -3mm; bottom: -3mm; }
+  /* Compact ticket so the HUMAN stub layout fits the 10-up A4 pack. */
+  .sheet.pack-a4-2x5 .tag.ticket {
+    grid-template-columns: 0.34in 1fr;
+  }
+  .sheet.pack-a4-2x5 .ticket .stub { padding: 0.08in 0; }
+  .sheet.pack-a4-2x5 .ticket .stub .kind {
+    font-size: 0.26in;
+    letter-spacing: 0.06em;
+  }
+  .sheet.pack-a4-2x5 .tag.clanker.ticket .stub .kind {
+    font-size: 0.2in;
+    letter-spacing: 0.04em;
+  }
+  .sheet.pack-a4-2x5 .ticket .stub .perf {
+    right: -0.04in;
+    top: 0.07in;
+    bottom: 0.07in;
+    width: 0.08in;
+    background: radial-gradient(circle, var(--ink) 0.022in, transparent 0.024in);
+    background-size: 0.08in 0.095in;
+  }
+  .sheet.pack-a4-2x5 .ticket .face { padding: 0.07in 0.1in 0.06in; }
+  .sheet.pack-a4-2x5 .ticket .jelly-mark { width: 0.24in; height: 0.24in; }
+  .sheet.pack-a4-2x5 .ticket .club { font-size: 0.078in; }
+  .sheet.pack-a4-2x5 .ticket .chip { font-size: 0.052in; padding: 0.018in 0.04in; }
+  .sheet.pack-a4-2x5 .ticket .identity { padding: 0.02in 0.06in 0.03in; }
+  .sheet.pack-a4-2x5 .blank.ticket .line-label {
+    font-size: 0.05in;
+    margin: 0.04in 0 0.01in;
+  }
+  .sheet.pack-a4-2x5 .blank.ticket .given {
+    min-height: 0.3in;
+    width: 2.2in;
+  }
+  .sheet.pack-a4-2x5 .tag.pen.ticket .identity {
+    margin: 0.04in 0.02in 0.02in;
+    padding: 0.04in 0.08in 0.06in;
+  }
+  .sheet.pack-a4-2x5 .tag.pen.blank .given {
+    min-height: 0.38in;
+    width: 2.3in;
+    border-bottom-width: 2px;
+  }
+  .sheet.pack-a4-2x5 .ticket .url { font-size: 0.048in; }
+  .sheet.pack-a4-2x5 .ticket .jelly-wash {
+    width: 1.12in;
+    height: 1.12in;
+    right: -0.18in;
+    bottom: -0.22in;
+  }
+  .sheet.sheet-pen {
+    background: #f4eef1;
+  }
+  .sheet.sheet-pen .sheet-label { color: var(--wine); }
+  .sheet.sheet-pen-lime {
+    background: #e8f3b8;
+  }
+  .sheet.sheet-pen-lime .sheet-label { color: #3d4e14; }
+  .sheet.sheet-pen-olive {
+    background: #eef1e4;
+  }
+  .sheet.sheet-pen-olive .sheet-label { color: #3a4a16; }
+  .sheet.sheet-pen-ink {
+    background: #f3efe8;
+  }
+  .sheet.sheet-pen-ink .sheet-label { color: var(--ink); }
+  .cell { position: relative; width: var(--tag-w); height: var(--tag-h); }
+  .crop {
+    position: absolute; width: 0.12in; height: 0.12in; z-index: 6;
+    pointer-events: none;
+  }
+  .crop.tl { left: -0.14in; top: -0.14in; border-top: 0.75pt solid var(--olive); border-left: 0.75pt solid var(--olive); }
+  .crop.tr { right: -0.14in; top: -0.14in; border-top: 0.75pt solid var(--olive); border-right: 0.75pt solid var(--olive); }
+  .crop.bl { left: -0.14in; bottom: -0.14in; border-bottom: 0.75pt solid var(--olive); border-left: 0.75pt solid var(--olive); }
+  .crop.br { right: -0.14in; bottom: -0.14in; border-bottom: 0.75pt solid var(--olive); border-right: 0.75pt solid var(--olive); }
+
+  .howto {
+    padding: 0.5in 0.7in;
+    display: grid; grid-template-columns: 1.25fr 1fr; gap: 0.35in;
+  }
+  .howto h1 {
+    font-family: var(--display); text-transform: uppercase;
+    font-size: 0.38in; line-height: 0.9; letter-spacing: -0.04em; margin: 0 0 0.14in;
+  }
+  .howto h1 span { color: var(--pink); }
+  .howto p { margin: 0 0 0.1in; font-size: 0.135in; line-height: 1.35; color: rgba(249,249,250,.8); }
+  .howto .kicker {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--lime); margin: 0 0 0.1in;
+  }
+  .swatch { display: flex; gap: 0.1in; margin: 0.14in 0; flex-wrap: wrap; }
+  .swatch b {
+    display: flex; flex-direction: column; justify-content: flex-end;
+    width: 1.45in; height: 0.62in; padding: 0.08in;
+    font-family: var(--mono); font-size: 0.07in; letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .swatch .exec { background: var(--lime); color: var(--ink); }
+  .swatch .member { background: var(--pink); color: var(--ink); }
+  .swatch .clanker { background: var(--cyan); color: var(--ink); }
+  .howto ol { margin: 0; padding-left: 1.1em; font-size: 0.13in; line-height: 1.4; }
+  .howto li { margin: 0 0 0.07in; }
+  .howto code { font-family: var(--mono); color: var(--lime); font-size: 0.115in; }
+
+  body.print-only .gallery, body.print-only .rail, body.print-only .toolbar { display: none; }
+  body.capture {
+    background: #000; padding: 0; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+  }
+  body.capture .toolbar, body.capture .rail, body.capture .gallery,
+  body.capture .sheet, body.capture .print-root { display: none !important; }
+  body.capture .capture-stage { display: block; filter: none; }
+  .capture-stage { display: none; }
+
+  @page { size: 11in 8.5in; margin: 0; }
+  @page a4 { size: A4; margin: 0; }
+  @media print {
+    body { background: #fff; }
+    .toolbar, .rail, .gallery, .capture-stage { display: none !important; }
+    .sheet {
+      margin: 0; box-shadow: none; background: #0a0408;
+      page-break-after: always; break-after: page;
+    }
+    .sheet.sheet-pen { background: #f4eef1; }
+    .sheet.sheet-pen-lime { background: #e8f3b8; }
+    .sheet.sheet-pen-olive { background: #eef1e4; }
+    .sheet.sheet-pen-ink { background: #f3efe8; }
+    .sheet:last-child { page-break-after: auto; break-after: auto; }
+    .sheet[hidden] { display: none !important; }
+    body:not(.paper-a4) .sheet.a4 { display: none !important; }
+    body.print-single-tag {
+      background: #030205;
+    }
+    body.print-single-tag .sheet { display: none !important; }
+    body.print-single-tag .print-root > .tag {
+      margin: 0;
+      box-shadow: none;
+    }
+  }
+</style>
+</head>
+<body>
+<nav class="toolbar">
+  <button type="button" data-filter="kind" data-value="all" aria-pressed="true">All roles</button>
+  <button type="button" data-filter="kind" data-value="exec" aria-pressed="false">Exec</button>
+  <button type="button" data-filter="kind" data-value="member" aria-pressed="false">Member</button>
+  <button type="button" data-filter="kind" data-value="clanker" aria-pressed="false">Clanker</button>
+  <button type="button" data-filter="layout" data-value="all" aria-pressed="true">All layouts</button>
+  <button type="button" data-filter="layout" data-value="ticket" aria-pressed="false">Ticket</button>
+  <button type="button" data-filter="layout" data-value="lockup" aria-pressed="false">Lockup</button>
+  <button type="button" data-filter="layout" data-value="sticker" aria-pressed="false">Sticker</button>
+  <button type="button" data-filter="layout" data-value="spec" aria-pressed="false">Spec plate</button>
+  <button type="button" id="guidesBtn" aria-pressed="false">Guides</button>
+  <a href="Human-Ticket-Pen-A4.pdf">Open A4 pen ticket PDF</a>
+  <a href="Human-Ticket-Pen-Lime-A4.pdf">Open A4 pen lime PDF</a>
+  <a href="Human-Ticket-Pen-Olive-A4.pdf">Open A4 pen olive PDF</a>
+  <a href="Human-Ticket-Pen-Ink-A4.pdf">Open A4 pen ink PDF</a>
+  <a href="Human-Ticket-Pen-Sampler-A4.pdf">Open A4 pen sampler PDF</a>
+  <a href="Luiz-Clanker-Ticket.pdf">Open Luiz ticket PDF</a>
+  <a href="Clanker-Ticket-Fill-In-A4.pdf">Open A4 clanker ticket PDF</a>
+  <a href="Human-Ticket-Fill-In-A4.pdf">Open A4 human ticket PDF</a>
+  <a href="Human-Fill-In-A4.pdf">Open A4 human fill-in PDF</a>
+  <a href="Exec-Stickers.pdf">Open exec stickers PDF</a>
+  <a href="Name-Tags.pdf">Open print PDF</a>
+  <button type="button" onclick="window.print()">Print / Save PDF</button>
+</nav>
+
+<div class="rail">
+  <strong>Name tags</strong>
+  — first name only, no family line. Execs print <code>type = ???</code> plus their club role (lime).
+  Members are a name and a type: <code>human</code> (pink) or <code>clanker</code> (cyan).
+  Lanyard inserts are <strong>4 × 3 in</strong> (ticket + lockup).
+  Peel-and-stick tags are <strong>3.5 × 2 in</strong> rectangles: <strong>stripe</strong> (name-forward) and <strong>spec plate</strong> (type-forward).
+  Six stickers per landscape Letter sheet. Print at 100%. Click a name to type, or edit the roster in this file.
+  Walk-up human fill-ins are one <strong>A4</strong> portrait page in <a href="Human-Fill-In-A4.pdf">Human-Fill-In-A4.pdf</a>
+  — ten blank pink stickers, 7 mm / 5.5 mm cut gaps (<code>?print=a4-human-fillin</code>).
+  Ticket fill-ins (pink HUMAN stub, write-in name) are <a href="Human-Ticket-Fill-In-A4.pdf">Human-Ticket-Fill-In-A4.pdf</a>
+  (<code>?print=a4-human-ticket</code>).
+  Paper-face human tickets for <strong>black or blue pen</strong> are <a href="Human-Ticket-Pen-A4.pdf">Human-Ticket-Pen-A4.pdf</a>
+  (<code>?print=a4-human-ticket-pen</code>).
+  Three more pen-readable faces: lime <a href="Human-Ticket-Pen-Lime-A4.pdf">Human-Ticket-Pen-Lime-A4.pdf</a>,
+  olive <a href="Human-Ticket-Pen-Olive-A4.pdf">Human-Ticket-Pen-Olive-A4.pdf</a>,
+  and ink-frame <a href="Human-Ticket-Pen-Ink-A4.pdf">Human-Ticket-Pen-Ink-A4.pdf</a>.
+  A mixed comparison sheet is <a href="Human-Ticket-Pen-Sampler-A4.pdf">Human-Ticket-Pen-Sampler-A4.pdf</a>.
+  Clanker ticket fill-ins (cyan CLANKER stub) are <a href="Clanker-Ticket-Fill-In-A4.pdf">Clanker-Ticket-Fill-In-A4.pdf</a>
+  (<code>?print=a4-clanker-ticket</code>).
+  Luiz’s named clanker ticket (4 × 3 in) is <a href="Luiz-Clanker-Ticket.pdf">Luiz-Clanker-Ticket.pdf</a>
+  (<code>?print=luiz-ticket</code>).
+  Named exec stickers are one Letter page in <a href="Exec-Stickers.pdf">Exec-Stickers.pdf</a>
+  (<code>?print=exec-stickers</code>). Full kit is <a href="Name-Tags.pdf">Name-Tags.pdf</a>.
+  75 × 25 mm engraved plates (mascot + name + title, not Daniil) are in
+  <a href="engrave/preview.html">engrave/</a>.
+  Dye-sub <strong>45 × 2 cm</strong> lanyards (club white/black templates, plus named exec straps, not Daniil) are in
+  <a href="../Lanyards/preview.html">Lanyards/</a>.
+  Rebuild print PDFs with <code>./capture_nametags.sh</code>.
+</div>
+
+<section class="gallery" id="gallery"></section>
+<div class="print-root" id="sheets"></div>
+<div class="capture-stage" id="captureStage"></div>
+
+<script>
+  /* Roster — first names. Execs are type "???" and still show a club role.
+     Members are name + type only. Click a tag to type, or edit this list. */
+  const PEOPLE = {
+    exec: [
+      { name: "Hailey", role: "President", type: "???" },
+      { name: "Pierre", role: "Vice President", type: "???" },
+      { name: "Alexander", role: "Treasurer", type: "???" },
+      { name: "Deema", role: "Community Manager", pronouns: "he/him", type: "???" },
+      { name: "Logan", role: "Community Manager", type: "???" },
+      { name: "Daniil", role: "AI", type: "???" },
+    ],
+    member: [
+      { name: "Riley", type: "human" },
+      { name: "Priya", type: "human" },
+      { name: "Devon", type: "human" },
+      { name: "Morgan", type: "clanker" },
+      { name: "Casey", type: "clanker" },
+      { name: "Quinn", type: "clanker" },
+      { name: "Luiz", type: "clanker" },
+    ],
+  };
+
+  const JELLY = "assets/jellyfish.svg";
+  const params = new URLSearchParams(location.search);
+  const filters = { kind: params.get("kind") || "all", layout: params.get("layout") || "all" };
+
+  function displayName(person) {
+    const parts = String(person.name || "").trim().split(/\s+/).filter(Boolean);
+    return parts[0] || "";
+  }
+
+  function personType(person) {
+    if (person.type) return person.type;
+    return person.kind === "exec" ? "???" : "human";
+  }
+
+  function stubKind(type) {
+    if (type === "???") return "???";
+    if (type === "clanker") return "CLANKER";
+    return "HUMAN";
+  }
+
+  function typeChip(type) {
+    return `type=${type}`;
+  }
+
+  function taglineFor(type) {
+    if (type === "???") return "Generated by AI · Type classified";
+    if (type === "clanker") return "Generated by AI · Deployed as member";
+    return "Generated by AI · Perfected by humans";
+  }
+
+  function accentClass(person) {
+    const type = personType(person);
+    if (type === "clanker") return "clanker";
+    return person.kind === "exec" ? "exec" : "member";
+  }
+
+  function roleIsOpen(person) {
+    const r = String(person.role || "").trim().toLowerCase();
+    return !r || r === "[placeholder]" || r === "placeholder";
+  }
+
+  function tagHTML(person, layout) {
+    const kind = person.kind;
+    const type = personType(person);
+    const isExec = kind === "exec";
+    const blank = !!person.blank;
+    const openRole = isExec && !blank && roleIsOpen(person);
+    const givenText = blank ? "" : displayName(person);
+    const titleText = blank || openRole ? "" : (person.role || "Exec");
+    const pronounsText = blank ? "" : String(person.pronouns || "").trim();
+    const typeText = type;
+    const penFace = person.pen && person.face && person.face !== "paper" ? `pen-${person.face}` : "";
+    const cls = ["tag", accentClass(person), layout, blank ? "blank" : "", openRole ? "blank-role" : "", person.pen ? "pen" : "", penFace].filter(Boolean).join(" ");
+    const chipCls = "chip" + (type === "???" ? " mystery" : "");
+    const chip = `<span class="${chipCls}">${escapeHtml(typeChip(type))}</span>`;
+    const execChip = isExec ? `<span class="chip solid">EXEC</span>` : "";
+    const execRoleChip = isExec ? `<span class="role-chip">EXEC</span>` : "";
+
+    const headerTicket = `
+      <img class="jelly-mark" src="${JELLY}" alt="">
+      <div class="club">Unnatural<br>Intelligence</div>
+      ${chip}`;
+    const headerLockup = `
+      <img class="jelly-mark" src="${JELLY}" alt="">
+      <div class="club">Unnatural<br>Intelligence</div>
+      <div class="chips">${chip}${execChip}</div>`;
+    const headerSticker = `
+      <img class="jelly-mark" src="${JELLY}" alt="">
+      <div class="club">Unnatural<br>Intelligence</div>
+      ${chip}`;
+    const headerSpec = `
+      <img class="jelly-mark" src="${JELLY}" alt="">
+      <div class="club">Unnatural<br>Intelligence</div>
+      ${execRoleChip}`;
+
+    const identity = `
+      <p class="line-label">name</p>
+      <p class="given" contenteditable="true" spellcheck="false">${escapeHtml(givenText)}</p>
+      ${pronounsText ? `<p class="pronouns" contenteditable="true" spellcheck="false">${escapeHtml(pronounsText)}</p>` : ""}
+      ${isExec ? `
+      <p class="line-label lab-role">role</p>
+      <p class="title" contenteditable="true" spellcheck="false">${escapeHtml(titleText)}</p>` : ""}`;
+
+    const url = `<span class="url">unnaturalintelligence.club</span>`;
+    let inner = "";
+    if (layout === "ticket") {
+      inner = `
+        <div class="stub">
+          <span class="kind">${escapeHtml(stubKind(type))}</span>
+          ${isExec ? `<span class="role">EXEC</span>` : ""}
+          <span class="perf" aria-hidden="true"></span>
+        </div>
+        <div class="face">
+          <div class="guides-layer"></div>
+          <header class="top">${headerTicket}</header>
+          <div class="identity">${identity}</div>
+          <footer class="foot">${execRoleChip}${url}</footer>
+        </div>`;
+    } else if (layout === "lockup") {
+      inner = `
+        <div class="face">
+          <div class="guides-layer"></div>
+          <header class="top">${headerLockup}</header>
+          <div class="identity">${identity}</div>
+          <footer class="foot">
+            ${isExec ? `<p class="tagline">${escapeHtml(taglineFor(type))}</p>` : `<span></span>`}
+            ${url}
+          </footer>
+        </div>`;
+    } else if (layout === "sticker") {
+      inner = `
+        <div class="bar" aria-hidden="true"></div>
+        <div class="face">
+          <div class="guides-layer"></div>
+          <header class="top">${headerSticker}</header>
+          <div class="identity">${identity}</div>
+          <footer class="foot">${execRoleChip}${url}</footer>
+        </div>`;
+    } else {
+      inner = `
+        <div class="face">
+          <div class="guides-layer"></div>
+          <header class="top">${headerSpec}</header>
+          <p class="spec-kicker">type =</p>
+          <p class="spec-type" contenteditable="true" spellcheck="false">${escapeHtml(typeText)}</p>
+          <div class="rule" aria-hidden="true"></div>
+          <div class="identity">${identity}</div>
+        </div>`;
+    }
+
+    return `
+<article class="${cls}" data-kind="${kind}" data-type="${escapeHtml(type)}" data-layout="${layout}">
+  <div class="bg" aria-hidden="true"><div class="wash"></div><div class="grid"></div></div>
+  <img class="jelly-wash" src="${JELLY}" alt="">
+  <div class="scan" aria-hidden="true"></div>
+  ${inner}
+</article>`;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+    }[c]));
+  }
+
+  function cellHTML(person, layout) {
+    return `<div class="cell">
+      <i class="crop tl"></i><i class="crop tr"></i><i class="crop bl"></i><i class="crop br"></i>
+      ${tagHTML(person, layout)}
+    </div>`;
+  }
+
+  function blankPerson(kind, type, extra = {}) {
+    return { name: "", role: "", kind, type: type || (kind === "exec" ? "???" : "human"), blank: true, ...extra };
+  }
+
+  function peopleOf(kind, type) {
+    return PEOPLE[kind]
+      .filter((p) => !type || p.type === type)
+      .map((p) => ({ ...p, kind }));
+  }
+
+  function padPeople(people, kind, type, slots) {
+    const out = [...people];
+    const blank = blankPerson(kind, type || (people[0] && people[0].type));
+    while (out.length < slots) out.push({ ...blank });
+    return out.slice(0, slots);
+  }
+
+  function sheetPages(kind, { type, slots = 4 } = {}) {
+    const named = peopleOf(kind, type);
+    if (!named.length) return [padPeople([], kind, type, slots)];
+    const pages = [];
+    for (let i = 0; i < named.length; i += slots) {
+      pages.push(padPeople(named.slice(i, i + slots), kind, type, slots));
+    }
+    return pages;
+  }
+
+  function sheetHTML({ kind, type, layout, pack, label, sub, people }) {
+    const packClass = pack === "2x3" ? " pack-2x3"
+      : pack === "a4-2x5" ? " pack-a4-2x5 a4"
+      : "";
+    const faces = [...new Set((people || []).filter((p) => p.pen).map((p) => p.face || "paper"))];
+    const penClass = faces.length
+      ? " sheet-pen" + (faces.length === 1 && faces[0] !== "paper" ? ` sheet-pen-${faces[0]}` : "")
+      : "";
+    const typeAttr = type || "all";
+    return `<article class="sheet${packClass}${penClass}" data-kind="${kind}" data-type="${typeAttr}" data-layout="${layout}">
+      <div class="sheet-label"><span>${label}</span><span>${sub}</span></div>
+      <div class="sheet-grid">${people.map((p) => cellHTML(p, layout)).join("")}</div>
+    </article>`;
+  }
+
+  function humanPenTicketFillInA4Sheet(face) {
+    const people = Array.from({ length: 10 }, () => blankPerson("member", "human", { pen: true, face }));
+    const meta = {
+      paper: {
+        label: "Unnatural Intelligence · human ticket · pen",
+        sub: "A4 · 10-up · paper face · black/blue pen · print 100%",
+      },
+      lime: {
+        label: "Unnatural Intelligence · human ticket · pen · lime",
+        sub: "A4 · 10-up · lime face · black/blue pen · print 100%",
+      },
+      olive: {
+        label: "Unnatural Intelligence · human ticket · pen · olive",
+        sub: "A4 · 10-up · olive face · black/blue pen · print 100%",
+      },
+      ink: {
+        label: "Unnatural Intelligence · human ticket · pen · ink",
+        sub: "A4 · 10-up · ink frame · black/blue pen · print 100%",
+      },
+    }[face || "paper"];
+    return sheetHTML({
+      kind: "member", type: "human", layout: "ticket", pack: "a4-2x5",
+      label: meta.label,
+      sub: meta.sub,
+      people,
+    });
+  }
+
+  function humanPenTicketSamplerA4Sheet() {
+    const faces = [
+      "paper", "lime",
+      "olive", "ink",
+      "paper", "lime",
+      "olive", "ink",
+      "lime", "olive",
+    ];
+    const people = faces.map((face) => blankPerson("member", "human", { pen: true, face }));
+    return sheetHTML({
+      kind: "member", type: "human", layout: "ticket", pack: "a4-2x5",
+      label: "Unnatural Intelligence · human ticket · pen variants",
+      sub: "A4 · 10-up · paper / lime / olive / ink · black/blue pen · print 100%",
+      people,
+    });
+  }
+
+  function clankerTicketFillInA4Sheet() {
+    const people = Array.from({ length: 10 }, () => blankPerson("member", "clanker"));
+    return sheetHTML({
+      kind: "member", type: "clanker", layout: "ticket", pack: "a4-2x5",
+      label: "Unnatural Intelligence · clanker ticket fill-in",
+      sub: "A4 · 10-up · CLANKER stub · 7 / 5.5 mm gaps · print 100%",
+      people,
+    });
+  }
+
+  function humanTicketFillInA4Sheet() {
+    const people = Array.from({ length: 10 }, () => blankPerson("member", "human"));
+    return sheetHTML({
+      kind: "member", type: "human", layout: "ticket", pack: "a4-2x5",
+      label: "Unnatural Intelligence · human ticket fill-in",
+      sub: "A4 · 10-up · HUMAN stub · 7 / 5.5 mm gaps · print 100%",
+      people,
+    });
+  }
+
+  function humanFillInA4Sheet() {
+    const people = Array.from({ length: 10 }, () => blankPerson("member", "human"));
+    return sheetHTML({
+      kind: "member", type: "human", layout: "sticker", pack: "a4-2x5",
+      label: "Unnatural Intelligence · human fill-in",
+      sub: "A4 · 10-up · 3.5 × 2 in · 7 / 5.5 mm gaps · print 100%",
+      people,
+    });
+  }
+
+  function setPaperA4() {
+    document.body.classList.add("paper-a4");
+    if (!document.getElementById("a4PageStyle")) {
+      const style = document.createElement("style");
+      style.id = "a4PageStyle";
+      style.textContent = "@page { size: A4; margin: 0; }";
+      document.head.appendChild(style);
+    }
+  }
+
+  function setPaperTag() {
+    document.body.classList.add("print-single-tag");
+    if (!document.getElementById("tagPageStyle")) {
+      const style = document.createElement("style");
+      style.id = "tagPageStyle";
+      style.textContent = "@page { size: 4in 3in; margin: 0; }";
+      document.head.appendChild(style);
+    }
+  }
+
+  function luizPerson() {
+    return { name: "Luiz", kind: "member", type: "clanker" };
+  }
+
+  function howtoSheet() {
+    return `<article class="sheet" data-kind="all" data-type="all" data-layout="all">
+      <div class="howto">
+        <div>
+          <p class="kicker">Print kit · execs, humans, clankers</p>
+          <h1>Name tags with a <span>type</span></h1>
+          <p>Execs are classified: <code>type = ???</code> and still show a club role (President, VP…). Members are first name + type only — <code>human</code> or <code>clanker</code>. No family names. Lime is exec. Pink is human member. Cyan is clanker.</p>
+          <div class="swatch">
+            <b class="exec">Exec · type = ???</b>
+            <b class="member">Member · type = human</b>
+            <b class="clanker">Member · type = clanker</b>
+          </div>
+          <p>Lanyard: 4 × 3 in ticket (stub) or lockup. Stickers: 3.5 × 2 in rectangles — stripe (name-forward) or spec plate (type-forward). Cut on olive crop marks. Stickers go on plain rectangle sticker paper or label stock.</p>
+        </div>
+        <div>
+          <p class="kicker">How to print</p>
+          <ol>
+            <li>Color printer. Landscape US Letter. Scale <code>100%</code> / actual size. Do not fit to page.</li>
+            <li>Click a name to type. First name only — no family line. Members do not get a role. Spec plates also let you edit the type.</li>
+            <li>Lanyard sheets print four-up. Sticker sheets print six-up.</li>
+            <li>Slide 4 × 3 in tags into a badge holder. Peel 3.5 × 2 in rectangles onto shirts, laptops, or water bottles.</li>
+            <li>Blanks are for walk-ups. Write in white gel pen or a paint marker.</li>
+          </ol>
+          <p style="margin-top:0.18in;font-family:var(--mono);font-size:0.11in;letter-spacing:0.08em;color:rgba(249,249,250,.55);">UNNATURALINTELLIGENCE.CLUB · SAIT STUDENT CLUB</p>
+        </div>
+      </div>
+    </article>`;
+  }
+
+  function buildGallery() {
+    const groups = [
+      {
+        title: "Exec roster",
+        items: PEOPLE.exec.map((p) => ({
+          person: { ...p, kind: "exec" },
+          layout: "sticker",
+          cap: p.role
+            ? [p.name, p.role, p.pronouns].filter(Boolean).join(" · ")
+            : `${p.name} · role TBD`,
+        })),
+      },
+      {
+        title: "Ticket — stub is the type",
+        items: [
+          { person: { ...PEOPLE.exec[0], kind: "exec" }, layout: "ticket", cap: "Exec · type = ???" },
+          { person: { ...PEOPLE.member[0], kind: "member" }, layout: "ticket", cap: "Member · type = human" },
+          { person: { ...PEOPLE.member[3], kind: "member" }, layout: "ticket", cap: "Member · type = clanker" },
+          { person: { ...PEOPLE.member[6], kind: "member" }, layout: "ticket", cap: "Luiz · type = clanker" },
+        ],
+      },
+      {
+        title: "Lockup — banner field",
+        items: [
+          { person: { ...PEOPLE.exec[1], kind: "exec" }, layout: "lockup", cap: "Exec · lockup · ???" },
+          { person: { ...PEOPLE.member[4], kind: "member" }, layout: "lockup", cap: "Clanker · lockup" },
+        ],
+      },
+      {
+        title: "Sticker — 3.5 × 2 in stripe",
+        items: [
+          { person: { ...PEOPLE.exec[0], kind: "exec" }, layout: "sticker", cap: "Exec sticker · ???" },
+          { person: { ...PEOPLE.member[1], kind: "member" }, layout: "sticker", cap: "Human sticker" },
+          { person: { ...PEOPLE.member[3], kind: "member" }, layout: "sticker", cap: "Clanker sticker" },
+        ],
+      },
+      {
+        title: "Spec plate — type-forward sticker",
+        items: [
+          { person: { ...PEOPLE.exec[2], kind: "exec" }, layout: "spec", cap: "Exec spec · type = ???" },
+          { person: { ...PEOPLE.member[0], kind: "member" }, layout: "spec", cap: "Human spec" },
+          { person: { ...PEOPLE.member[5], kind: "member" }, layout: "spec", cap: "Clanker spec" },
+        ],
+      },
+      {
+        title: "Write-in blanks",
+        items: [
+          { person: blankPerson("exec", "???"), layout: "sticker", cap: "Exec sticker · write-in" },
+          { person: blankPerson("member", "human", { pen: true }), layout: "ticket", cap: "Human ticket · paper face · black/blue pen" },
+          { person: blankPerson("member", "human", { pen: true, face: "lime" }), layout: "ticket", cap: "Human ticket · lime face · black/blue pen" },
+          { person: blankPerson("member", "human", { pen: true, face: "olive" }), layout: "ticket", cap: "Human ticket · olive face · black/blue pen" },
+          { person: blankPerson("member", "human", { pen: true, face: "ink" }), layout: "ticket", cap: "Human ticket · ink frame · black/blue pen" },
+          { person: blankPerson("member", "human"), layout: "ticket", cap: "Human ticket · write-in · A4 10-up" },
+          { person: blankPerson("member", "clanker"), layout: "ticket", cap: "Clanker ticket · write-in · A4 10-up" },
+          { person: blankPerson("member", "human"), layout: "sticker", cap: "Human sticker · write-in · A4 10-up" },
+          { person: blankPerson("member", "clanker"), layout: "spec", cap: "Clanker spec · write-in" },
+        ],
+      },
+    ];
+    document.getElementById("gallery").innerHTML = groups.map((g) => `
+      <h2>${g.title}</h2>
+      <div class="row">${g.items.map((s) => `
+        <figure class="shot" data-kind="${s.person.kind}" data-type="${personType(s.person)}" data-layout="${s.layout}">
+          ${tagHTML(s.person, s.layout)}
+          <figcaption>${s.cap}</figcaption>
+        </figure>`).join("")}
+      </div>`).join("");
+  }
+
+  function buildSheets() {
+    if (params.get("print") === "exec-stickers") {
+      const people = peopleOf("exec", "???");
+      document.getElementById("sheets").innerHTML = sheetHTML({
+        kind: "exec", type: "???", layout: "sticker", pack: "2x3",
+        label: "Unnatural Intelligence · exec stickers · type = ???",
+        sub: "3.5 × 2 in · 6-up · print at 100% · cut crop marks",
+        people: padPeople(people, "exec", "???", 6),
+      });
+      return;
+    }
+    if (params.get("print") === "a4-human-ticket-pen") {
+      setPaperA4();
+      document.getElementById("sheets").innerHTML = humanPenTicketFillInA4Sheet();
+      return;
+    }
+    if (params.get("print") === "a4-human-ticket-pen-lime") {
+      setPaperA4();
+      document.getElementById("sheets").innerHTML = humanPenTicketFillInA4Sheet("lime");
+      return;
+    }
+    if (params.get("print") === "a4-human-ticket-pen-olive") {
+      setPaperA4();
+      document.getElementById("sheets").innerHTML = humanPenTicketFillInA4Sheet("olive");
+      return;
+    }
+    if (params.get("print") === "a4-human-ticket-pen-ink") {
+      setPaperA4();
+      document.getElementById("sheets").innerHTML = humanPenTicketFillInA4Sheet("ink");
+      return;
+    }
+    if (params.get("print") === "a4-human-ticket-pen-sampler") {
+      setPaperA4();
+      document.getElementById("sheets").innerHTML = humanPenTicketSamplerA4Sheet();
+      return;
+    }
+    if (params.get("print") === "luiz-ticket") {
+      setPaperTag();
+      document.getElementById("sheets").innerHTML = tagHTML(luizPerson(), "ticket");
+      return;
+    }
+    if (params.get("print") === "a4-clanker-ticket") {
+      setPaperA4();
+      document.getElementById("sheets").innerHTML = clankerTicketFillInA4Sheet();
+      return;
+    }
+    if (params.get("print") === "a4-human-ticket") {
+      setPaperA4();
+      document.getElementById("sheets").innerHTML = humanTicketFillInA4Sheet();
+      return;
+    }
+    if (params.get("print") === "a4-human-fillin") {
+      setPaperA4();
+      document.getElementById("sheets").innerHTML = humanFillInA4Sheet();
+      return;
+    }
+    const lanyard = ["ticket", "lockup"];
+    let html = howtoSheet();
+    for (const layout of lanyard) {
+      for (const people of sheetPages("exec", { type: "???", slots: 4 })) {
+        html += sheetHTML({
+          kind: "exec", type: "???", layout,
+          label: `Unnatural Intelligence · exec · ${layout} · type = ???`,
+          sub: "4 × 3 in · print at 100% · cut crop marks",
+          people,
+        });
+      }
+      html += sheetHTML({
+        kind: "member", type: "human", layout,
+        label: `Unnatural Intelligence · member · ${layout} · type = human`,
+        sub: "4 × 3 in · print at 100% · cut crop marks",
+        people: padPeople(peopleOf("member", "human"), "member", "human", 4),
+      });
+      html += sheetHTML({
+        kind: "member", type: "clanker", layout,
+        label: `Unnatural Intelligence · member · ${layout} · type = clanker`,
+        sub: "4 × 3 in · print at 100% · cut crop marks",
+        people: padPeople(peopleOf("member", "clanker"), "member", "clanker", 4),
+      });
+      html += sheetHTML({
+        kind: "all", type: "all", layout,
+        label: `Unnatural Intelligence · write-in blanks · ${layout}`,
+        sub: "2 exec + 1 human + 1 clanker · 4 × 3 in · print at 100%",
+        people: [
+          blankPerson("exec", "???"),
+          blankPerson("exec", "???"),
+          blankPerson("member", "human"),
+          blankPerson("member", "clanker"),
+        ],
+      });
+    }
+    const stickerLayouts = [
+      { layout: "sticker", name: "stripe sticker" },
+      { layout: "spec", name: "spec plate" },
+    ];
+    for (const { layout, name } of stickerLayouts) {
+      for (const people of sheetPages("exec", { type: "???", slots: 6 })) {
+        html += sheetHTML({
+          kind: "exec", type: "???", layout, pack: "2x3",
+          label: `Unnatural Intelligence · exec · ${name} · type = ???`,
+          sub: "3.5 × 2 in · 6-up · print at 100% · cut crop marks",
+          people,
+        });
+      }
+      html += sheetHTML({
+        kind: "member", type: "human", layout, pack: "2x3",
+        label: `Unnatural Intelligence · member · ${name} · type = human`,
+        sub: "3.5 × 2 in · 6-up · print at 100% · cut crop marks",
+        people: padPeople(peopleOf("member", "human"), "member", "human", 6),
+      });
+      html += sheetHTML({
+        kind: "member", type: "clanker", layout, pack: "2x3",
+        label: `Unnatural Intelligence · member · ${name} · type = clanker`,
+        sub: "3.5 × 2 in · 6-up · print at 100% · cut crop marks",
+        people: padPeople(peopleOf("member", "clanker"), "member", "clanker", 6),
+      });
+    }
+    const mixedBlanks = [
+      blankPerson("exec", "???"),
+      blankPerson("exec", "???"),
+      blankPerson("member", "human"),
+      blankPerson("member", "human"),
+      blankPerson("member", "clanker"),
+      blankPerson("member", "clanker"),
+    ];
+    html += sheetHTML({
+      kind: "all", type: "all", layout: "sticker", pack: "2x3",
+      label: "Unnatural Intelligence · write-in blanks · stripe sticker",
+      sub: "2 exec + 2 human + 2 clanker · 3.5 × 2 in",
+      people: mixedBlanks,
+    });
+    if (!params.has("print")) {
+      html += humanFillInA4Sheet();
+      html += humanTicketFillInA4Sheet();
+      html += humanPenTicketFillInA4Sheet();
+      html += humanPenTicketFillInA4Sheet("lime");
+      html += humanPenTicketFillInA4Sheet("olive");
+      html += humanPenTicketFillInA4Sheet("ink");
+      html += humanPenTicketSamplerA4Sheet();
+      html += clankerTicketFillInA4Sheet();
+    }
+    document.getElementById("sheets").innerHTML = html;
+  }
+
+  function fitNames(root = document) {
+    const shrink = (el, min) => {
+      el.style.fontSize = "";
+      const cs = getComputedStyle(el);
+      let size = parseFloat(cs.fontSize);
+      while (el.scrollWidth > el.clientWidth + 1 && size > min) {
+        size -= 1;
+        el.style.fontSize = size + "px";
+      }
+    };
+    root.querySelectorAll(".tag:not(.blank) .given").forEach((el) => {
+      const min = el.closest(".tag.spec, .tag.sticker") ? 16 : 22;
+      shrink(el, min);
+    });
+    root.querySelectorAll(".tag:not(.blank):not(.blank-role) .title").forEach((el) => {
+      if (!el.textContent.trim()) return;
+      const min = el.closest(".tag.spec, .tag.sticker") ? 9 : 11;
+      shrink(el, min);
+    });
+    root.querySelectorAll(".tag:not(.blank) .spec-type").forEach((el) => shrink(el, 18));
+  }
+
+  function matchesKind(el) {
+    if (filters.kind === "all") return true;
+    if (el.dataset.kind === "all" || el.dataset.type === "all") return true;
+    if (filters.kind === "clanker") return el.dataset.type === "clanker";
+    if (filters.kind === "member") return el.dataset.kind === "member";
+    return el.dataset.kind === filters.kind;
+  }
+
+  function matchesLayout(el) {
+    if (filters.layout === "all") return true;
+    if (el.dataset.layout === "all") return true;
+    return el.dataset.layout === filters.layout;
+  }
+
+  function applyFilters() {
+    document.querySelectorAll("[data-filter]").forEach((btn) => {
+      btn.setAttribute("aria-pressed", btn.dataset.value === filters[btn.dataset.filter] ? "true" : "false");
+    });
+    document.querySelectorAll(".sheet, .gallery .shot").forEach((el) => {
+      el.hidden = !(matchesKind(el) && matchesLayout(el));
+    });
+    document.querySelectorAll(".gallery h2").forEach((h) => {
+      const row = h.nextElementSibling;
+      const visible = row && [...row.querySelectorAll(".shot")].some((s) => !s.hidden);
+      h.hidden = !visible;
+    });
+  }
+
+  function parseCapture(spec) {
+    const parts = spec.split("-");
+    const blank = parts.includes("blank");
+    const layout = parts[0];
+    let kind = "member";
+    let type = "human";
+    if (parts.includes("exec")) { kind = "exec"; type = "???"; }
+    if (parts.includes("clanker")) { kind = "member"; type = "clanker"; }
+    if (parts.includes("human")) { kind = "member"; type = "human"; }
+    if (parts.includes("member") && !parts.includes("clanker")) { kind = "member"; type = "human"; }
+    let face;
+    if (parts.includes("lime")) face = "lime";
+    else if (parts.includes("olive")) face = "olive";
+    else if (parts.includes("ink")) face = "ink";
+    const reserved = new Set(["ticket", "lockup", "sticker", "spec", "blank", "pen", "lime", "olive", "ink", "exec", "member", "human", "clanker"]);
+    const nameToken = parts.find((p) => !reserved.has(p));
+    const named = nameToken ? nameToken.charAt(0).toUpperCase() + nameToken.slice(1) : "";
+    return { layout, kind, type, blank, pen: parts.includes("pen"), face, named };
+  }
+
+  function showCapture() {
+    const spec = params.get("capture");
+    if (!spec) return;
+    document.body.classList.add("capture");
+    const { layout, kind, type, blank, pen, face, named } = parseCapture(spec);
+    let person;
+    if (blank) {
+      person = blankPerson(kind, type, { pen, face });
+    } else {
+      const pool = peopleOf(kind, type);
+      const src = named
+        ? pool.find((p) => displayName(p).toLowerCase() === named.toLowerCase()) || { name: named, type, kind }
+        : pool[0];
+      person = { ...src, kind, pen, face };
+    }
+    document.getElementById("captureStage").innerHTML = tagHTML(person, layout);
+  }
+
+  document.querySelectorAll("[data-filter]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      filters[btn.dataset.filter] = btn.dataset.value;
+      applyFilters();
+    });
+  });
+  document.getElementById("guidesBtn").addEventListener("click", () => {
+    const on = document.body.classList.toggle("guides-on");
+    document.getElementById("guidesBtn").setAttribute("aria-pressed", on ? "true" : "false");
+  });
+
+  if (params.has("print")) document.body.classList.add("print-only");
+  if (params.has("guides")) document.body.classList.add("guides-on");
+
+  showCapture();
+  buildGallery();
+  buildSheets();
+  applyFilters();
+  requestAnimationFrame(() => fitNames());
+  document.addEventListener("input", (e) => {
+    if (e.target.classList.contains("given") || e.target.classList.contains("spec-type") || e.target.classList.contains("title")) {
+      fitNames(e.target.closest(".tag"));
+    }
+  });
+</script>
+</body>
+</html>

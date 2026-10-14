@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1700" width="11in" height="17in" role="img" aria-label="Tabloid fact-bar rules" fill="none">
+  <rect x="42.00" y="22" width="217.96" height="8" fill="#BAF837"/>
+  <rect x="42.00" y="1670" width="217.96" height="8" fill="#BAF837"/>
+  <rect x="269.96" y="22" width="249.09" height="8" fill="#FA4A9E"/>
+  <rect x="269.96" y="1670" width="249.09" height="8" fill="#FA4A9E"/>
+  <rect x="529.05" y="22" width="280.23" height="8" fill="#7EC8FF"/>
+  <rect x="529.05" y="1670" width="280.23" height="8" fill="#7EC8FF"/>
+  <rect x="819.28" y="22" width="238.72" height="8" fill="#95B747"/>
+  <rect x="819.28" y="1670" width="238.72" height="8" fill="#95B747"/>
+  <path d="M28 40V1660" fill="none" stroke="#F9F9FA" stroke-width="1.5" opacity="0.8"/>
+  <path d="M1072 40V1660" fill="none" stroke="#F9F9FA" stroke-width="1.5" opacity="0.8"/>
+</svg>

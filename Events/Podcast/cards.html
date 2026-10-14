@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Podcast cards — Unnatural Intelligence</title>
+<link rel="stylesheet" href="kit.css">
+<style>
+  body { display: flex; flex-direction: column; align-items: center; gap: 28px; padding: 72px 24px 64px; }
+
+  .letter {
+    width: 8.5in; height: 11in; overflow: hidden;
+    background: #fff; color: var(--ink);
+    page-break-after: always;
+  }
+  .halves {
+    display: grid;
+    grid-template-rows: 1fr 0.18in 1fr;
+  }
+  .cut {
+    background: repeating-linear-gradient(90deg, #fff 0 10px, #9a9aa3 10px 14px, #fff 14px 24px);
+  }
+
+  .promo {
+    display: grid;
+    grid-template-columns: 1.35fr 0.95fr;
+    overflow: hidden;
+    min-height: 0;
+  }
+  .promo .copy, .promo .side { min-width: 0; min-height: 0; }
+  .promo .copy {
+    padding: 0.28in 0.26in 0.24in 0.32in;
+    display: flex; flex-direction: column;
+  }
+  .promo .side {
+    padding: 0.22in 0.24in 0.2in 0.12in;
+    display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between;
+  }
+  .eyebrow {
+    margin: 0;
+    font-family: var(--mono); font-weight: 700; font-size: 0.12in;
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .promo h2 {
+    margin: 0.06in 0 0;
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 0.92in; line-height: 0.78; letter-spacing: -0.05em;
+  }
+  .tape {
+    display: inline-block; margin-top: 0.1in;
+    font-family: var(--mono); font-weight: 700; font-size: 0.13in;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 0.05in 0.08in;
+    transform: rotate(-2deg);
+    align-self: flex-start;
+  }
+  .promo .copy p {
+    margin: 0.12in 0 0;
+    font-size: 0.155in; line-height: 1.28; font-weight: 500;
+    max-width: 4.4in;
+  }
+  .url {
+    margin-top: auto;
+    padding-top: 0.1in;
+    font-family: var(--mono); font-weight: 700; font-size: 0.12in; letter-spacing: 0.02em;
+  }
+  .promo .jelly { width: 1.85in; height: 2in; object-fit: contain; }
+  .promo .wave { width: 100%; height: 0.42in; }
+  .mini-marks { display: flex; align-items: flex-end; gap: 0.06in; }
+  .mini-marks .logo-card img { width: 0.92in; }
+  .mini-marks .logo-card.sait img { width: 0.72in; }
+  .mini-marks .qr .box { width: 0.78in; height: 0.78in; }
+  .mini-marks .qr .cap { font-size: 0.07in; }
+
+  .hate { background: var(--ink); color: var(--paper); }
+  .hate .eyebrow { color: var(--cyan); }
+  .hate h2 { color: var(--lime); }
+  .hate h2 span {
+    display: block; color: transparent; -webkit-text-stroke: 0.016in var(--paper);
+  }
+  .hate .tape { background: var(--pink); color: var(--ink); box-shadow: 0.04in 0.04in 0 var(--lime); }
+  .hate .url { color: var(--lime); }
+
+  .useful { background: var(--lime); color: var(--ink); }
+  .useful .eyebrow { color: var(--wine); }
+  .useful h2 span { display: block; color: var(--pink); }
+  .useful .tape { background: var(--ink); color: var(--lime); }
+  .useful .side { background: var(--ink); color: var(--paper); }
+  .useful .url { color: var(--wine); }
+
+  .finish { background: var(--wine); color: var(--paper); }
+  .finish .eyebrow { color: var(--lime); }
+  .finish h2 span {
+    display: block; color: transparent; -webkit-text-stroke: 0.016in var(--paper);
+  }
+  .finish h2 em { font-style: normal; color: var(--lime); }
+  .finish .tape { background: var(--cyan); color: var(--ink); }
+  .finish .url { color: var(--cyan); }
+  .meters { margin-top: 0.12in; display: grid; gap: 0.08in; }
+  .meters div { display: grid; grid-template-columns: 0.7in 1fr; gap: 0.08in; align-items: center; }
+  .meters span { font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.1em; text-transform: uppercase; }
+  .meters i { display: block; height: 0.12in; border-radius: 0.08in; background: #2a0a18; position: relative; }
+  .meters i::before { content: ""; position: absolute; inset: 0 auto 0 0; border-radius: 0.08in; }
+  .meters .tok i::before { width: 28%; background: var(--olive); }
+  .meters .voice i::before { width: 92%; background: var(--pink); }
+
+  .series { background: var(--paper); color: var(--ink); grid-template-columns: 1.15fr 0.9fr; }
+  .series h2 { font-size: 0.62in; text-transform: lowercase; letter-spacing: -0.04em; line-height: 0.86; }
+  .series h2 span { color: var(--pink); }
+  .series .eyebrow { color: var(--wine); }
+  .series .pill {
+    margin-top: 0.12in; align-self: flex-start;
+    background: var(--ink); color: var(--lime);
+    font-family: var(--mono); font-weight: 700; font-size: 0.12in;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.06in 0.1in;
+  }
+  .series .url { color: var(--wine); }
+  .series .side { background: var(--ink); }
+
+  .squares {
+    display: grid;
+    grid-template-columns: 3.9in 3.9in;
+    grid-template-rows: 3.9in 3.9in;
+    gap: 0.22in;
+    justify-content: center;
+    align-content: center;
+    background: #e6e6ea;
+    position: relative;
+  }
+  .sheet-note {
+    position: absolute; left: 0; right: 0; bottom: 0.22in;
+    text-align: center;
+    font-family: var(--mono); font-size: 0.11in; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #5c5c66;
+  }
+  .sq {
+    overflow: hidden; padding: 0.22in 0.22in 0.18in;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .sq .ep {
+    font-family: var(--mono); font-weight: 700; font-size: 0.12in;
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .sq h2 {
+    margin: 0.08in 0 0;
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 0.62in; line-height: 0.8; letter-spacing: -0.05em;
+  }
+  .sq p { margin: 0.1in 0 0; font-size: 0.15in; line-height: 1.25; font-weight: 600; }
+  .sq .url {
+    margin-top: auto;
+    font-family: var(--mono); font-weight: 700; font-size: 0.11in;
+  }
+  .sq .jelly {
+    position: absolute; right: 0.08in; bottom: 0.36in;
+    width: 1.15in; height: 1.25in; object-fit: contain;
+  }
+  .sq.hate { background: var(--ink); color: var(--paper); }
+  .sq.hate .ep { color: var(--cyan); }
+  .sq.hate h2 { color: var(--lime); }
+  .sq.hate .url { color: var(--pink); }
+  .sq.useful { background: var(--lime); color: var(--ink); }
+  .sq.useful .ep { color: var(--wine); }
+  .sq.useful h2 { color: var(--ink); }
+  .sq.useful h2 span { color: var(--pink); display: block; }
+  .sq.finish { background: var(--wine); color: var(--paper); }
+  .sq.finish .ep { color: var(--lime); }
+  .sq.finish h2 { color: var(--paper); }
+  .sq.finish .url { color: var(--cyan); }
+  .sq.series { background: var(--paper); color: var(--ink); }
+  .sq.series .ep { color: var(--wine); }
+  .sq.series h2 { font-size: 0.42in; text-transform: lowercase; letter-spacing: -0.04em; }
+  .sq.series h2 span { color: var(--pink); }
+  .sq.series .url { color: var(--wine); }
+
+  @page { size: 8.5in 11in; margin: 0; }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print / Save as PDF (Letter)</button>
+  <a href="index.html">All posters</a>
+  <a href="ep01-hate.html">E01 poster</a>
+  <a href="ep02-useful.html">E02 poster</a>
+  <a href="ep03-finish.html">E03 poster</a>
+</div>
+
+<section class="letter halves stage" data-stage data-w="8.5" data-h="11">
+  <article class="promo hate">
+    <div class="copy">
+      <p class="eyebrow">Podcast · S01 E01 · The feeling</p>
+      <h2>I hate<span>it</span></h2>
+      <div class="tape">but it’s so useful</div>
+      <p>Say you don’t like it. Then say what you used it for this week. Both can be true.</p>
+      <div class="url">unnaturalintelligence.club</div>
+    </div>
+    <div class="side">
+      <img class="jelly" src="assets/jellyfish-gradient.svg" alt="">
+      <div class="wave" data-wave aria-hidden="true"></div>
+      <div class="mini-marks">
+        <div class="logo-card"><img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs"></div>
+        <div class="qr"><div class="box"></div><div class="cap">Discord</div></div>
+      </div>
+    </div>
+  </article>
+  <div class="cut" aria-hidden="true"></div>
+  <article class="promo useful">
+    <div class="copy">
+      <p class="eyebrow">Podcast · S01 E02 · Tuesday</p>
+      <h2>So<span>useful</span></h2>
+      <div class="tape">Workflow, not a demo</div>
+      <p>The email. The lab. The thing due at midnight. Fold it into the week.</p>
+      <div class="url">unnaturalintelligence.club</div>
+    </div>
+    <div class="side">
+      <img class="jelly" src="assets/jellyfish-gradient.svg" alt="">
+      <div class="wave" data-wave aria-hidden="true"></div>
+      <div class="mini-marks">
+        <div class="logo-card sait"><img src="assets/sait-logo.png" alt="SAIT"></div>
+        <div class="qr"><div class="box"></div><div class="cap">Discord</div></div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<section class="letter halves stage" data-stage data-w="8.5" data-h="11">
+  <article class="promo finish">
+    <div class="copy">
+      <p class="eyebrow">Podcast · S01 E03 · The voice</p>
+      <h2><span>Human</span><em>finish</em></h2>
+      <div class="tape">Lean tokens · keep the voice</div>
+      <div class="meters">
+        <div class="tok"><span>Tokens</span><i></i></div>
+        <div class="voice"><span>Voice</span><i></i></div>
+      </div>
+      <p>If you would not say it in the hallway, it is not finished.</p>
+      <div class="url">unnaturalintelligence.club</div>
+    </div>
+    <div class="side">
+      <img class="jelly" src="assets/mask.svg" alt="" style="width:1.55in;height:1.55in;object-fit:contain;">
+      <img class="jelly" src="assets/jellyfish-gradient.svg" alt="" style="width:1.45in;height:1.55in;">
+      <div class="mini-marks">
+        <div class="qr"><div class="box"></div><div class="cap">Discord</div></div>
+      </div>
+    </div>
+  </article>
+  <div class="cut" aria-hidden="true"></div>
+  <article class="promo series">
+    <div class="copy">
+      <p class="eyebrow">Unnatural Intelligence · the podcast</p>
+      <h2>i hate it <span>but it’s so useful</span></h2>
+      <div class="pill">Season 1 · upcoming</div>
+      <p>A student-club show for the conflicting feelings that come with using AI. All programs. No purity test.</p>
+      <div class="url">unnaturalintelligence.club</div>
+    </div>
+    <div class="side">
+      <img class="jelly" src="assets/jellyfish-gradient.svg" alt="">
+      <div class="wave" data-wave aria-hidden="true"></div>
+      <div class="mini-marks">
+        <div class="logo-card"><img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs"></div>
+        <div class="logo-card sait"><img src="assets/sait-logo.png" alt="SAIT"></div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<section class="letter squares stage" data-stage data-w="8.5" data-h="11">
+  <article class="sq hate">
+    <div class="ep">E01 · The feeling</div>
+    <h2>I hate it</h2>
+    <p>But it’s so useful. Both can be true.</p>
+    <img class="jelly" src="assets/jellyfish-gradient.svg" alt="">
+    <div class="url">unnaturalintelligence.club</div>
+  </article>
+  <article class="sq useful">
+    <div class="ep">E02 · Tuesday</div>
+    <h2>So<span>useful</span></h2>
+    <p>Fold it into the week. Not into a demo.</p>
+    <img class="jelly" src="assets/jellyfish-ink.svg" alt="">
+    <div class="url">unnaturalintelligence.club</div>
+  </article>
+  <article class="sq finish">
+    <div class="ep">E03 · The voice</div>
+    <h2>Human finish</h2>
+    <p>Spend less. Keep the sentence that sounds like you.</p>
+    <img class="jelly" src="assets/jellyfish-gradient.svg" alt="">
+    <div class="url">unnaturalintelligence.club</div>
+  </article>
+  <article class="sq series">
+    <div class="ep">The podcast · S01</div>
+    <h2>i hate it <span>but it’s so useful</span></h2>
+    <p>Generated by AI. Perfected by humans.</p>
+    <img class="jelly" src="assets/jellyfish-gradient.svg" alt="">
+    <div class="url">unnaturalintelligence.club</div>
+  </article>
+  <div class="sheet-note">Cut on the gap · 3.9 in squares · table cards</div>
+</section>
+
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: "unnaturalintelligencesait@gmail.com",
+  contactDiscord: "discord.gg/nYeCuXGa47",
+  qrUrl: "https://discord.gg/nYeCuXGa47",
+  widthIn: 8.5,
+  heightIn: 11
+});
+</script>
+</body>
+</html>

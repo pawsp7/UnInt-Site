@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Restart icon" fill="none">
+  <rect width="64" height="64" rx="14" fill="#030205"/>
+
+  <path d="M43.87 39.42 A 14.00 14.00 0 1 1 43.03 23.38" fill="none" stroke="#FA4A9E" stroke-width="3.5" stroke-linecap="round"/>
+  <polygon points="46.11,27.32 38.76,26.72 47.31,20.04" fill="#FA4A9E"/>
+</svg>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exec nameplates — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter Display"; src: url("../../../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  :root {
+    --paper: #F9F9FA; --ink: #030205; --lime: #BAF837; --pink: #FA4A9E; --cyan: #7EC8FF;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: #14040c; color: var(--paper);
+    font-family: Inter, sans-serif; min-height: 100%;
+  }
+  .rail {
+    max-width: 920px; margin: 28px auto 8px; padding: 0 24px;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 12px; line-height: 1.55; color: rgba(249,249,250,.72);
+  }
+  h1 {
+    font-family: "Inter Display", Inter, sans-serif;
+    font-size: 28px; letter-spacing: -0.04em; margin: 0 0 8px; color: var(--paper);
+  }
+  .rail strong { color: var(--lime); }
+  .rail code { color: var(--pink); }
+  .gallery {
+    max-width: 920px; margin: 12px auto 48px; padding: 0 24px;
+    display: grid; gap: 28px;
+  }
+  .card header {
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px;
+  }
+  .card h2 {
+    font-family: "Inter Display", Inter, sans-serif;
+    font-size: 18px; margin: 0; letter-spacing: -0.03em;
+  }
+  .card header p {
+    margin: 0; font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--lime);
+  }
+  .pair { display: flex; flex-wrap: wrap; gap: 22px; align-items: flex-start; }
+  figure { margin: 0; }
+  figure img {
+    display: block; width: 75mm; height: 25mm;
+    filter: drop-shadow(0 18px 28px rgba(0,0,0,.5));
+  }
+  .film {
+    padding: 8px; background: #efefef; border-radius: 10px;
+  }
+  .film img { background: #fff; border-radius: 2mm; }
+  figcaption {
+    margin-top: 8px; font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(249,249,250,.5);
+  }
+  .sheet {
+    max-width: 920px; margin: 0 auto 64px; padding: 0 24px;
+  }
+  .sheet img {
+    width: 75mm; height: auto;
+    filter: drop-shadow(0 18px 28px rgba(0,0,0,.5));
+  }
+  .sheet .film-sheet {
+    padding: 12px; background: #efefef; border-radius: 12px; width: fit-content;
+  }
+  .sheet .film-sheet img { filter: none; background: #fff; }
+  @media print {
+    body { background: #fff; color: #000; }
+    .rail, figcaption, .sheet h2, .card header { color: #000; }
+    figure img { filter: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="rail">
+    <h1>Exec nameplates</h1>
+    <p><strong>75 × 25 mm</strong> engraving templates. Official jellyfish mascot, first name, club title. Daniil is omitted. Black fill = engrave. Red hairline = optional cut.</p>
+    <p>Roster: Hailey (President), Pierre (Vice President), Alexander (Treasurer), Deema (Community Manager), Logan (Community Manager). Rebuild with <code>python3 generate.py</code>. Import the per-person SVGs into LightBurn, xTool, or a trophy shop.</p>
+  </div>
+  <section class="gallery">
+    <article class="card">
+      <header>
+        <h2>Hailey</h2>
+        <p>President</p>
+      </header>
+      <div class="pair">
+        <figure>
+          <img src="proof/hailey.svg" width="75" height="25" alt="Hailey proof plate">
+          <figcaption>Proof · ink plate</figcaption>
+        </figure>
+        <figure class="film">
+          <img src="hailey.svg" width="75" height="25" alt="Hailey engrave film">
+          <figcaption>Engrave · black = laser</figcaption>
+        </figure>
+      </div>
+    </article>
+    <article class="card">
+      <header>
+        <h2>Pierre</h2>
+        <p>Vice President</p>
+      </header>
+      <div class="pair">
+        <figure>
+          <img src="proof/pierre.svg" width="75" height="25" alt="Pierre proof plate">
+          <figcaption>Proof · ink plate</figcaption>
+        </figure>
+        <figure class="film">
+          <img src="pierre.svg" width="75" height="25" alt="Pierre engrave film">
+          <figcaption>Engrave · black = laser</figcaption>
+        </figure>
+      </div>
+    </article>
+    <article class="card">
+      <header>
+        <h2>Alexander</h2>
+        <p>Treasurer</p>
+      </header>
+      <div class="pair">
+        <figure>
+          <img src="proof/alexander.svg" width="75" height="25" alt="Alexander proof plate">
+          <figcaption>Proof · ink plate</figcaption>
+        </figure>
+        <figure class="film">
+          <img src="alexander.svg" width="75" height="25" alt="Alexander engrave film">
+          <figcaption>Engrave · black = laser</figcaption>
+        </figure>
+      </div>
+    </article>
+    <article class="card">
+      <header>
+        <h2>Deema</h2>
+        <p>Community Manager</p>
+      </header>
+      <div class="pair">
+        <figure>
+          <img src="proof/deema.svg" width="75" height="25" alt="Deema proof plate">
+          <figcaption>Proof · ink plate</figcaption>
+        </figure>
+        <figure class="film">
+          <img src="deema.svg" width="75" height="25" alt="Deema engrave film">
+          <figcaption>Engrave · black = laser</figcaption>
+        </figure>
+      </div>
+    </article>
+    <article class="card">
+      <header>
+        <h2>Logan</h2>
+        <p>Community Manager</p>
+      </header>
+      <div class="pair">
+        <figure>
+          <img src="proof/logan.svg" width="75" height="25" alt="Logan proof plate">
+          <figcaption>Proof · ink plate</figcaption>
+        </figure>
+        <figure class="film">
+          <img src="logan.svg" width="75" height="25" alt="Logan engrave film">
+          <figcaption>Engrave · black = laser</figcaption>
+        </figure>
+      </div>
+    </article>
+  </section>
+  <section class="sheet">
+    <h2 class="rail" style="padding:0;margin:0 0 12px">Batch sheet · proof</h2>
+    <img src="sheet-proof.svg" alt="All five exec nameplates, colour proof">
+    <h2 class="rail" style="padding:0;margin:28px 0 12px">Batch sheet · engrave film</h2>
+    <div class="film-sheet">
+      <img src="sheet-engrave.svg" alt="All five exec nameplates, black engrave film">
+    </div>
+  </section>
+</body>
+</html>

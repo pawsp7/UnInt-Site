@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agents v5 — Lime board — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --paper: #F9F9FA; --olive: #95B747; --ink: #030205; --pink: #FA4A9E;
+    --wine: #591337; --lime: #BAF837; --cyan: #7EC8FF;
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; min-height: 100%; }
+  body { background: #cfd6b8; font-family: var(--sans); color: var(--ink); display: flex; justify-content: center; padding: 72px 24px 48px; }
+  .toolbar { position: fixed; top: 16px; right: 16px; z-index: 20; display: flex; gap: 8px; font-family: var(--mono); font-size: 12px; }
+  .toolbar a, .toolbar button {
+    cursor: pointer; text-decoration: none; border: 1px solid var(--ink);
+    background: var(--paper); color: var(--ink); padding: 8px 12px; font: inherit;
+  }
+  .stage { width: 11in; height: 17in; flex: 0 0 auto; transform-origin: top center; filter: drop-shadow(0 24px 40px rgba(0,0,0,.28)); }
+
+  .poster {
+    width: 11in; height: 17in; overflow: hidden; background: var(--paper);
+    display: flex; flex-direction: column;
+  }
+  .band {
+    background: var(--lime); color: var(--ink);
+    display: grid; grid-template-columns: auto 1fr auto auto auto;
+    gap: 0.14in; align-items: center;
+    padding: 0.16in 0.36in;
+  }
+  .band img.ticket { width: 0.62in; height: 0.62in; display: block; }
+  .band .club { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.22in; letter-spacing: -0.03em; line-height: 0.95; }
+  .band .club small { display: block; font-family: var(--mono); font-weight: 400; font-size: 0.09in; letter-spacing: 0.12em; margin-top: 0.04in; }
+  .band .badge { height: 0.36in; width: auto; display: block; }
+
+  .sheet {
+    flex: 1; padding: 0.28in 0.38in 0.28in;
+    display: flex; flex-direction: column; justify-content: flex-start; gap: 0.14in;
+  }
+  .eyebrow { font-family: var(--mono); font-size: 0.11in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--wine); }
+  .title {
+    margin: 0; font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 0.92in; line-height: 0.84; letter-spacing: -0.045em;
+  }
+  .title .ai { color: var(--ink); }
+  .title .agents { color: var(--pink); }
+  .title .rest { display: block; color: transparent; -webkit-text-stroke: 0.02in var(--ink); font-size: 0.58in; }
+  .official { margin: 0; font-family: var(--mono); font-size: 0.1in; color: #555; }
+  .purpose { margin: 0; font-size: 0.16in; line-height: 1.28; }
+  .purpose strong { color: var(--wine); }
+  .purpose em { color: var(--pink); font-style: normal; font-weight: 700; }
+
+  .trio { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.12in; flex: 1; }
+  .col { border: 0.018in solid var(--ink); background: #fff; padding: 0.16in 0.14in 0.16in; display: flex; flex-direction: column; }
+  .col.what { box-shadow: 0.08in 0.08in 0 var(--cyan); }
+  .col.how { box-shadow: 0.08in 0.08in 0 var(--lime); }
+  .col.use { box-shadow: 0.08in 0.08in 0 var(--pink); }
+  .col img.big { width: 1.05in; height: 1.05in; display: block; margin-bottom: 0.1in; }
+  .col .n { font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.14em; text-transform: uppercase; color: #555; }
+  .col h3 { margin: 0.04in 0 0.08in; font-family: var(--display); text-transform: uppercase; font-size: 0.34in; letter-spacing: -0.03em; line-height: 0.92; }
+  .col p { margin: 0; font-size: 0.135in; line-height: 1.28; }
+  .icons { display: flex; gap: 0.06in; margin-top: auto; padding-top: 0.12in; }
+  .icons img { width: 0.48in; height: 0.48in; display: block; }
+
+  .run { display: grid; gap: 0.07in; }
+  .run li {
+    list-style: none; display: grid; grid-template-columns: 0.52in 0.7in 1fr;
+    gap: 0.12in; align-items: center;
+    border: 0.016in solid var(--ink); background: #fff; padding: 0.08in 0.12in;
+  }
+  .run li.hot { background: var(--pink); color: var(--paper); border-color: var(--pink); }
+  .run img { width: 0.44in; height: 0.44in; display: block; }
+  .run .dur { font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.06em; }
+  .run p { margin: 0; font-size: 0.15in; font-weight: 600; line-height: 1.2; }
+  .run small { display: block; font-weight: 400; font-size: 0.115in; }
+
+  .tasks { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.1in; }
+  .tasks article { background: var(--ink); color: var(--paper); padding: 0.14in; min-height: 1.35in; }
+  .tasks img { width: 0.48in; height: 0.48in; display: block; margin-bottom: 0.08in; }
+  .tasks .n { font-family: var(--mono); font-size: 0.09in; color: var(--lime); letter-spacing: 0.12em; }
+  .tasks h4 { margin: 0.04in 0 0.04in; font-size: 0.18in; text-transform: uppercase; letter-spacing: -0.02em; }
+  .tasks p { margin: 0; font-size: 0.12in; line-height: 1.28; color: rgba(249,249,250,.78); }
+
+  .meta {
+    display: grid; grid-template-columns: 1fr 1.2fr 1.1fr;
+    gap: 0.12in; background: var(--ink); color: var(--paper);
+    padding: 0.12in 0.16in;
+  }
+  .meta h3 { margin: 0 0 0.02in; font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lime); }
+  .meta .big { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.26in; letter-spacing: -0.03em; }
+  .meta .sub { font-size: 0.12in; font-weight: 600; margin-top: 0.03in; color: rgba(249,249,250,.75); }
+
+  .foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 0.12in; }
+  .contact h5 { margin: 0 0 0.04in; font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--wine); }
+  .contact .line { font-size: 0.125in; line-height: 1.35; }
+  .contact code { font-family: var(--mono); font-size: 0.11in; }
+  .marks { display: flex; align-items: flex-end; gap: 0.08in; }
+  .logo-card { background: #fff; border: 0.014in solid var(--ink); width: 1.55in; padding: 0.06in; display: flex; align-items: center; justify-content: center; }
+  .logo-card.sait { width: 1.28in; }
+  .logo-card img { width: 100%; height: auto; display: block; }
+  .qr { width: 1.12in; text-align: center; }
+  .qr .box { background: #fff; border: 0.014in solid var(--ink); padding: 0.05in; width: 1.12in; height: 1.12in; }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr .cap { font-family: var(--mono); font-size: 0.08in; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.04in; }
+
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    body { background: #fff; padding: 0; display: block; }
+    .toolbar { display: none; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+  <a href="AI%20Agents%20Poster%20v5%20Lime%20(11%C3%9717).pdf">Open PDF</a>
+  <a href="index.html">all</a>
+</div>
+<div class="stage" id="stage">
+<div class="poster">
+  <div class="band">
+    <img class="ticket" src="assets/jellyfish-pink.svg" alt="">
+    <div class="club">Unnatural Intelligence<small>SAIT student club · Learn pillar · Lunch &amp; Learn</small></div>
+    <img class="badge" src="assets/workshop.svg" alt="Workshop">
+    <img class="badge" src="assets/live-lab.svg" alt="Live lab">
+    <img class="badge" src="assets/member.svg" alt="Member">
+  </div>
+
+  <div class="sheet">
+    <div class="eyebrow">Educational workshop · Fall 2026 · Purpose: demystify AI agents</div>
+    <h1 class="title"><span class="ai">AI </span><span class="agents">Agents</span><span class="rest">What? How? Use.</span></h1>
+    <p class="official">AI Agents: What? How? &amp; Learning to Use Them</p>
+    <p class="purpose">A friendly two-hour workshop for the whole SAIT community. <strong>No prior experience.</strong> Chatbots answer. <em>Agents act.</em> Every attendee leaves having used an AI agent for a real task.</p>
+
+    <section class="trio">
+      <article class="col what">
+        <img class="big" src="assets/bubble.svg" alt="">
+        <div class="n">Part 1 · 30 min</div>
+        <h3>What?</h3>
+        <p>Chatbot vs agent. Everyday examples. Live demos you can interrupt.</p>
+        <div class="icons">
+          <img src="assets/bubble.svg" alt="">
+          <img src="assets/neural.svg" alt="">
+          <img src="assets/glitch.svg" alt="">
+        </div>
+      </article>
+      <article class="col how">
+        <img class="big" src="assets/workflow.svg" alt="">
+        <div class="n">Part 2 · 30 min</div>
+        <h3>How?</h3>
+        <p>Perceive → decide → act. Tools, limitations, and the risks of improvising.</p>
+        <div class="icons">
+          <img src="assets/spark.svg" alt="">
+          <img src="assets/node.svg" alt="">
+          <img src="assets/meter.svg" alt="">
+        </div>
+      </article>
+      <article class="col use">
+        <img class="big" src="assets/prompt.svg" alt="">
+        <div class="n">Part 3 · 30 min</div>
+        <h3>Use.</h3>
+        <p>You run an agent on studying, a resume, or a project. Then a human finish.</p>
+        <div class="icons">
+          <img src="assets/prompt.svg" alt="">
+          <img src="assets/mask.svg" alt="">
+          <img src="assets/commit.svg" alt="">
+        </div>
+      </article>
+    </section>
+
+    <ol class="run">
+      <li><img src="assets/ticket.svg" alt=""><span class="dur">15 min</span><p>Welcome, club presentation, new member sign-ups</p></li>
+      <li><img src="assets/bubble.svg" alt=""><span class="dur">30 min</span><p>What is an AI agent?<small>Chatbot vs agent, everyday examples, live demos</small></p></li>
+      <li><img src="assets/neural.svg" alt=""><span class="dur">30 min</span><p>How do they work?<small>Perceive → decide → act, tools, limitations and risks</small></p></li>
+      <li class="hot"><img src="assets/prompt.svg" alt=""><span class="dur">30 min</span><p>Hands-on: use an agent for a concrete task<small>Studying, resume, or a project</small></p></li>
+      <li><img src="assets/commit.svg" alt=""><span class="dur">15 min</span><p>Q&amp;A and open discussion</p></li>
+    </ol>
+
+    <section class="tasks">
+      <article><img src="assets/token.svg" alt=""><div class="n">Task A</div><h4>Studying</h4><p>Syllabus to a plan you will actually open next week.</p></article>
+      <article><img src="assets/mask.svg" alt=""><div class="n">Task B</div><h4>Resume</h4><p>Draft with an agent, finish it so it still sounds like you.</p></article>
+      <article><img src="assets/commit.svg" alt=""><div class="n">Task C</div><h4>Project</h4><p>Automate one recurring assignment. Keep only what saves time.</p></article>
+    </section>
+
+    <section class="meta">
+      <div><h3>When</h3><div class="big">Thu Oct 1</div><div class="sub">6:00 – 8:00 PM</div></div>
+      <div><h3>Where</h3><div class="big">MB202</div><div class="sub">Stan Grad Centre · SAIT campus</div></div>
+      <div><h3>Type</h3><div class="big">Student Club</div><div class="sub">All programs · free · no alcohol</div></div>
+    </section>
+
+    <footer class="foot">
+      <div class="contact">
+        <h5>Show up · Contact</h5>
+        <div class="line"><b>Unnatural Intelligence</b> — SAIT student club</div>
+        <div class="line">Email <code id="contact-email"></code></div>
+        <div class="line">Discord <code id="contact-discord"></code></div>
+      </div>
+      <div class="marks">
+        <div class="logo-card"><img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs"></div>
+        <div class="logo-card sait"><img src="assets/sait-logo.png" alt="SAIT"></div>
+        <div class="qr"><div class="box" id="qr"></div><div class="cap">Scan Discord</div></div>
+      </div>
+    </footer>
+  </div>
+</div>
+</div>
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: "unnaturalintelligencesait@gmail.com",
+  contactDiscord: "discord.gg/hcsQFRNUEa",
+  qrUrl: "https://discord.gg/hcsQFRNUEa"
+});
+</script>
+</body>
+</html>

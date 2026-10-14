@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agents v10 — Monument — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --paper: #F9F9FA; --olive: #95B747; --ink: #030205; --pink: #FA4A9E;
+    --wine: #591337; --lime: #BAF837; --cyan: #7EC8FF;
+    --muted: rgba(249,249,250,.72);
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; min-height: 100%; }
+  body { background: #12040c; font-family: var(--sans); color: var(--paper); display: flex; justify-content: center; padding: 72px 24px 48px; }
+  .toolbar { position: fixed; top: 16px; right: 16px; z-index: 20; display: flex; gap: 8px; font-family: var(--mono); font-size: 12px; }
+  .toolbar a, .toolbar button { cursor: pointer; text-decoration: none; border: 1px solid rgba(186,248,55,.45); background: rgba(3,2,5,.88); color: var(--lime); padding: 8px 12px; font: inherit; }
+  .stage { width: 11in; height: 17in; flex: 0 0 auto; transform-origin: top center; filter: drop-shadow(0 28px 50px rgba(0,0,0,.55)); }
+
+  .poster {
+    position: relative; width: 11in; height: 17in; overflow: hidden; background: var(--ink);
+    display: grid;
+    grid-template-rows: 0.98in 5.75in 5.15in 2.22in 2.9in;
+  }
+  .mark-abs {
+    position: absolute; right: 0.28in; top: 1.15in; width: 2.35in; height: 2.35in;
+    z-index: 1; pointer-events: none; opacity: 0.95;
+  }
+  .head, .hero, .trio, .strip, .dock { position: relative; z-index: 2; }
+
+  .head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.22in 0.36in 0.08in;
+  }
+  .brand { display: flex; align-items: center; gap: 0.1in; }
+  .brand img { width: 0.52in; height: 0.52in; display: block; }
+  .brand-name { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.2in; line-height: 0.9; letter-spacing: -0.03em; }
+  .brand-name small { display: block; margin-top: 0.04in; font-family: var(--mono); font-weight: 400; font-size: 0.085in; letter-spacing: 0.12em; color: var(--muted); }
+  .chip {
+    font-family: var(--mono); font-size: 0.095in; letter-spacing: 0.12em; text-transform: uppercase;
+    background: var(--lime); color: var(--ink); padding: 0.07in 0.11in; font-weight: 700;
+  }
+
+  .hero { padding: 0 0.36in; display: flex; flex-direction: column; justify-content: center; }
+  .eyebrow { font-family: var(--mono); font-size: 0.105in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cyan); margin: 0 0 0.08in; }
+  .title {
+    margin: 0; font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 1.72in; line-height: 0.78; letter-spacing: -0.07em;
+  }
+  .title .l1 { color: var(--lime); }
+  .title .l2 { color: var(--pink); display: block; font-size: 1.42in; }
+  .title .l3 { display: block; color: transparent; -webkit-text-stroke: 0.026in var(--paper); font-size: 0.82in; }
+  .official { margin: 0.1in 0 0; font-family: var(--mono); font-size: 0.095in; color: var(--muted); }
+  .purpose { margin: 0.1in 0 0; font-size: 0.165in; line-height: 1.28; max-width: 7.6in; }
+  .purpose em { color: var(--pink); font-style: normal; font-weight: 700; }
+  .purpose strong { color: var(--lime); }
+
+  .trio {
+    padding: 0.08in 0.36in 0.1in;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.12in;
+  }
+  .card {
+    display: grid; grid-template-rows: auto 1fr; overflow: hidden;
+  }
+  .card .body { padding: 0.16in 0.16in 0.1in; }
+  .card img { width: 0.82in; height: 0.82in; display: block; margin-bottom: 0.08in; }
+  .card .n { font-family: var(--mono); font-size: 0.08in; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); opacity: 0.7; }
+  .card h3 { margin: 0.03in 0 0.06in; font-family: var(--display); text-transform: uppercase; font-size: 0.42in; letter-spacing: -0.04em; line-height: 0.88; }
+  .card p { margin: 0; font-size: 0.135in; line-height: 1.25; font-weight: 500; }
+  .card .dur {
+    margin: 0; font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700;
+    padding: 0.12in 0.16in;
+  }
+  .card.a { background: var(--cyan); color: var(--ink); }
+  .card.b { background: var(--lime); color: var(--ink); }
+  .card.c { background: var(--pink); color: var(--paper); }
+  .card.c .n { color: var(--paper); opacity: 0.8; }
+  .card.a .dur { background: #5aa8e6; }
+  .card.b .dur { background: #95c42c; }
+  .card.c .dur { background: #c43a7c; }
+
+  .strip {
+    background: var(--wine);
+    display: grid; grid-template-columns: repeat(5, 1fr);
+  }
+  .strip article { padding: 0.18in 0.12in; border-right: 1px solid rgba(250,74,158,.35); display: flex; flex-direction: column; justify-content: center; }
+  .strip article:last-child { border-right: 0; }
+  .strip .n { font-family: var(--mono); font-size: 0.08in; letter-spacing: 0.1em; color: var(--lime); }
+  .strip h4 { margin: 0.06in 0 0.04in; font-size: 0.15in; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.15; }
+  .strip p { margin: 0; font-size: 0.11in; line-height: 1.25; color: rgba(249,249,250,.78); }
+
+  .dock {
+    padding: 0.18in 0.32in 0.18in;
+    display: grid; grid-template-rows: 1in 1.36in; gap: 0.18in;
+    background: #0a0610;
+  }
+  .meta { display: grid; grid-template-columns: 1fr 1.2fr 1.15fr; gap: 0.12in; align-content: center; }
+  .dock h3 { margin: 0 0 0.02in; font-family: var(--mono); font-size: 0.085in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lime); }
+  .dock .big { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.28in; letter-spacing: -0.03em; }
+  .dock .sub { font-size: 0.12in; font-weight: 600; margin-top: 0.03in; color: var(--muted); }
+  .foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 0.12in; }
+  .dock .contact { font-size: 0.11in; line-height: 1.3; }
+  .dock .contact h3 { color: var(--pink); }
+  .dock code { font-family: var(--mono); font-size: 0.095in; color: var(--lime); }
+  .marks { display: flex; align-items: flex-end; gap: 0.07in; }
+  .logo-card { background: #fff; border-radius: 0.05in; width: 1.38in; padding: 0.05in; display: flex; align-items: center; justify-content: center; }
+  .logo-card.sait { width: 1.12in; }
+  .logo-card img { width: 100%; height: auto; display: block; }
+  .qr { width: 0.92in; text-align: center; }
+  .qr .box { background: #fff; border-radius: 0.05in; padding: 0.04in; width: 0.92in; height: 0.92in; }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr .cap { font-family: var(--mono); font-size: 0.065in; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cyan); margin-top: 0.03in; }
+
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    body { background: #fff; padding: 0; display: block; }
+    .toolbar { display: none; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+  <a href="AI%20Agents%20Poster%20v10%20Monument%20(11%C3%9717).pdf">Open PDF</a>
+  <a href="index.html">all</a>
+</div>
+<div class="stage" id="stage">
+<div class="poster">
+  <img class="mark-abs" src="assets/jellyfish-pink.svg" alt="">
+
+  <header class="head">
+    <div class="brand">
+      <img src="assets/jellyfish-lime.svg" alt="">
+      <div class="brand-name">Unnatural<br>Intelligence<small>SAIT student club · Saitsa</small></div>
+    </div>
+    <div class="chip">Student Club · Lunch &amp; Learn</div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Purpose: demystify AI agents · no prior experience</div>
+    <h1 class="title"><span class="l1">AI</span><span class="l2">Agents</span><span class="l3">What? How? Use.</span></h1>
+    <p class="official">Official title · AI Agents: What? How? &amp; Learning to Use Them</p>
+    <p class="purpose">A friendly two-hour workshop. Chatbots answer. <em>Agents act.</em> <strong>Leave having used one</strong> for studying, a resume, or a project. On campus · free · no alcohol.</p>
+  </section>
+
+  <section class="trio">
+    <article class="card a">
+      <div class="body">
+        <img src="assets/eye.svg" alt="">
+        <div class="n">See it</div>
+        <h3>What?</h3>
+        <p>Chatbot vs agent. Everyday examples. Demos you can interrupt.</p>
+      </div>
+      <div class="dur">30 min</div>
+    </article>
+    <article class="card b">
+      <div class="body">
+        <img src="assets/loop.svg" alt="">
+        <div class="n">Plan it</div>
+        <h3>How?</h3>
+        <p>Perceive → decide → act. Tools, limits, stay in the loop.</p>
+      </div>
+      <div class="dur">30 min</div>
+    </article>
+    <article class="card c">
+      <div class="body">
+        <img src="assets/hands-on.svg" alt="">
+        <div class="n">Do it</div>
+        <h3>Use.</h3>
+        <p>Run one on a real task. Keep a human finish. Then Q&amp;A.</p>
+      </div>
+      <div class="dur">45 min</div>
+    </article>
+  </section>
+
+  <section class="strip">
+    <article><div class="n">01 · 15 min</div><h4>Welcome</h4><p>Club intro and sign-ups.</p></article>
+    <article><div class="n">02 · 30 min</div><h4>What?</h4><p>Chatbot vs agent, live.</p></article>
+    <article><div class="n">03 · 30 min</div><h4>How?</h4><p>Perceive → decide → act.</p></article>
+    <article><div class="n">04 · 30 min</div><h4>Hands-on</h4><p>Use one on a real task.</p></article>
+    <article><div class="n">05 · 15 min</div><h4>Q&amp;A</h4><p>Ask anything.</p></article>
+  </section>
+
+  <footer class="dock">
+    <section class="meta">
+      <div><h3>When</h3><div class="big">Thu Oct 1</div><div class="sub">6:00 – 8:00 PM</div></div>
+      <div><h3>Where</h3><div class="big">MB202</div><div class="sub">Stan Grad Centre · SAIT campus</div></div>
+      <div><h3>Type</h3><div class="big">Student Club</div><div class="sub">Lunch &amp; Learn · free · no alcohol</div></div>
+    </section>
+    <div class="foot">
+      <div class="contact">
+        <h3>Contact</h3>
+        <div>Email <code id="contact-email"></code></div>
+        <div>Discord <code id="contact-discord"></code></div>
+      </div>
+      <div class="marks">
+        <div class="logo-card"><img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs"></div>
+        <div class="logo-card sait"><img src="assets/sait-logo.png" alt="SAIT"></div>
+        <div class="qr"><div class="box" id="qr"></div><div class="cap">Scan Discord</div></div>
+      </div>
+    </div>
+  </footer>
+</div>
+</div>
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: "unnaturalintelligencesait@gmail.com",
+  contactDiscord: "discord.gg/hcsQFRNUEa",
+  qrUrl: "https://discord.gg/hcsQFRNUEa"
+});
+</script>
+</body>
+</html>

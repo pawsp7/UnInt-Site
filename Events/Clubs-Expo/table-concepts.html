@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clubs Expo — realistic table builds — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --paper: #F9F9FA;
+    --olive: #95B747;
+    --ink: #030205;
+    --pink: #FA4A9E;
+    --wine: #591337;
+    --lime: #BAF837;
+    --cyan: #7EC8FF;
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; }
+  body {
+    background: #14040c;
+    color: var(--paper);
+    font-family: var(--sans);
+    line-height: 1.5;
+  }
+  a { color: var(--lime); }
+  a:hover { color: var(--pink); }
+  .toolbar {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end;
+    padding: 12px 20px;
+    background: rgba(3,2,5,.92);
+    border-bottom: 1px solid rgba(186,248,55,.28);
+    font-family: var(--mono); font-size: 12px;
+  }
+  .toolbar a, .toolbar button {
+    cursor: pointer; text-decoration: none;
+    border: 1px solid rgba(186,248,55,.45);
+    background: rgba(3,2,5,.88); color: var(--lime);
+    padding: 8px 12px; font: inherit; letter-spacing: 0.04em;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 20px 80px; }
+  .kicker {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--lime); margin: 0 0 10px;
+  }
+  h1 {
+    font-family: var(--display); font-size: clamp(36px, 6vw, 64px);
+    line-height: 0.9; letter-spacing: -0.04em; text-transform: uppercase;
+    margin: 0 0 16px;
+  }
+  h1 .pink { color: var(--pink); }
+  h1 .lime { color: var(--lime); }
+  .lede { max-width: 46em; color: rgba(249,249,250,.82); font-size: 18px; }
+  .swatches { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 36px; }
+  .swatch {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em;
+    background: rgba(249,249,250,.04); border: 1px solid rgba(249,249,250,.1);
+    padding: 6px 10px;
+  }
+  .chip { width: 14px; height: 14px; }
+  h2 {
+    font-family: var(--display); text-transform: uppercase; letter-spacing: -0.03em;
+    font-size: 28px; margin: 48px 0 12px;
+  }
+  h3 {
+    font-family: var(--display); text-transform: uppercase; letter-spacing: -0.02em;
+    font-size: 22px; margin: 0 0 8px;
+  }
+  h3 small {
+    display: block; font-family: var(--mono); font-weight: 400;
+    font-size: 12px; letter-spacing: 0.14em; color: var(--pink); margin-bottom: 6px;
+  }
+  p { margin: 0 0 12px; }
+  ul, ol { margin: 0 0 14px; padding-left: 1.2em; }
+  li { margin: 0 0 6px; }
+  .grid { display: grid; gap: 16px; }
+  .g2 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .g3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .card {
+    background: rgba(249,249,250,.04);
+    border: 1px solid rgba(186,248,55,.22);
+    padding: 16px 18px;
+  }
+  .card.pink { border-color: rgba(250,74,158,.45); }
+  .card h4 {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--lime); margin: 0 0 8px;
+  }
+  .concept {
+    margin: 36px 0 56px;
+    border: 1px solid rgba(250,74,158,.35);
+    background: linear-gradient(180deg, rgba(89,19,55,.28), rgba(3,2,5,.2));
+    padding: 22px;
+  }
+  .concept.rec { border-color: var(--lime); box-shadow: 0 0 0 1px rgba(186,248,55,.25); }
+  .concept img, .inv img {
+    width: 100%; height: auto; display: block;
+    border: 1px solid rgba(249,249,250,.12); margin: 14px 0 18px;
+  }
+  .inv { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0 24px; }
+  .inv figure { margin: 0; background: #fff; }
+  .inv figcaption {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+    color: rgba(249,249,250,.7); padding: 6px 4px 0;
+  }
+  @media (max-width: 720px) { .inv { grid-template-columns: repeat(2, 1fr); } }
+  .meta {
+    display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+  }
+  .pill {
+    border: 1px solid rgba(186,248,55,.4); color: var(--lime);
+    padding: 4px 8px;
+  }
+  .pill.pink { border-color: rgba(250,74,158,.5); color: var(--pink); }
+  table {
+    width: 100%; border-collapse: collapse; font-size: 14px; margin: 10px 0 16px;
+  }
+  th, td {
+    border-bottom: 1px solid rgba(249,249,250,.12);
+    padding: 8px 6px; text-align: left; vertical-align: top;
+  }
+  th {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--lime); font-weight: 400;
+  }
+  .price { font-family: var(--mono); color: var(--lime); white-space: nowrap; }
+  .note { color: rgba(249,249,250,.62); font-size: 13px; }
+  .plan {
+    background: #0a0408; border: 1px solid rgba(186,248,55,.2); padding: 12px;
+    overflow-x: auto;
+  }
+  .plan svg { width: 100%; height: auto; display: block; }
+  .callout {
+    background: var(--lime); color: var(--ink); padding: 14px 16px; margin: 18px 0;
+    font-weight: 600;
+  }
+  .callout span { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; }
+  footer {
+    margin-top: 48px; padding-top: 18px;
+    border-top: 1px solid rgba(186,248,55,.25);
+    font-family: var(--mono); font-size: 12px; color: rgba(249,249,250,.55);
+  }
+  @media print {
+    .toolbar { display: none; }
+    body { background: #fff; color: #111; }
+    a { color: #145f20; }
+    .concept, .card { break-inside: avoid; }
+    .callout { background: #BAF837 !important; }
+  }
+</style>
+</head>
+<body>
+<nav class="toolbar">
+  <a href="#prog">Programming</a>
+  <a href="#candy-git">Candy git</a>
+  <a href="candy-git.html">Candy card</a>
+  <a href="#combo">Combined</a>
+  <a href="#p1">REPL</a>
+  <a href="#p2">Pipeline</a>
+  <a href="#git-walk">git walk</a>
+  <a href="git-walk.html">Print kit</a>
+  <a href="#p3">Runtime</a>
+  <a href="#p4">Stack</a>
+  <a href="#p5">IDE</a>
+  <a href="#r3">Grand</a>
+  <a href="#r2">Round 2</a>
+  <button type="button" onclick="window.print()">Print</button>
+</nav>
+
+<div class="wrap">
+  <p class="kicker">SAIT · Saitsa Clubs Expo · 6 ft table · $120 · banner is the facade</p>
+  <h1>Make the <span class="pink">6×3 ft banner</span> the whole front.<br>Then <span class="lime">frame it.</span></h1>
+  <p class="lede">
+    The printed piece is <strong>6 ft × 3 ft</strong> — the full width of the table and taller than the table itself.
+    Hang it as the entire front fascia, tabletop rail to the floor. Do not drape a plastic cloth over it.
+    Put a <strong>black fitted cloth on the TOP only</strong>, then frame the billboard with height and light.
+    Budget is $120. Existing hats, honeycomb balloons, candy, binder, and bins still do the close-up work.
+  </p>
+  <div class="swatches">
+    <div class="swatch"><i class="chip" style="background:#030205"></i> Ink #030205</div>
+    <div class="swatch"><i class="chip" style="background:#FA4A9E"></i> Pink #FA4A9E</div>
+    <div class="swatch"><i class="chip" style="background:#BAF837"></i> Lime #BAF837</div>
+    <div class="swatch"><i class="chip" style="background:#591337"></i> Wine #591337</div>
+    <div class="swatch"><i class="chip" style="background:#7EC8FF"></i> Cyan #7EC8FF</div>
+    <div class="swatch"><i class="chip" style="background:#95B747"></i> Olive #95B747</div>
+  </div>
+
+  <figure style="margin:0 0 28px">
+    <img src="assets/banner-6x3-preview.jpg" alt="Unnatural Intelligence 6 by 3 foot banner: gradient jellyfish and UNNATURAL INTELLIGENCE lockup">
+    <figcaption style="font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:rgba(249,249,250,.65)">
+      Banner lockup from <code>Branding/Design Templates/Banner_6x3ft</code> — this is the whole table front, not a skinny strip.
+    </figcaption>
+  </figure>
+
+  <div class="grid g2">
+    <div class="card">
+      <h4>What made the earlier tables look small</h4>
+      <ul>
+        <li>A short black strip instead of the real 6×3 vinyl</li>
+        <li>Pink/lime cloth hanging over the front and hiding the art</li>
+        <li>Props sitting flat with nothing above 3 ft</li>
+      </ul>
+    </div>
+    <div class="card pink">
+      <h4>How to make it read from across the gym</h4>
+      <ul>
+        <li>Banner = the skirt. Clip the top edge to the front rail. A 30 in table + 36 in drop will kiss the floor — fold a 2 in hem if needed.</li>
+        <li>Black on the tabletop so the jellyfish and wordmark stay the brightest thing.</li>
+        <li>Neon pink/lime only as a runner on TOP, or as balloons around the banner — never over the type.</li>
+        <li>Add one 7 ft frame (arch, twin columns, or a lit backdrop).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout" id="prog">
+    <span>RECOMMENDED — CANDY GIT</span><br>
+    The interactive is four moves with the eyeball chews and your two lime-handle bins. <code>git add</code> (take a candy) → <code>git commit -m</code> (sticky on the wrapper) → <code>git push</code> (into the second bin) → <code>git pull</code> (take someone else’s noted candy). Same black top and 6×3 banner as the pipeline booth. Three layouts below.
+  </div>
+
+  <h2>Programming builds</h2>
+  <p>Same banner-as-fascia rule. The extra money goes into <strong>black boards + lime monospace signs</strong> and one structure, not more party decor. Hand-letter labels with space in them — mockup type runs together. Pitch is still “using AI without sounding like a robot,” now staged as a tiny runtime.</p>
+  <table>
+    <thead><tr><th>Add to the black-cloth kit</th><th>Job</th><th>Where</th><th>Est.</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Black foam board, 3 sheets</td>
+        <td>Terminal backdrop + station labels</td>
+        <td><a href="https://www.walmart.ca/en/search?q=black%20foam%20board">Walmart black foam board</a> · <a href="https://www.amazon.ca/s?k=black+foam+board">Amazon.ca</a></td>
+        <td class="price">$12</td>
+      </tr>
+      <tr>
+        <td>Lime + pink paint pens / chalk markers</td>
+        <td>Monospace-looking signs on black</td>
+        <td><a href="https://www.amazon.ca/s?k=neon+green+paint+pen">Amazon neon green paint pens</a> · Walmart craft markers</td>
+        <td class="price">$12</td>
+      </tr>
+      <tr>
+        <td>Neon tape (lime or pink)</td>
+        <td>Pipeline “data flow” on the tabletop</td>
+        <td><a href="https://www.walmart.ca/en/search?q=neon%20tape">Walmart neon tape</a></td>
+        <td class="price">$5</td>
+      </tr>
+      <tr>
+        <td>Laptop you already own + cheap riser</td>
+        <td>Live REPL / human-finish demo</td>
+        <td><a href="https://www.amazon.ca/s?k=laptop+stand">Amazon laptop stand</a> or a book</td>
+        <td class="price">$0–12</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 id="candy-git">Candy git — the interactive</h2>
+  <p>Inspired by the black pipeline booth. Two containers you already own. The candy is the file. The sticky is the message. The second bin is <code>origin</code>. About 45 seconds. No laptop required. Print the staff card: <a href="candy-git.html">candy-git.html</a>.</p>
+  <table>
+    <thead><tr><th>Command</th><th>What they do</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>git add</code></td>
+        <td>Grab an eyeball from the starting container.</td>
+      </tr>
+      <tr>
+        <td><code>git commit -m "write comment"</code></td>
+        <td>Write a comment on a sticky note and put it on the eyeball.</td>
+      </tr>
+      <tr>
+        <td><code>git push</code></td>
+        <td>Put the candy with the sticky note into the 2nd container.</td>
+      </tr>
+      <tr>
+        <td><code>git pull</code></td>
+        <td>Grab somebody else’s eyeball with their commit note.</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note">Seed the second bin with three staff notes before doors open so the first visitor can pull. They keep the pulled candy. The one they pushed stays for the next person. Only pull a candy that already has a note.</p>
+
+  <article class="concept" id="g1">
+    <h3><small>Candy 1 · closest to the attached booth · ~$80</small>Candy pipeline</h3>
+    <div class="meta">
+      <span class="pill">Full 6×3 fascia</span>
+      <span class="pill">Four stations</span>
+      <span class="pill pink">add → commit → push → pull</span>
+    </div>
+    <p>Same silhouette as the pipeline mockup you attached: black top, banner fascia, hats at the ends, honeycomb jars, neon tape. Relabel the four signs as the four git commands. Starting bin sits on <code>git add</code>. Stickies and a pen sit on <code>git commit -m</code>. The second bin sits on <code>git push</code>. <code>git pull</code> is the same second bin — they reach back in and take a different noted candy. Binder stands behind commit as the log if you want extras.</p>
+    <img src="assets/g1-candy-pipeline.png" alt="Candy pipeline: black banner table with two lime-handle bins, sticky notes, squid hats, and four git command signs">
+    <p class="note">Mockup type runs together — letter <code>git add</code>, <code>git commit -m</code>, <code>git push</code>, <code>git pull</code> with spaces. Use your real lime-handle bins, not a new toolbox. Hats stay off the candy.</p>
+  </article>
+
+  <article class="concept rec" id="g2">
+    <h3><small>Candy 2 · clearest teaching · ~$75</small>Local / origin</h3>
+    <div class="meta">
+      <span class="pill">Full 6×3 fascia</span>
+      <span class="pill">Two bins are the lesson</span>
+      <span class="pill pink">working tree vs origin</span>
+    </div>
+    <p>Strip the four-station line down to the two containers. Left bin = <code>git add</code> (full of bare eyeballs). Middle = <code>git commit -m</code> (stickies + pens). Right bin = <code>git push</code> and <code>git pull</code> (noted candies). Hats sit on the bin lids as <code>daemon[0]</code> / <code>daemon[1]</code>. Binder in the gap is yesterday’s log. This is the one to run if the hall is loud — two objects, one idea: local vs remote.</p>
+    <img src="assets/g2-local-origin.png" alt="Twin bins on a black banner table: left full of eyeballs, right with sticky-noted candies, hats on the lids">
+    <p class="note">Lime tape between the bins is enough data-path. No laptop. Staff line: “Left is your machine. Right is the internet.”</p>
+  </article>
+
+  <article class="concept" id="g3">
+    <h3><small>Candy 3 · with height · ~$110</small>Candy under the clothesline</h3>
+    <div class="meta">
+      <span class="pill">Full 6×3 fascia</span>
+      <span class="pill">Same two-bin git</span>
+      <span class="pill pink">Streamer line + photo</span>
+    </div>
+    <p>Same add / commit / push / pull as Candy 2, then steal height from the party table. Sandbagged backdrop stand, streamers on the crossbar (stop above the banner rail), honeycomb on the line or in jars. After they pull, offer the frame: hat on, one photo, they leave with someone else’s commit.</p>
+    <img src="assets/g3-candy-clothesline.png" alt="Candy git booth with backdrop stand, two bins, hats, and a photo corner">
+    <p class="note">Ignore stray mockup labels. Hang your real streamers; the photo’s thin ribbon is only a stand-in. Photo is optional — the git is the activity.</p>
+    <p>Add only if you want height: <a href="https://www.amazon.ca/s?k=8x8+photo+backdrop+stand">8×8 stand</a> (~$35) · <a href="https://www.amazon.ca/s?k=photography+sandbag">sandbags</a> or rice (~$12).</p>
+  </article>
+
+  <article class="concept" id="combo">
+    <h3><small>Combined · recommended · ~$105–115</small>Pipeline under the clothesline</h3>
+    <div class="meta">
+      <span class="pill">Full 6×3 fascia</span>
+      <span class="pill">Git walk on the top</span>
+      <span class="pill pink">Streamer line for height</span>
+    </div>
+    <p>This is the compile pipeline and the party clothesline in one booth. Black cloth on the <em>top only</em>. The real 6×3 banner is the entire front — do not use the skinny black strip, and do not drape pink plastic over the jellyfish. The table is the program. The air above it is the fair.</p>
+    <img src="assets/combo-pipeline-clothesline.png" alt="Combined booth: black table with banner fascia, four git stations, streamer clothesline and honeycomb balloons">
+    <p class="note">Mockup type still runs together. Letter the four tent signs from the <a href="git-walk.html">print kit</a>. Hang your real honeycomb teardrops (wire stems) from the crossbar or stand them in the weighted jars — the round honeycombs in the photo are only a stand-in.</p>
+
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Keep from the pipeline</h4>
+        <ul>
+          <li>Black fitted top. Neon pink tape as the data path.</li>
+          <li>Four stations: <code>01 INPUT</code> → <code>02 HALT</code> → <code>03 HUMAN FINISH</code> → <code>04 OUTPUT</code>.</li>
+          <li>Hats as <code>daemon[0]</code> / <code>daemon[1]</code> at the ends, not on a station.</li>
+          <li>Monster binder at 03 = <code>git log</code>. Laptop stays for the optional 90-second commit.</li>
+          <li>Sticky notes + slop cards at 01. Pink X at 02. QR + stickers + candy at 04.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Steal from the party table</h4>
+        <ul>
+          <li>8×8 backdrop stand behind the table. Sandbag both feet (rice bags work).</li>
+          <li>Primary streamers on the crossbar — they stop above the banner rail.</li>
+          <li>Honeycomb balloons on that same line, or in the two weighted jars.</li>
+          <li>Photo frame + phone tripod at 04 so the push is also a photo.</li>
+          <li>Clear lime-handle bin under the table, not as a pink tablecloth riser.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="plan" aria-label="Combined six-foot table">
+      <svg viewBox="0 0 720 148" role="img">
+        <text x="360" y="18" text-anchor="middle" fill="#FA4A9E" font-family="ui-monospace,monospace" font-size="11">streamers + honeycomb on a sandbagged clothesline</text>
+        <line x1="40" y1="28" x2="680" y2="28" stroke="#7EC8FF" stroke-width="2"/>
+        <rect x="8" y="42" width="704" height="90" fill="#0a0408" stroke="#BAF837" stroke-width="1.5"/>
+        <text x="28" y="64" fill="#FA4A9E" font-family="ui-monospace,monospace" font-size="11">daemon[0]</text>
+        <text x="28" y="82" fill="#F9F9FA" font-family="ui-monospace,monospace" font-size="13">01 INPUT</text>
+        <text x="28" y="100" fill="#BAF837" font-family="ui-monospace,monospace" font-size="11">working tree</text>
+        <line x1="168" y1="80" x2="198" y2="80" stroke="#FA4A9E" stroke-width="3"/>
+        <text x="210" y="64" fill="#7EC8FF" font-family="ui-monospace,monospace" font-size="11">cards + X</text>
+        <text x="210" y="82" fill="#F9F9FA" font-family="ui-monospace,monospace" font-size="13">02 HALT</text>
+        <text x="210" y="100" fill="#BAF837" font-family="ui-monospace,monospace" font-size="11">git add</text>
+        <line x1="348" y1="80" x2="378" y2="80" stroke="#FA4A9E" stroke-width="3"/>
+        <text x="390" y="64" fill="#7EC8FF" font-family="ui-monospace,monospace" font-size="11">binder + laptop</text>
+        <text x="390" y="82" fill="#F9F9FA" font-family="ui-monospace,monospace" font-size="13">03 HUMAN FINISH</text>
+        <text x="390" y="100" fill="#BAF837" font-family="ui-monospace,monospace" font-size="11">git commit</text>
+        <line x1="558" y1="80" x2="588" y2="80" stroke="#FA4A9E" stroke-width="3"/>
+        <text x="600" y="64" fill="#FA4A9E" font-family="ui-monospace,monospace" font-size="11">frame + phone</text>
+        <text x="600" y="82" fill="#F9F9FA" font-family="ui-monospace,monospace" font-size="13">04 OUTPUT</text>
+        <text x="600" y="100" fill="#BAF837" font-family="ui-monospace,monospace" font-size="11">git push</text>
+        <text x="360" y="128" text-anchor="middle" fill="rgba(249,249,250,.55)" font-family="ui-monospace,monospace" font-size="11">6×3 banner is the fascia · bin lives under the table</text>
+      </svg>
+    </div>
+
+    <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">What to buy beyond props you already have</h4>
+    <table>
+      <thead><tr><th>Item</th><th>Job</th><th>Where</th><th>Est.</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Black 6 ft fitted / spandex cloth</td>
+          <td>Top only</td>
+          <td><a href="https://www.amazon.ca/s?k=6ft+black+fitted+tablecloth">Amazon 6 ft black fitted</a></td>
+          <td class="price">~$18</td>
+        </tr>
+        <tr>
+          <td>Neon tape + foam + paint pens</td>
+          <td>Pipeline + readable signs</td>
+          <td><a href="https://www.walmart.ca/en/search?q=neon%20tape">Walmart neon tape</a> · foam board · lime paint pens</td>
+          <td class="price">~$25</td>
+        </tr>
+        <tr>
+          <td>8×8 backdrop stand</td>
+          <td>Clothesline</td>
+          <td><a href="https://www.amazon.ca/s?k=8x8+photo+backdrop+stand">Amazon 8×8 stand</a></td>
+          <td class="price">~$35</td>
+        </tr>
+        <tr>
+          <td>Sandbags or rice</td>
+          <td>Weight both feet</td>
+          <td><a href="https://www.amazon.ca/s?k=photography+sandbag">Amazon sandbags</a> · Walmart rice</td>
+          <td class="price">~$12</td>
+        </tr>
+        <tr>
+          <td>Jars + floral foam</td>
+          <td>If honeycombs stand instead of hang</td>
+          <td><a href="https://www.walmart.ca/en/search?q=floral%20foam">Walmart floral foam</a> · mason jars</td>
+          <td class="price">~$15</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="note">Streamers, hats, honeycomb balloons, binder, bins, candy, and the 6×3 banner are already owned. Activity is still the <a href="#git-walk">git walk</a>. After they push, offer the frame: hat on, one photo, sticker.</p>
+  </article>
+
+  <article class="concept" id="p1">
+    <h3><small>Prog 1 · ~$85–95</small>REPL / Prompt Playground</h3>
+    <div class="meta">
+      <span class="pill">Full 6×3 fascia</span>
+      <span class="pill">Terminal tri-fold</span>
+      <span class="pill pink">20-second human finish</span>
+    </div>
+    <p>The booth is a prompt. Black fitted top, lime runner as the cursor. A black tri-fold behind the table lettered like a shell. Laptop in the centre. Recast the props: hats are <code>daemon[0]</code> / <code>daemon[1]</code>, candy is <code>tokens[]</code>, binder is the commit log, stickers are <code>TAKE A TOKEN</code>.</p>
+    <img src="assets/p1-repl-playground.png" alt="REPL playground: banner fascia, terminal backdrop, laptop, labeled hats and candy">
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Letter this (with spaces)</h4>
+        <ul>
+          <li><code>&gt; unnatural@sait:~$ prompt playground</code></li>
+          <li><code>human finish --edit until it sounds like you</code></li>
+          <li><code>take a token</code></li>
+        </ul>
+        <p class="note">Interactive: they give you one messy sentence. You show a generic draft vs a 15-second human pass. Then sticker. Do not live-generate homework.</p>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Supports</h4>
+        <ul>
+          <li>Tri-fold sits on the table, taped at the hinges. No floor poles required.</li>
+          <li>Lime fairy lights along the top edge only.</li>
+          <li>Bring a charged laptop + hotspot. Preload 3 demos: email, lab-report tone, job note.</li>
+        </ul>
+        <p>Add lights: <a href="https://www.walmart.ca/en/c/kp/fairy-lights">Walmart fairy lights</a> (~$12).</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="concept" id="p2">
+    <h3><small>Prog 2 · ~$80</small>Compile pipeline</h3>
+    <div class="meta">
+      <span class="pill">Full 6×3 fascia</span>
+      <span class="pill">Four stations</span>
+      <span class="pill pink">working tree → add → commit → push</span>
+    </div>
+    <p>Left-to-right program. Neon tape is the data path. The activity is a <strong>paper git tutorial</strong> — one commit, about 60 seconds, no install. Same club story as Halt &amp; Restart: you choose what gets in, then you write the message. Full script and cut-outs: <a href="#git-walk">git walk</a> · <a href="git-walk.html">print kit</a>.</p>
+    <img src="assets/p2-compile-pipeline.png" alt="Compile pipeline stations across a black table with the banner as the front">
+    <p class="note">Mockup type on the photo runs together — letter the real signs from the print kit. Four tent cards in binder clips. Tape the flow line so it does not peel. Hats live at the ends so they do not sit on a station. Binder stands at 03 as <code>git log</code>.</p>
+    <div class="plan" aria-label="Six-foot table, left to right">
+      <svg viewBox="0 0 720 118" role="img">
+        <rect x="8" y="18" width="704" height="82" fill="#0a0408" stroke="#BAF837" stroke-width="1.5"/>
+        <text x="28" y="40" fill="#FA4A9E" font-family="ui-monospace,monospace" font-size="11">daemon[0]</text>
+        <text x="28" y="58" fill="#F9F9FA" font-family="ui-monospace,monospace" font-size="13">01 INPUT</text>
+        <text x="28" y="76" fill="#BAF837" font-family="ui-monospace,monospace" font-size="11">working tree</text>
+        <line x1="168" y1="56" x2="198" y2="56" stroke="#FA4A9E" stroke-width="3"/>
+        <text x="210" y="40" fill="#7EC8FF" font-family="ui-monospace,monospace" font-size="11">cards + pen</text>
+        <text x="210" y="58" fill="#F9F9FA" font-family="ui-monospace,monospace" font-size="13">02 HALT</text>
+        <text x="210" y="76" fill="#BAF837" font-family="ui-monospace,monospace" font-size="11">git add</text>
+        <line x1="348" y1="56" x2="378" y2="56" stroke="#FA4A9E" stroke-width="3"/>
+        <text x="390" y="40" fill="#7EC8FF" font-family="ui-monospace,monospace" font-size="11">binder = log</text>
+        <text x="390" y="58" fill="#F9F9FA" font-family="ui-monospace,monospace" font-size="13">03 HUMAN_FINISH</text>
+        <text x="390" y="76" fill="#BAF837" font-family="ui-monospace,monospace" font-size="11">git commit</text>
+        <line x1="558" y1="56" x2="588" y2="56" stroke="#FA4A9E" stroke-width="3"/>
+        <text x="600" y="40" fill="#FA4A9E" font-family="ui-monospace,monospace" font-size="11">daemon[1]</text>
+        <text x="600" y="58" fill="#F9F9FA" font-family="ui-monospace,monospace" font-size="13">04 OUTPUT</text>
+        <text x="600" y="76" fill="#BAF837" font-family="ui-monospace,monospace" font-size="11">git push</text>
+      </svg>
+    </div>
+  </article>
+
+  <article class="concept rec" id="git-walk">
+    <h3><small>Pipeline activity · ~60 seconds · no install</small>git walk — one commit, on paper</h3>
+    <div class="meta">
+      <span class="pill">Teach one idea</span>
+      <span class="pill">A commit is a snapshot + a message you wrote</span>
+      <span class="pill pink">Skip GitHub accounts</span>
+    </div>
+    <p>Do not teach clone, rebase, or SSH at a fair. Teach <em>one</em> move: you pick what is allowed in, then you name the save-point in your own words. The monster binder is <code>git log</code>. The sticky note is the file. You are the remote.</p>
+
+    <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Station map</h4>
+    <table>
+      <thead><tr><th>Sign on the table</th><th>Git name (small, under it)</th><th>What they do</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>01 INPUT</code></td>
+          <td><code>working tree</code></td>
+          <td>Write one line on a card, <em>or</em> pick a preprinted “AI slop” card.</td>
+        </tr>
+        <tr>
+          <td><code>02 HALT</code></td>
+          <td><code>git add</code></td>
+          <td>Cross out anything that sounds generic. Only the kept words may enter the repo.</td>
+        </tr>
+        <tr>
+          <td><code>03 HUMAN_FINISH</code></td>
+          <td><code>git commit</code></td>
+          <td>Rewrite the leftover into a message of 8 words or fewer that sounds like them. Staff stamps a 4-character “hash” and clips the card into the binder.</td>
+        </tr>
+        <tr>
+          <td><code>04 OUTPUT</code></td>
+          <td><code>git push</code></td>
+          <td>Sticker + QR. Say: “That’s shipping. You’re on <code>main</code>.”</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Staff script (say this)</h4>
+        <ol>
+          <li>“Git is save-points with a note. Walk the line.”</li>
+          <li>INPUT: “One sentence you might actually send — or grab a bad AI card.”</li>
+          <li>HALT: “<code>git add</code> is the choice. Cross out the robot voice.”</li>
+          <li>COMMIT: “Message in eight words. If ChatGPT wrote it, we halt.”</li>
+          <li>PUSH: Hand the sticker. “That’s the push. Binder is the log if you want to see yesterday’s commits.”</li>
+        </ol>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Preprint 3 “AI slop” cards</h4>
+        <ul>
+          <li>“I hope this email finds you well I wanted to reach out regarding…”</li>
+          <li>“In today’s rapidly evolving digital landscape, AI empowers students to…”</li>
+          <li>“Please find attached my comprehensive reflections on the assignment.”</li>
+        </ul>
+        <p class="note">Good commit examples to pin at station 03: <code>fix lab 4 tone</code> · <code>ask about Thursday shift</code> · <code>cut the hope-this-finds-you</code></p>
+      </div>
+    </div>
+
+    <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Kit (already in the $80–$120 pile)</h4>
+    <ul>
+      <li>Sticky notes or index cards + pens</li>
+      <li>Monster binder = <code>git log</code> (newest card on top). Clip the <code>$ git log --oneline</code> spine from the print kit on the cover.</li>
+      <li>A pad of fake hashes: <code>a3f1</code> <code>9c0e</code> <code>b72d</code>… or a $4 number stamp</li>
+      <li>Print kit (staff script, 4 tent signs, slop cards, blanks): <a href="git-walk.html">git-walk.html</a> — print, cut dashed boxes, fold signs on the dotted line, stand them in binder clips.</li>
+      <li>Optional laptop seed: <a href="git-walk-seed/README.md"><code>git-walk-seed/</code></a> — run <code>sh setup.sh</code> once so the folder is already a repo.</li>
+    </ul>
+
+    <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Optional 90-second laptop (only if they ask)</h4>
+    <p>A folder on the booth laptop, already a repo, README open. Card taped to the bezel:</p>
+    <pre style="background:#0a0408;border:1px solid rgba(186,248,55,.25);padding:12px 14px;overflow:auto;font-family:var(--mono);font-size:13px;color:var(--lime);">git add README.md
+git commit -m "your eight words"
+git log -1 --oneline</pre>
+    <p class="note">Seed the file with <code>Generated by AI.</code> They change it to something that sounds like them, then run those three lines. No GitHub account. No <code>push</code> unless a staffer wants to show origin later. If wifi dies, paper still works.</p>
+  </article>
+
+  <article class="concept" id="p3">
+    <h3><small>Prog 3 · ~$110–120</small>Token runtime</h3>
+    <div class="meta">
+      <span class="pill">Full 6×3 fascia</span>
+      <span class="pill">Wheel as RNG</span>
+      <span class="pill pink">function-named slices</span>
+    </div>
+    <p>Prize wheel labeled like an API: <code>sticker()</code>, <code>hat.tryOn()</code>, <code>token++</code>, <code>humanFinish()</code>, <code>join()</code>. One balloon column tagged <code>runtime</code>. Binder is <code>git commit</code>. Spin after they sign.</p>
+    <img src="assets/p3-token-runtime.png" alt="Token runtime: banner fascia, function-labeled prize wheel, hat on a column">
+    <p>Add: <a href="https://www.amazon.ca/Spinning-Tabletop-Roulette-Carnivals-Activities/dp/B0D1FTST5T">12 in wheel</a> (~$28) · one <a href="https://www.amazon.ca/Decojoy-Adjustable-Assembly-Graduation-Decoration/dp/B0BW914VMY">column stand</a> + balloons (~$28). Water-fill the column base.</p>
+  </article>
+
+  <article class="concept" id="p4">
+    <h3><small>Prog 4 · ~$100</small>Call stack</h3>
+    <div class="meta">
+      <span class="pill">Full 6×3 fascia</span>
+      <span class="pill">Bins as frames</span>
+      <span class="pill pink">stack[0] / stack[1]</span>
+    </div>
+    <p>Your clear bins become stack frames (<code>frame: events</code>, <code>frame: join</code>). Twin pink/lime columns at the floor ends labeled <code>stack[0]</code> and <code>stack[1]</code>. Banner stays a clean billboard. Honeycomb balloons live in foam inside a bin.</p>
+    <img src="assets/p4-call-stack.png" alt="Call stack: banner between two columns, bins labeled as stack frames">
+    <p>Add the same two-column kit as Grand 3. Do not stack bins so high they hide the jellyfish.</p>
+  </article>
+
+  <article class="concept" id="p5">
+    <h3><small>Prog 5 · ~$115</small>Dark IDE</h3>
+    <div class="meta">
+      <span class="pill">Full 6×3 fascia</span>
+      <span class="pill">Comment wall</span>
+      <span class="pill pink">viewport, not a rave</span>
+    </div>
+    <p>Backdrop stand + black board. Three lime comments only — not a wall of fake code:</p>
+    <ul>
+      <li><code>// destigmatise AI</code></li>
+      <li><code>// keep the human in the loop</code></li>
+      <li><code>// unnaturalintelligence.club</code></li>
+    </ul>
+    <p>Laptop, hats as photo props, thin lime lights. The banner is the preview pane.</p>
+    <img src="assets/p5-dark-ide.png" alt="Dark IDE: banner fascia, comment wall, laptop and hats">
+    <p>Add: <a href="https://www.amazon.ca/s?k=8x8+photo+backdrop+stand">backdrop stand</a> (~$35) · black fabric or foam (~$12) · sandbags (~$12) · lime lights (~$12). Sandbag both feet.</p>
+  </article>
+
+  <h2>Programming pick</h2>
+  <table>
+    <thead><tr><th>Build</th><th>Programming hook</th><th>Interactive</th><th>Est.</th></tr></thead>
+    <tbody>
+      <tr><td>1 REPL</td><td>Terminal backdrop + laptop</td><td>Human-finish demo</td><td class="price">~$90</td></tr>
+      <tr><td>2 Pipeline</td><td>INPUT → HALT → FINISH → OUTPUT</td><td>Walk the compile line</td><td class="price">~$80</td></tr>
+      <tr><td>3 Runtime</td><td>Wheel as function calls</td><td>Spin after commit</td><td class="price">~$115</td></tr>
+      <tr><td>4 Call stack</td><td>Bins + columns as frames</td><td>Pick a frame, get the pitch</td><td class="price">~$100</td></tr>
+      <tr><td>5 Dark IDE</td><td>Comment wall + preview banner</td><td>Photo in the viewport</td><td class="price">~$115</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" id="r3">
+    <span>IF YOU WANT PARTY HEIGHT INSTEAD</span><br>
+    Grand 1 — Reef arch still sits below. Use it if the hall is loud and you need balloons more than a laptop.
+  </div>
+
+  <h2>Grand shopping kit (Walmart + Amazon, ~$120)</h2>
+  <p>Shared row first (~$40). Then pick one frame from the builds below. Prices CAD before tax.</p>
+  <table>
+    <thead><tr><th>Item</th><th>Job</th><th>Where</th><th>Est.</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Black fitted / spandex cloth for a 6 ft table</td>
+        <td>Covers the TOP only so the banner can be the whole front. Skip a draping plastic sheet.</td>
+        <td>
+          <a href="https://www.amazon.ca/s?k=6ft+black+spandex+fitted+tablecloth">Amazon.ca 6 ft black fitted</a> (~$15–20) ·
+          <a href="https://www.vevor.ca/tablecloths-c_14264/vevor-3-pack-table-cloth-for-6ft-rectangular-fitted-events-wrinkle-resistant-stretch-black-table-covers-washable-spandex-tablecloth-protector-for-party-wedding-cocktail-banquet-festival-p_010883324515">VEVOR 3-pack $26.90</a>
+        </td>
+        <td class="price">$18</td>
+      </tr>
+      <tr>
+        <td>Hot pink or lime 54×108 plastic (runner only)</td>
+        <td>Cut or fold so it sits on the tabletop and stops at the front edge</td>
+        <td><a href="https://www.walmart.ca/en/search?q=54%22%20x%20108%22%20plastic%20table%20cover">Walmart 54×108</a> · <a href="https://www.amazon.ca/Unique-Party-Reusable-Rectangular-Tablecover/dp/B01M6UXJYR">Amazon Unique</a></td>
+        <td class="price">$3</td>
+      </tr>
+      <tr>
+        <td>Binder clips + tablecloth clips</td>
+        <td>Hang the 6×3 vinyl on the front rail</td>
+        <td><a href="https://www.walmart.ca/en/search?q=binder%20clips">Walmart clips</a></td>
+        <td class="price">$6</td>
+      </tr>
+      <tr>
+        <td>Floral foam + 2 jars + beans + glass bowl</td>
+        <td>Honeycomb stems and candy</td>
+        <td><a href="https://www.walmart.ca/en/ip/12-PCS-Floral-Foam-Wet-Floral-Foam-Blocks-Flower-Arrangement-for/5OB5MWD59VEU">Walmart foam</a> · jars / bowl in-store</td>
+        <td class="price">$15</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <article class="concept rec" id="r3a">
+    <h3><small>Grand 1 · loudest · ~$115–120</small>Reef arch</h3>
+    <div class="meta">
+      <span class="pill">Full 6×3 fascia</span>
+      <span class="pill">7 ft arch + water bases</span>
+      <span class="pill pink">Fairy lights</span>
+    </div>
+    <p>The banner is the billboard. Two telescopic poles stand on the floor at the table ends. A pink + lime balloon arch connects them over the booth. Fairy lights in the arch. Hats clip onto the arch. Tabletop stays dark and relatively clean so the jellyfish still reads.</p>
+    <img src="assets/r3-1-reef-arch.png" alt="Reef arch: full Unnatural Intelligence banner as the table front, balloon arch and squid hats">
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Supports</h4>
+        <ul>
+          <li>Poles on the floor, not on the table. Fill every water bag / bucket.</li>
+          <li>Build the arch the night before. Air-fill only, no helium.</li>
+          <li>Keep balloons off the wordmark. Frame it, do not bury it.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Add to shared kit</h4>
+        <ul>
+          <li><a href="https://www.amazon.ca/Decojoy-Adjustable-Assembly-Graduation-Decoration/dp/B0BW914VMY">Amazon Decojoy 2-pack columns</a> or <a href="https://www.amazon.ca/s?k=YALLOVE+balloon+column+stand+2+pack">YALLOVE 2-pack</a> (~$25–35)</li>
+          <li><a href="https://www.amazon.ca/s?k=pink+lime+green+balloon+garland+kit">Amazon pink + lime garland kit</a> (~$20–28)</li>
+          <li><a href="https://www.walmart.ca/en/c/kp/fairy-lights">Walmart fairy lights</a> (~$12–15)</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="concept" id="r3b">
+    <h3><small>Grand 2 · most on-brand · ~$110–120</small>Dark glow wall</h3>
+    <div class="meta">
+      <span class="pill">Full 6×3 fascia</span>
+      <span class="pill">Backdrop + sandbags</span>
+      <span class="pill pink">Pink / lime LEDs</span>
+    </div>
+    <p>Same giant banner, then a black backdrop stand behind the table with pink and lime fairy-light strings. Reads like a tiny club, not a craft table. Lime runner on the top only.</p>
+    <img src="assets/r3-2-dark-glow.png" alt="Dark glow: full banner fascia, black and LED backdrop stand">
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Supports</h4>
+        <ul>
+          <li>Sandbags or rice bags on both backdrop feet. Lights + fabric catch air.</li>
+          <li>Need a nearby outlet or a USB battery pack for the LEDs.</li>
+          <li>Ask Saitsa if a stand behind the table is allowed.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Add</h4>
+        <ul>
+          <li><a href="https://www.amazon.ca/s?k=8x8+photo+backdrop+stand">Amazon 8×8 backdrop stand</a> (~$35)</li>
+          <li><a href="https://www.amazon.ca/s?k=black+backdrop+curtain">Black backdrop fabric</a> (~$15)</li>
+          <li><a href="https://www.walmart.ca/en/c/kp/fairy-lights">Pink + lime fairy lights</a> (~$15)</li>
+          <li><a href="https://www.amazon.ca/s?k=photography+sandbag">Sandbags</a> or Walmart rice (~$12)</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="concept" id="r3c">
+    <h3><small>Grand 3 · cleanest lockup · ~$100–110</small>Twin towers</h3>
+    <div class="meta">
+      <span class="pill">Full 6×3 fascia</span>
+      <span class="pill">Two 7 ft columns</span>
+      <span class="pill pink">Hats as toppers</span>
+    </div>
+    <p>No arch across the type. Two pink/lime columns stand just outside the table ends and wear the squid hats as toppers. The banner stays a clean 6×3 billboard. Best if the hall is crowded and you need the wordmark readable at 20 ft.</p>
+    <img src="assets/r3-3-twin-towers.png" alt="Twin towers: banner as billboard between two balloon columns with squid hat toppers">
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Supports</h4>
+        <ul>
+          <li>Water-filled bases on the floor, outside the table legs.</li>
+          <li>Hats sit on the top cup — add a clip so they do not blow off.</li>
+          <li>Wrap one fairy-light string up each pole.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Add</h4>
+        <ul>
+          <li>Same column kit as Grand 1 (~$30)</li>
+          <li>Pink + lime balloons (~$18) — fewer than a full arch</li>
+          <li>Fairy lights (~$12)</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="concept" id="r3d">
+    <h3><small>Grand 4 · photo traffic · ~$110–120</small>Fringe portal</h3>
+    <div class="meta">
+      <span class="pill">Full 6×3 fascia</span>
+      <span class="pill">Pink foil fringe</span>
+      <span class="pill pink">Photo then sticker</span>
+    </div>
+    <p>Banner still owns the front. Behind the table: backdrop stand + two hot-pink foil fringe curtains. Honeycomb balloons on the crossbar. Hats as photo props. Phone on a tripod.</p>
+    <img src="assets/r3-4-fringe-portal.png" alt="Fringe portal: full banner, pink foil curtains, hats as photo props">
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Supports</h4>
+        <ul>
+          <li>Sandbags on both stand feet. Foil fringe is a sail.</li>
+          <li>Fringe hangs behind the table, never over the banner.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Add</h4>
+        <ul>
+          <li>Backdrop stand (~$35) + sandbags (~$12)</li>
+          <li><a href="https://www.amazon.ca/s?k=pink+foil+fringe+curtain">Amazon pink foil fringe (2-pack)</a> (~$14)</li>
+          <li><a href="https://www.amazon.ca/s?k=mini+phone+tripod">Mini phone tripod</a> (~$12)</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="concept" id="r3e">
+    <h3><small>Grand 5 · interactive · ~$115–120</small>Billboard + wheel</h3>
+    <div class="meta">
+      <span class="pill">Full 6×3 fascia</span>
+      <span class="pill">One column</span>
+      <span class="pill pink">Spin after sign-up</span>
+    </div>
+    <p>One 7 ft column on the left, prize wheel on the right, banner as the entire front. Less decoration than the arch, more reason to stop.</p>
+    <img src="assets/r3-5-billboard-wheel.png" alt="Billboard and wheel: full banner, one balloon column, prize wheel">
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Supports</h4>
+        <ul>
+          <li>Column water base on the floor.</li>
+          <li>Wheel uses its included weighted stand. Not on a bin.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Add</h4>
+        <ul>
+          <li>1 column stand + pink/lime balloons (~$28) — a 2-pack still fits if you skip lights</li>
+          <li><a href="https://www.amazon.ca/Spinning-Tabletop-Roulette-Carnivals-Activities/dp/B0D1FTST5T">Amazon 12 in prize wheel</a> (~$28)</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <h2>Grand pick</h2>
+  <table>
+    <thead><tr><th>Build</th><th>Why it looks bigger</th><th>Structure + ballast</th><th>Est.</th></tr></thead>
+    <tbody>
+      <tr><td>1 Reef arch</td><td>Banner + 7 ft neon frame</td><td>2 poles, water bags</td><td class="price">~$120</td></tr>
+      <tr><td>2 Dark glow</td><td>Banner + lit black wall</td><td>Backdrop stand, sandbags</td><td class="price">~$115</td></tr>
+      <tr><td>3 Twin towers</td><td>Banner as a clean billboard</td><td>2 columns, water bases</td><td class="price">~$105</td></tr>
+      <tr><td>4 Fringe portal</td><td>Banner + shiny photo wall</td><td>Stand + sandbags</td><td class="price">~$115</td></tr>
+      <tr><td>5 Billboard + wheel</td><td>Banner + one tower + game</td><td>1 column + wheel base</td><td class="price">~$118</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="r2">Earlier realistic builds (no giant fascia)</h2>
+  <p class="note">Round 2 used the real props but still drew the banner as a short strip. Keep those shopping notes if you skip the fitted black cloth. Prefer Grand 1–5 if you want it to stand out.</p>
+
+  <div class="inv" aria-label="Existing supplies">
+    <figure>
+      <img src="assets/inventory/squid-hats.jpg" alt="Pink, purple, and lime plush squid hats with pom-pom eyes">
+      <figcaption>Hats — plush squid, 2 on hand</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/inventory/honeycomb-balloons.jpg" alt="Honeycomb paper balloons on thin white wire stems">
+      <figcaption>Balloons — honeycomb paper + wire</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/inventory/eyeball-candy.jpg" alt="Individually wrapped eyeball candies">
+      <figcaption>Candy — keep them wrapped</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/inventory/monster-binder-bins.jpg" alt="Skip Hop monster binder and clear plastic bins">
+      <figcaption>Binder + bins you already have</figcaption>
+    </figure>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <h4>Already on hand</h4>
+      <ul>
+        <li>6 ft hanging banner for the table front</li>
+        <li>Honeycomb paper balloons on wire stems</li>
+        <li>2 plush squid hats (pink / lime; purple if you have a third)</li>
+        <li>Wrapped eyeball candies</li>
+        <li>Skip Hop monster binder</li>
+        <li>Clear bins with lime handles</li>
+        <li>Primary-colour streamers + stickers</li>
+      </ul>
+    </div>
+    <div class="card pink">
+      <h4>Support rules</h4>
+      <ul>
+        <li>Plant honeycomb stems in floral foam or a jar of beans. They will not stand in an empty vase.</li>
+        <li>Floor poles need water or sand in the base. Empty bases fall.</li>
+        <li>Backdrop feet need sandbags or water weights.</li>
+        <li>Clip the banner to the table front with binder clips. Do not tape it to the cloth only.</li>
+        <li>Bins under the table hide the extra hats, tape, and candy refill.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <span>ROUND 2 FALLBACK</span><br>
+    If you cannot hang the 6×3 as a full fascia, Build A (weighted jars) is still the cheapest honest table. Prefer Grand 1 if you want it to stand out.
+  </div>
+
+  <h2>Walmart + Amazon shopping kit</h2>
+  <p>Buy the shared row once. Prices are CAD before tax, Sept 2026 — confirm the colour swatch before checkout. Prefer <strong>Walmart</strong> for cloths, jars, foam, clips, beans, bowls; <strong>Amazon.ca</strong> for poles, backdrop stand, prize wheel.</p>
+  <table>
+    <thead>
+      <tr><th>Item</th><th>Why / support job</th><th>Where</th><th>Est.</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Hot pink + lime 54×108 plastic table covers</td>
+        <td>Brand cloth; Unique / Way to Celebrate in the party aisle</td>
+        <td>
+          <a href="https://www.walmart.ca/en/search?q=54%22%20x%20108%22%20plastic%20table%20cover">Walmart.ca 54×108 covers</a> (often ~$1.35–$4) ·
+          <a href="https://www.amazon.ca/Unique-Party-Reusable-Rectangular-Tablecover/dp/B01M6UXJYR">Amazon Unique Party cover</a> (pick Hot Pink + Lime Green)
+        </td>
+        <td class="price">$6–12</td>
+      </tr>
+      <tr>
+        <td>Floral foam bricks</td>
+        <td>Holds honeycomb wires upright</td>
+        <td><a href="https://www.walmart.ca/en/ip/12-PCS-Floral-Foam-Wet-Floral-Foam-Blocks-Flower-Arrangement-for/5OB5MWD59VEU">Walmart floral foam ~$10</a> · <a href="https://www.amazon.ca/s?k=floral+foam+blocks">Amazon.ca floral foam</a></td>
+        <td class="price">$10</td>
+      </tr>
+      <tr>
+        <td>2–3 glass mason jars + 1 bag dry beans or rice</td>
+        <td>Weight in the jar so bouquets do not tip. 250 ml is small — grab 500 ml–1 L if you see them.</td>
+        <td>
+          <a href="https://www.walmart.ca/en/ip/Mainstays-Clear-Glass-Canning-Jars-250ml-12-Piece/6000207429119">Walmart Mainstays jars</a> ·
+          beans in grocery
+        </td>
+        <td class="price">$8</td>
+      </tr>
+      <tr>
+        <td>Binder clips + tablecloth clips</td>
+        <td>Banner on the table front; cloth will not blow or slide</td>
+        <td>
+          <a href="https://www.walmart.ca/en/search?q=binder%20clips">Walmart binder clips</a> ·
+          <a href="https://www.amazon.ca/s?k=tablecloth+clips">Amazon tablecloth clips</a>
+        </td>
+        <td class="price">$8</td>
+      </tr>
+      <tr>
+        <td>Clear glass bowl</td>
+        <td>Wrapped candy, still readable as eyeballs</td>
+        <td><a href="https://www.walmart.ca/en/search?q=glass%20mixing%20bowl">Walmart glass bowl</a></td>
+        <td class="price">$5</td>
+      </tr>
+      <tr>
+        <td>Foam board + black marker</td>
+        <td>QR / JOIN / SIGN-UP</td>
+        <td><a href="https://www.walmart.ca/en/search?q=foam%20board">Walmart foam board</a></td>
+        <td class="price">$5</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note">Shared kit ~$42–48. That leaves $50+ for a standing structure if you want one. Command hooks: <a href="https://www.walmart.ca/en/search?q=command%20hooks">Walmart Command hooks</a> if you are allowed to use a nearby wall — do not count on it.</p>
+
+  <article class="concept rec" id="r2a">
+    <h3><small>Build A · recommended · no floor structure · ~$40–50</small>Weighted jar bouquets</h3>
+    <div class="meta">
+      <span class="pill">Split pink / lime cloth</span>
+      <span class="pill">Jars + foam + beans</span>
+      <span class="pill pink">Hat try-on</span>
+    </div>
+    <p>Most honest use of the honeycomb balloons: plant them like flowers. Two mason jars, beans in the bottom, floral foam on top, stems at different heights. Pink hat on the table as a try-on, lime hat folded. Monster binder standing. Candy in a glass bowl. Bins under the table. Banner clipped to the front.</p>
+    <img src="assets/r2-1-jar-bouquets.png" alt="Split pink and lime table with honeycomb balloons in weighted mason jars, squid hats, monster binder">
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Supports</h4>
+        <ul>
+          <li>Each jar: 2–3 cm dry beans, then a foam plug cut to the mouth.</li>
+          <li>3–4 stems per jar max. Overfill and it tips.</li>
+          <li>Binder clips on the banner + tablecloth clips on the corners.</li>
+          <li>Hat stand optional — a full water bottle works (see Build D).</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Interactive</h4>
+        <ol>
+          <li>Try a squid hat.</li>
+          <li>Sticker + QR while it is still on.</li>
+          <li>Binder is the analog sign-up.</li>
+        </ol>
+        <p class="note">No extra Amazon structure. Stay in the Walmart party / craft / grocery aisles.</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="concept" id="r2b">
+    <h3><small>Build B · floor structure · ~$55–70</small>Two-pole clothesline</h3>
+    <div class="meta">
+      <span class="pill">Full pink cloth</span>
+      <span class="pill">Poles + water ballast</span>
+      <span class="pill pink">Hats hang at eye level</span>
+    </div>
+    <p>Two poles on the <em>floor</em> at the table ends, fishing line between the tops, hats and honeycomb balloons clipped to the line. The mockup uses water-filled buckets as bases — that is the cheap, stable version. A bought column kit works if it includes fillable bases.</p>
+    <img src="assets/r2-2-column-clothesline.png" alt="Pink table with two water-weighted poles and a clothesline of hats and honeycomb balloons">
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Supports — do not skip ballast</h4>
+        <ul>
+          <li>Poles sit on the gym floor, not on the table.</li>
+          <li>Each base must hold water or sand. An empty bucket will walk and fall.</li>
+          <li>Keep the line slightly shorter than the span so it stays taut.</li>
+          <li>Leave a staff gap in the middle behind the table.</li>
+          <li>Honeycomb balloons clip by the wire. Streamer “tentacles” on the clips are optional extra, not part of the stock balloons.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Buy</h4>
+        <ul>
+          <li>Cheap DIY: 2 Walmart buckets + 2 closet rods / EMT + fishing line + binder clips (~$20).</li>
+          <li>Bought: <a href="https://www.amazon.ca/Decojoy-Adjustable-Assembly-Graduation-Decoration/dp/B0BW914VMY">Amazon Decojoy 2-pack column stands</a> (fill the included water bags).</li>
+          <li><a href="https://www.walmart.ca/en/search?q=fishing%20line">Walmart fishing line</a></li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="concept" id="r2c">
+    <h3><small>Build C · floor structure · ~$75–90</small>Backdrop stand photo wall</h3>
+    <div class="meta">
+      <span class="pill">Pink cloth</span>
+      <span class="pill">6 ft stand + sandbags</span>
+      <span class="pill pink">Photo then sticker</span>
+    </div>
+    <p>An 8×8-class photo backdrop stand behind the table. Streamers hang from the crossbar. Honeycomb balloons are light enough to twist onto that same bar. Hats stay on the table as props. Phone on a mini tripod. Binder and candy shift right so the centre stays clear.</p>
+    <img src="assets/r2-3-backdrop-portal.png" alt="Pink table in front of a weighted backdrop stand with streamers and honeycomb balloons">
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Supports</h4>
+        <ul>
+          <li>Two telescoping uprights + one crossbar. Open to ~6 ft wide, ~6.5 ft tall.</li>
+          <li>Sandbags or water weights on <em>both</em> feet. Streamers act like a sail.</li>
+          <li>Set the stand on the floor behind the table, not on the tabletop.</li>
+          <li>Ask Saitsa if a stand behind the table is allowed before you buy.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Buy</h4>
+        <ul>
+          <li><a href="https://www.amazon.ca/s?k=8x8+photo+backdrop+stand">Amazon.ca 8×8 backdrop stand</a> (~$30–45)</li>
+          <li><a href="https://www.amazon.ca/s?k=photography+sandbag">Amazon photography sandbags</a> or Walmart bags of rice as weights (~$12)</li>
+          <li><a href="https://www.amazon.ca/s?k=mini+phone+tripod">Amazon mini phone tripod</a> or Walmart equivalent (~$12)</li>
+          <li>Extra streamers: <a href="https://www.walmart.ca/en/search?q=crepe%20streamers">Walmart crepe streamers</a></li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <article class="concept" id="r2d">
+    <h3><small>Build D · uses your bins · ~$35–45</small>Bin risers + bottle hat stand</h3>
+    <div class="meta">
+      <span class="pill">Lime cloth + pink runner</span>
+      <span class="pill">Bins as plinths</span>
+      <span class="pill pink">Foam garden</span>
+    </div>
+    <p>The clear bins you already own become the vertical structure. Back bin: floral foam, honeycomb stems stuck in. Front bin: monster binder as the sign-up log. A full water bottle is the hat stand. No poles, no Amazon stand.</p>
+    <img src="assets/r2-4-bin-risers.png" alt="Lime and pink table using existing plastic bins as risers for balloons and the monster binder">
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Supports</h4>
+        <ul>
+          <li>Foam must fill the bin so stems cannot flop. Dry foam, not dripping wet.</li>
+          <li>Fill the water bottle completely. A half-full bottle tips when someone grabs the hat.</li>
+          <li>Put leftover candy and tape in a third bin under the table.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Buy</h4>
+        <p>Only the shared Walmart kit (cloths, foam, bowl, clips). Bottle is free. Bins are already yours.</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="concept" id="r2e">
+    <h3><small>Build E · tabletop structure · ~$75–90</small>Prize wheel + weighted vases</h3>
+    <div class="meta">
+      <span class="pill">Full pink cloth</span>
+      <span class="pill">Wheel stand + stone jars</span>
+      <span class="pill pink">Spin after sign-up</span>
+    </div>
+    <p>The 12 in wheel comes with its own weighted stand — that is the structure. Honeycomb balloons go in two short jars with stones or beans (not tall empty vases). Hats on cheap stands or bottles. Spin only after they sign the binder.</p>
+    <img src="assets/r2-5-wheel-weighted.png" alt="Pink table with prize wheel on a weighted stand, honeycomb balloons in stone-filled jars, squid hats">
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Supports</h4>
+        <ul>
+          <li>Use the wheel’s included base. Tighten the screw. Do not perch it on a bin.</li>
+          <li>Jars: stones or beans first, then a foam plug if stems still wobble.</li>
+          <li>Hat stands: <a href="https://www.amazon.ca/s?k=wig+stand">Amazon wig stands</a> (~$10) or water bottles.</li>
+          <li>No 7 ft columns unless you also buy fillable bases (see Build B).</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Buy</h4>
+        <ul>
+          <li><a href="https://www.amazon.ca/Spinning-Tabletop-Roulette-Carnivals-Activities/dp/B0D1FTST5T">Amazon 12 in prize wheel</a> · <a href="https://www.amazon.ca/12-inch-Spinning-Prize-Wheel-Tabletop/dp/B0BZ3BPR6G">alternate 12 in wheel</a> (~$25–35)</li>
+          <li>Jars + stones: Walmart</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <h2>Pick a realistic build</h2>
+  <table>
+    <thead>
+      <tr><th>Build</th><th>Standing structure</th><th>Ballast</th><th>Interactive</th><th>Est.</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>A Jars</td><td>None (tabletop jars)</td><td>Beans + foam in jars</td><td>Hat try-on</td><td class="price">~$45</td></tr>
+      <tr><td>B Line</td><td>2 poles beside the table</td><td>Water in buckets / fillable bases</td><td>Hats at eye level</td><td class="price">~$60</td></tr>
+      <tr><td>C Stand</td><td>Backdrop stand behind table</td><td>Sandbags on both feet</td><td>Photo then sticker</td><td class="price">~$80</td></tr>
+      <tr><td>D Bins</td><td>Your existing bins</td><td>Foam in bin + full water bottle</td><td>Sign the monster</td><td class="price">~$40</td></tr>
+      <tr><td>E Wheel</td><td>Prize-wheel stand</td><td>Included wheel base + stone jars</td><td>Spin after sign-up</td><td class="price">~$80</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="round1">Round 1 — stylized concepts</h2>
+  <p class="note">Earlier pass, more illustrated. Kept for colour / vibe. Use Round 2 if you are actually packing the car.</p>
+
+  <h2 id="shared">Round 1 shopping notes</h2>
+  <p>Buy this once. Every concept below only adds a few extras. Prices are CAD, before tax, as of Sept 2026 — check stock.</p>
+  <table>
+    <thead>
+      <tr><th>Item</th><th>Why</th><th>Where</th><th>Est.</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Hot pink plastic table cover, 54×108 in</td>
+        <td>Brand pink, fits a 6 ft table with drape</td>
+        <td>
+          <a href="https://www.partyconnection.ca/products/plastic-table-covers">Party Connection $2.99</a> ·
+          <a href="https://www.partycity.com/products/plastic-table-cover">Party City Hot Pink ~$2</a> ·
+          Calgary: Party City or Dollarama first
+        </td>
+        <td class="price">$3</td>
+      </tr>
+      <tr>
+        <td>Lime / kiwi plastic table cover, 54×108 in</td>
+        <td>Brand lime; use as the other half or as a runner</td>
+        <td>
+          <a href="https://www.partyconnection.ca/products/lime-green-plastic-table-cover">Party Connection lime $2.99</a> ·
+          Party City “Kiwi” / “Festive Green”
+        </td>
+        <td class="price">$3</td>
+      </tr>
+      <tr>
+        <td>Midnight black table cover, 54×108 in (optional)</td>
+        <td>Ink underlayer so neon sits on brand black</td>
+        <td><a href="https://www.partyconnection.ca/products/plastic-table-covers">Party Connection Midnight Black</a></td>
+        <td class="price">$3</td>
+      </tr>
+      <tr>
+        <td>White foam board, 4 sheets</td>
+        <td>QR, JOIN, and station labels</td>
+        <td><a href="https://dollarama.instacart.com/store/dollarama/products/28550706-foam-board-white-each">Dollarama foam board ~$1.50</a></td>
+        <td class="price">$6</td>
+      </tr>
+      <tr>
+        <td>Fishing line + clear tape / Command hooks</td>
+        <td>Hang hats and balloons from stands, not the ceiling</td>
+        <td>
+          <a href="https://dollarama.instacart.com/store/dollarama/products/27784427-professional-fishing-line-on-spool-each">Dollarama line ~$3</a> ·
+          Command hooks at Walmart / Dollarama
+        </td>
+        <td class="price">$10</td>
+      </tr>
+      <tr>
+        <td>2 clear bowls + neon duck tape</td>
+        <td>Candy “plankton” + glitch seam on the split cloth</td>
+        <td>Dollarama bowls · <a href="https://www.findtape.com/Duck-Brand-Neon-Color-Duct-Tape/p649/">Duck neon tape</a> or Dollarama equivalent</td>
+        <td class="price">$10</td>
+      </tr>
+      <tr>
+        <td>Battery fairy lights, 1–2 strings</td>
+        <td>Makes jellyfish hats and paper balloons read as creatures at a distance</td>
+        <td><a href="https://www.walmart.ca/en/c/kp/fairy-lights">Walmart.ca fairy lights from ~$8</a></td>
+        <td class="price">$10</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note">Calgary in-person: Dollarama (Deerfoot / 36 St NE / downtown) for cheap bits; Party City for guaranteed neon cloth if Dollarama is out. Print a QR to <a href="https://unnaturalintelligence.club/">unnaturalintelligence.club</a> on black paper with lime type.</p>
+
+  <!-- CONCEPT 1 -->
+  <article class="concept rec" id="c1">
+    <h3><small>Concept 1 · recommended · ~$55 total</small>Jellyfish Colony</h3>
+    <div class="meta">
+      <span class="pill">Split pink / lime cloth</span>
+      <span class="pill">Vertical colony</span>
+      <span class="pill pink">Hat try-on + QR</span>
+    </div>
+    <p>Turn the table into a small unnatural reef. The banner’s jellyfish is the species; the two hats and paper balloons are the rest of the colony hanging at different heights. The monster binder is the specimen log. Eyeball candy is plankton. It looks weird from across the gym, which is the point.</p>
+    <img src="assets/concept-1-jellyfish-colony.png" alt="Concept 1 mockup: split neon table, hanging jellyfish hats, banner on the front">
+
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Top-down (aisle at bottom)</h4>
+        <div class="plan">
+          <svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Top-down plan for Jellyfish Colony">
+            <rect width="720" height="280" fill="#0a0408"/>
+            <text x="360" y="22" fill="#BAF837" font-size="11" font-family="monospace" text-anchor="middle">6 ft table · staff behind · aisle in front of banner</text>
+            <rect x="40" y="48" width="320" height="160" fill="#FA4A9E"/>
+            <rect x="360" y="48" width="320" height="160" fill="#BAF837"/>
+            <rect x="352" y="48" width="16" height="160" fill="#030205"/>
+            <rect x="40" y="208" width="640" height="28" fill="#030205"/>
+            <text x="360" y="227" fill="#F9F9FA" font-size="11" font-family="monospace" text-anchor="middle">BANNER 6 ft — front face</text>
+            <rect x="58" y="70" width="90" height="70" fill="#030205" stroke="#FA4A9E"/>
+            <text x="103" y="110" fill="#FA4A9E" font-size="10" font-family="monospace" text-anchor="middle">binder</text>
+            <circle cx="210" cy="120" r="28" fill="#fff" fill-opacity=".9"/>
+            <text x="210" y="124" fill="#030205" font-size="9" font-family="monospace" text-anchor="middle">candy</text>
+            <circle cx="290" cy="120" r="28" fill="#fff" fill-opacity=".9"/>
+            <text x="290" y="124" fill="#030205" font-size="9" font-family="monospace" text-anchor="middle">candy</text>
+            <rect x="400" y="88" width="90" height="50" fill="#030205"/>
+            <text x="445" y="118" fill="#BAF837" font-size="10" font-family="monospace" text-anchor="middle">stickers</text>
+            <rect x="520" y="80" width="80" height="70" fill="#F9F9FA"/>
+            <text x="560" y="118" fill="#030205" font-size="10" font-family="monospace" text-anchor="middle">QR</text>
+            <text x="140" y="195" fill="#030205" font-size="10" font-family="monospace">hat try-on</text>
+            <text x="560" y="195" fill="#030205" font-size="10" font-family="monospace">hat on stand</text>
+            <text x="360" y="42" fill="#7EC8FF" font-size="10" font-family="monospace" text-anchor="middle">↑ hanging hats + paper balloons on fishing line from two balloon stands</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">How people use it</h4>
+        <ol>
+          <li>Hats and lanterns pull them off the aisle.</li>
+          <li>“Want to be the jellyfish for ten seconds?” — photo in a hat.</li>
+          <li>Sticker + scan the QR while they still have the hat on.</li>
+          <li>Binder is the analog backup: name, program, email, Discord.</li>
+        </ol>
+        <p class="note">No-ceiling version: two <a href="https://bargainballoons.ca/collections/balloon-stands">4 ft balloon stands (~$7–11)</a> at the back corners. Tie fishing line between them as a clothesline for hats and paper balloons. Streamers hang as tentacles from that line and from the table front over the banner corners — not across the wordmark.</p>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Add-on</th><th>Link</th><th>Est.</th></tr></thead>
+      <tbody>
+        <tr><td>2× balloon / display stands</td><td><a href="https://bargainballoons.ca/collections/balloon-stands">Bargain Balloons 4 ft stand $7–11</a> or <a href="https://bargainballoons.ca/collections/balloon-stands">48″ column kit $6.31</a></td><td class="price">$14–22</td></tr>
+        <tr><td>Extra lime + pink latex if paper balloons are few</td><td>Dollarama / Party City balloon bags</td><td class="price">$8</td></tr>
+      </tbody>
+    </table>
+  </article>
+
+  <!-- CONCEPT 2 -->
+  <article class="concept" id="c2">
+    <h3><small>Concept 2 · ~$70 total</small>Glitch Lab / Prompt Playground</h3>
+    <div class="meta">
+      <span class="pill">Black cloth + pink runner</span>
+      <span class="pill">Tri-fold terminal</span>
+      <span class="pill pink">20-second prompt demo</span>
+    </div>
+    <p>This is the “we actually do the work” table. A black cloth (ink) with a neon pink runner, a foam-core tri-fold painted like a terminal, and a laptop running a 20-second “human finish” demo. Streamers become data cables from the laptop to balloon clusters. Hats perch on the top corners as mascots, not as the main event.</p>
+    <img src="assets/concept-2-glitch-lab.png" alt="Concept 2 mockup: black table, pink runner, tri-fold terminal, laptop demo">
+
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Top-down</h4>
+        <div class="plan">
+          <svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg">
+            <rect width="720" height="280" fill="#0a0408"/>
+            <rect x="80" y="16" width="560" height="36" fill="#111" stroke="#BAF837"/>
+            <text x="360" y="38" fill="#BAF837" font-size="11" font-family="monospace" text-anchor="middle">TRI-FOLD  ·  PROMPT PLAYGROUND</text>
+            <rect x="40" y="60" width="640" height="148" fill="#141016"/>
+            <rect x="250" y="60" width="220" height="148" fill="#FA4A9E"/>
+            <rect x="40" y="208" width="640" height="28" fill="#030205"/>
+            <text x="360" y="227" fill="#F9F9FA" font-size="11" font-family="monospace" text-anchor="middle">BANNER 6 ft — front face</text>
+            <rect x="55" y="85" width="100" height="80" fill="#3a0d22" stroke="#FA4A9E"/>
+            <text x="105" y="128" fill="#FA4A9E" font-size="10" font-family="monospace" text-anchor="middle">binder</text>
+            <circle cx="185" cy="130" r="22" fill="#fff"/>
+            <text x="185" y="134" fill="#030205" font-size="9" font-family="monospace" text-anchor="middle">candy</text>
+            <rect x="300" y="100" width="120" height="70" fill="#030205"/>
+            <text x="360" y="140" fill="#BAF837" font-size="10" font-family="monospace" text-anchor="middle">laptop</text>
+            <rect x="500" y="100" width="90" height="50" fill="#030205"/>
+            <text x="545" y="128" fill="#BAF837" font-size="10" font-family="monospace" text-anchor="middle">stickers</text>
+            <text x="105" y="195" fill="#7EC8FF" font-size="10" font-family="monospace">balloon cluster</text>
+            <text x="560" y="195" fill="#7EC8FF" font-size="10" font-family="monospace">balloon cluster</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">How people use it</h4>
+        <ol>
+          <li>They type (or you type) one messy sentence they actually have to send.</li>
+          <li>You show a generic AI draft vs a 15-second human finish.</li>
+          <li>Sticker labelled TAKE A TOKEN. Binder for sign-up.</li>
+        </ol>
+        <p class="note">Needs power or a charged laptop + hotspot. Bring a 10 ft extension and gaffer tape in case the hall has an outlet. Preload 3 demos: email, lab report tone, job application. Do not live-generate anything academic as “the finished homework.”</p>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Add-on</th><th>Link</th><th>Est.</th></tr></thead>
+      <tbody>
+        <tr><td>Black cloth (if not in shared kit) + extra foam board</td><td>Party Connection Midnight Black · Dollarama foam</td><td class="price">$8</td></tr>
+        <tr><td>Neon poster markers / paint pens</td><td>Dollarama or Michaels</td><td class="price">$8</td></tr>
+        <tr><td>Laptop stand or cheap riser</td><td>Dollarama / Amazon bookstand</td><td class="price">$8</td></tr>
+        <tr><td>Fairy lights along tri-fold</td><td><a href="https://www.walmart.ca/en/ip/Fairy-Lights-Fairy-Lights-USB-Powered-String-Lights-Holiday-Lights-Fairy-String-Lights-For-Party-Wedding-Festival-Bedroom-Table-Decoration/4MNFZR07RPXH">Walmart USB fairy lights ~$8</a></td><td class="price">$8</td></tr>
+      </tbody>
+    </table>
+  </article>
+
+  <!-- CONCEPT 3 -->
+  <article class="concept" id="c3">
+    <h3><small>Concept 3 · ~$80 total</small>Unnatural Arcade</h3>
+    <div class="meta">
+      <span class="pill">Full pink cloth</span>
+      <span class="pill">Balloon columns</span>
+      <span class="pill pink">Prize wheel + feed-the-monster</span>
+    </div>
+    <p>Highest traffic stopper. A 12 in dry-erase prize wheel and a cardboard “feed the monster” toss using the binder face or a painted box. Spin after you sign up — never before, or you will run out of stickers and candy. Balloon columns at both ends give you the vertical punch of a carnival stall.</p>
+    <img src="assets/concept-3-unnatural-arcade.png" alt="Concept 3 mockup: pink table, prize wheel, monster toss, balloon columns">
+
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Top-down</h4>
+        <div class="plan">
+          <svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg">
+            <rect width="720" height="280" fill="#0a0408"/>
+            <circle cx="36" cy="140" r="28" fill="#FA4A9E"/><circle cx="36" cy="140" r="16" fill="#BAF837"/>
+            <circle cx="684" cy="140" r="28" fill="#BAF837"/><circle cx="684" cy="140" r="16" fill="#FA4A9E"/>
+            <text x="36" y="188" fill="#7EC8FF" font-size="9" font-family="monospace" text-anchor="middle">column</text>
+            <text x="684" y="188" fill="#7EC8FF" font-size="9" font-family="monospace" text-anchor="middle">column</text>
+            <rect x="70" y="56" width="580" height="150" fill="#FA4A9E"/>
+            <rect x="70" y="206" width="580" height="28" fill="#030205"/>
+            <text x="360" y="225" fill="#F9F9FA" font-size="11" font-family="monospace" text-anchor="middle">BANNER 6 ft — front face</text>
+            <rect x="90" y="80" width="110" height="80" fill="#3a2010" stroke="#fff"/>
+            <text x="145" y="122" fill="#fff" font-size="10" font-family="monospace" text-anchor="middle">monster</text>
+            <circle cx="250" cy="125" r="26" fill="#fff"/>
+            <text x="250" y="129" fill="#030205" font-size="9" font-family="monospace" text-anchor="middle">candy</text>
+            <rect x="310" y="95" width="70" height="60" fill="#030205"/>
+            <text x="345" y="128" fill="#BAF837" font-size="10" font-family="monospace" text-anchor="middle">QR</text>
+            <rect x="400" y="100" width="80" height="50" fill="#030205"/>
+            <text x="440" y="128" fill="#BAF837" font-size="10" font-family="monospace" text-anchor="middle">stickers</text>
+            <circle cx="560" cy="128" r="40" fill="#030205" stroke="#BAF837"/>
+            <text x="560" y="132" fill="#BAF837" font-size="10" font-family="monospace" text-anchor="middle">WHEEL</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Wheel slices (write in dry-erase)</h4>
+        <ul>
+          <li>Sticker</li>
+          <li>Eyeball</li>
+          <li>Try a hat</li>
+          <li>Human finish (you rewrite one sentence of theirs)</li>
+          <li>Double sticker</li>
+          <li>Join + sticker (the “win”)</li>
+        </ul>
+        <p class="note">Weight the wheel: most slices are sticker. Candy and hat are rare. Staff the wheel — do not leave it unattended or the aisle clogs.</p>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Add-on</th><th>Link</th><th>Est.</th></tr></thead>
+      <tbody>
+        <tr><td>12 in dry-erase prize wheel</td><td><a href="https://www.vevor.ca/prize-wheel-c_11540/vevor-12-in-spinning-prize-wheel-12-slots-spinning-wheel-with-stand-tabletop-win-fortune-roulette-with-a-dry-erase-and-2-markers-6-colors-easy-assembly-for-party-pub-trade-show-carnival-events-p_010142772295">VEVOR.ca 12 in wheel $28.90</a> · <a href="https://www.amazon.ca/12-inch-Spinning-Prize-Wheel-Tabletop/dp/B0BZ3BPR6G">Amazon.ca 12 in wheel</a></td><td class="price">$29</td></tr>
+        <tr><td>2 balloon column kits + lime/pink balloons</td><td><a href="https://bargainballoons.ca/collections/balloon-stands">Bargain Balloons 48″ column $6.31</a> ×2 + Dollarama balloons</td><td class="price">$20</td></tr>
+        <tr><td>Cardboard box + extra tape for monster toss</td><td>Reuse a shipping box; Dollarama googly eyes if you want a second mouth</td><td class="price">$4</td></tr>
+      </tbody>
+    </table>
+  </article>
+
+  <!-- CONCEPT 4 -->
+  <article class="concept" id="c4">
+    <h3><small>Concept 4 · ~$50 total</small>Specimen Cabinet</h3>
+    <div class="meta">
+      <span class="pill">Lime cloth + pink runner</span>
+      <span class="pill">Stacked heights</span>
+      <span class="pill pink">Guess-the-specimen</span>
+    </div>
+    <p>Quiet but sticky. Stack gift boxes or black cardboard as plinths so every prop sits at a different height, tagged like a museum: <em>Jellyfish hat (genus: UI)</em>, <em>Eyeball candy (plankton)</em>, <em>Monster binder (field log)</em>. People stop to read labels. The interaction is “pick a specimen, we tell you the matching club idea” — hat = events, candy = low-token tips, binder = join, sticker = you leave with a piece of the collection.</p>
+    <img src="assets/concept-4-specimen-cabinet.png" alt="Concept 4 mockup: lime cloth, pink runner, labeled props on stacked boxes">
+
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Top-down</h4>
+        <div class="plan">
+          <svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg">
+            <rect width="720" height="280" fill="#0a0408"/>
+            <rect x="40" y="50" width="640" height="156" fill="#95B747"/>
+            <rect x="300" y="50" width="120" height="156" fill="#FA4A9E"/>
+            <rect x="40" y="206" width="640" height="28" fill="#030205"/>
+            <text x="360" y="225" fill="#F9F9FA" font-size="11" font-family="monospace" text-anchor="middle">BANNER 6 ft — front face</text>
+            <rect x="70" y="80" width="90" height="70" fill="#1a0a12"/>
+            <text x="115" y="118" fill="#BAF837" font-size="9" font-family="monospace" text-anchor="middle">hat</text>
+            <rect x="180" y="95" width="80" height="55" fill="#3a1024"/>
+            <text x="220" y="126" fill="#F9F9FA" font-size="9" font-family="monospace" text-anchor="middle">balloon</text>
+            <rect x="330" y="85" width="70" height="70" fill="#1a0a12"/>
+            <text x="365" y="122" fill="#FA4A9E" font-size="9" font-family="monospace" text-anchor="middle">candy</text>
+            <rect x="430" y="75" width="90" height="80" fill="#1a0a12"/>
+            <text x="475" y="118" fill="#BAF837" font-size="9" font-family="monospace" text-anchor="middle">binder</text>
+            <rect x="545" y="100" width="100" height="50" fill="#030205"/>
+            <text x="595" y="128" fill="#BAF837" font-size="9" font-family="monospace" text-anchor="middle">stickers</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Label copy</h4>
+        <ul>
+          <li>JELLYFISH HAT — genus UI. Wear to become the mascot.</li>
+          <li>PAPER BALLOON — airborne token. Untapped potential: it floats until you use it.</li>
+          <li>EYEBALL CANDY — plankton. Small, frequent, slightly wrong.</li>
+          <li>MONSTER BINDER — field log. Sign here. Keep the human accountable.</li>
+          <li>STICKER — take a specimen home.</li>
+        </ul>
+        <p class="note">Best if your greeters like talking. Weak if the hall is too loud to read tags. Hang leftover paper balloons on fishing line from a rear dowel, not from the ceiling.</p>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Add-on</th><th>Link</th><th>Est.</th></tr></thead>
+      <tbody>
+        <tr><td>Nested gift boxes or black storage boxes as plinths</td><td>Dollarama gift boxes / photo boxes</td><td class="price">$12</td></tr>
+        <tr><td>Tag string + kraft tags</td><td>Dollarama or Michaels</td><td class="price">$5</td></tr>
+        <tr><td>Optional glass-look bowl or cloche for candy</td><td>Dollarama</td><td class="price">$4</td></tr>
+      </tbody>
+    </table>
+  </article>
+
+  <!-- CONCEPT 5 -->
+  <article class="concept" id="c5">
+    <h3><small>Concept 5 · ~$75 total</small>Glitch Portal photo wall</h3>
+    <div class="meta">
+      <span class="pill">Full pink cloth</span>
+      <span class="pill">Streamer curtain</span>
+      <span class="pill pink">Photo then sticker</span>
+    </div>
+    <p>Build a 6 ft-wide streamer curtain <em>behind</em> the table (tape streamers to a cheap tension rod, PVC, or a folding clothes rack). Paper balloons live in the curtain. Hats are photo props. A cardboard frame reads Generated by AI / Perfected by humans. Phone on a mini tripod. Sign-up stays to the far right so the centre stays clear for photos.</p>
+    <img src="assets/concept-5-glitch-portal.png" alt="Concept 5 mockup: pink table, streamer photo wall, phone tripod, photo frame">
+
+    <div class="grid g2">
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">Top-down</h4>
+        <div class="plan">
+          <svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg">
+            <rect width="720" height="280" fill="#0a0408"/>
+            <rect x="40" y="10" width="640" height="28" fill="#FA4A9E"/>
+            <rect x="40" y="18" width="640" height="12" fill="#BAF837"/>
+            <text x="360" y="48" fill="#7EC8FF" font-size="10" font-family="monospace" text-anchor="middle">STREAMER + BALLOON CURTAIN on a rack behind the table</text>
+            <rect x="40" y="60" width="640" height="146" fill="#FA4A9E"/>
+            <rect x="40" y="206" width="640" height="28" fill="#030205"/>
+            <text x="360" y="225" fill="#F9F9FA" font-size="11" font-family="monospace" text-anchor="middle">BANNER 6 ft — front face</text>
+            <rect x="70" y="100" width="40" height="50" fill="#030205"/>
+            <text x="90" y="128" fill="#BAF837" font-size="9" font-family="monospace" text-anchor="middle">tripod</text>
+            <rect x="160" y="90" width="70" height="70" fill="#7EC8FF" fill-opacity=".3" stroke="#7EC8FF"/>
+            <text x="195" y="128" fill="#F9F9FA" font-size="9" font-family="monospace" text-anchor="middle">hat</text>
+            <rect x="280" y="95" width="120" height="55" fill="#3a2010"/>
+            <text x="340" y="126" fill="#fff" font-size="9" font-family="monospace" text-anchor="middle">photo frame</text>
+            <circle cx="460" cy="125" r="24" fill="#fff"/>
+            <text x="460" y="129" fill="#030205" font-size="8" font-family="monospace" text-anchor="middle">candy</text>
+            <rect x="530" y="90" width="120" height="70" fill="#030205"/>
+            <text x="590" y="128" fill="#FA4A9E" font-size="9" font-family="monospace" text-anchor="middle">binder</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-family:var(--mono);letter-spacing:.12em;color:var(--lime);text-transform:uppercase;font-size:12px;">How people use it</h4>
+        <ol>
+          <li>Grab a hat + hold the frame.</li>
+          <li>Staff or self-timer takes the shot.</li>
+          <li>Sticker on the way out, QR on the frame’s back.</li>
+        </ol>
+        <p class="note">Ask Saitsa whether a clothes rack behind the table is allowed. If not, tape streamers to the back of a tri-fold sitting on the table — shorter, still vertical. Extra streamers: Dollarama / Party City. Do not cover the front banner with streamers.</p>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Add-on</th><th>Link</th><th>Est.</th></tr></thead>
+      <tbody>
+        <tr><td>2–3 extra streamer packs (pink, lime, primary)</td><td>Dollarama / Party City</td><td class="price">$8</td></tr>
+        <tr><td>Folding clothes rack or tension rod</td><td>Dollarama / Walmart</td><td class="price">$15</td></tr>
+        <tr><td>Mini phone tripod</td><td>Amazon / Dollarama clip stand</td><td class="price">$12</td></tr>
+        <tr><td>Foam board for the photo frame</td><td>Already in shared kit</td><td class="price">$0</td></tr>
+      </tbody>
+    </table>
+  </article>
+
+  <h2>Pick one</h2>
+  <table>
+    <thead>
+      <tr><th>Concept</th><th>Look</th><th>Interactive</th><th>Budget</th><th>Best if…</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1 Colony</td><td>Mascot reef, split cloth</td><td>Hat photo + QR</td><td class="price">~$55</td><td>You want on-brand and low risk</td></tr>
+      <tr><td>2 Lab</td><td>Terminal, black + pink</td><td>Live prompt finish</td><td class="price">~$70</td><td>You have a charged laptop and a talker</td></tr>
+      <tr><td>3 Arcade</td><td>Carnival, full pink</td><td>Wheel + monster toss</td><td class="price">~$80</td><td>The hall is loud and you need a crowd magnet</td></tr>
+      <tr><td>4 Cabinet</td><td>Museum plinths</td><td>Read a tag, take a specimen</td><td class="price">~$50</td><td>You like conversation over spectacle</td></tr>
+      <tr><td>5 Portal</td><td>Streamer photo wall</td><td>Photo then sticker</td><td class="price">~$75</td><td>You can put a rack behind the table</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Hybrid if you cannot decide</h2>
+  <p>Build <strong>Concept 1</strong>. If the shared kit comes in under $45, add the <a href="https://www.vevor.ca/prize-wheel-c_11540/vevor-12-in-spinning-prize-wheel-12-slots-spinning-wheel-with-stand-tabletop-win-fortune-roulette-with-a-dry-erase-and-2-markers-6-colors-easy-assembly-for-party-pub-trade-show-carnival-events-p_010142772295">VEVOR 12 in wheel ($28.90)</a> on the lime half. Still under $100. Hats hang. Wheel spins after sign-up. Stickers close.</p>
+
+  <h2>Day-of kit</h2>
+  <div class="grid g3">
+    <div class="card">
+      <h4>Pack</h4>
+      <ul>
+        <li>Banner + binder clips / table clamps</li>
+        <li>Cloths, tape, scissors, fishing line</li>
+        <li>Hats, balloons, streamers, candy, stickers</li>
+        <li>Printed QR (two copies)</li>
+        <li>Phone battery + laptop if Concept 2 or 5</li>
+        <li>Painters tape (venue-safe)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Setup order (20 min)</h4>
+      <ol>
+        <li>Cloth, then banner on the front.</li>
+        <li>Vertical: stands / tri-fold / rack.</li>
+        <li>Hang hats and balloons.</li>
+        <li>Stations: binder, candy, stickers, QR.</li>
+        <li>One person in the aisle, one behind the table.</li>
+      </ol>
+    </div>
+    <div class="card pink">
+      <h4>Signs to hand-letter</h4>
+      <ul>
+        <li>JOIN THE UNNATURAL</li>
+        <li>SIGN-UP LOG</li>
+        <li>TAKE A TOKEN</li>
+        <li>TRY A HAT</li>
+        <li>Generated by AI · Perfected by humans</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    Unnatural Intelligence · SAIT student club · Saitsa · unnaturalintelligence.club<br>
+    Brand: ink #030205 · pink #FA4A9E · lime #BAF837 · wine #591337 · cyan #7EC8FF<br>
+    Prices are estimates in CAD before tax. Confirm in-store stock at Dollarama and Party City Calgary.
+  </footer>
+</div>
+</body>
+</html>

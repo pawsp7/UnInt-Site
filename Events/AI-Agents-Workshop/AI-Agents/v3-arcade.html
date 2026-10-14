@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agents v3 — Arcade ticket — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --paper: #F9F9FA;
+    --olive: #95B747;
+    --ink: #030205;
+    --pink: #FA4A9E;
+    --wine: #591337;
+    --lime: #BAF837;
+    --cyan: #7EC8FF;
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: #1a0510;
+    font-family: var(--sans); color: var(--paper);
+    display: flex; justify-content: center; padding: 72px 24px 48px;
+  }
+  .toolbar {
+    position: fixed; top: 16px; right: 16px; z-index: 20;
+    display: flex; gap: 8px; font-family: var(--mono); font-size: 12px;
+  }
+  .toolbar a, .toolbar button {
+    cursor: pointer; text-decoration: none;
+    border: 1px solid rgba(186,248,55,.45); background: rgba(3,2,5,.88); color: var(--lime);
+    padding: 8px 12px; font: inherit; letter-spacing: 0.04em;
+  }
+  .stage { width: 11in; height: 17in; flex: 0 0 auto; transform-origin: top center; filter: drop-shadow(0 28px 50px rgba(0,0,0,.55)); }
+
+  .poster {
+    position: relative; width: 11in; height: 17in; overflow: hidden; background: var(--ink);
+    display: flex; flex-direction: column; justify-content: space-between; padding: 0.26in 0.34in 0.28in; gap: 0.12in;
+  }
+  .poster::before {
+    content: ""; position: absolute; inset: 0.12in;
+    border: 0.04in dashed rgba(186,248,55,.35); pointer-events: none; z-index: 2;
+  }
+  .jelly-bg {
+    position: absolute; right: -0.6in; top: 2.2in; width: 6.4in; height: 6.4in; z-index: 0;
+    opacity: 0.16; pointer-events: none;
+  }
+
+  .ticket {
+    position: relative; z-index: 3;
+    background: var(--lime); color: var(--ink);
+    display: grid; grid-template-columns: 1.5fr 1.35fr 1.25fr auto;
+    gap: 0.12in; align-items: center;
+    padding: 0.13in 0.18in; border-radius: 0.08in;
+  }
+  .ticket h3 { margin: 0 0 0.02in; font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.16em; text-transform: uppercase; }
+  .ticket .big { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.24in; letter-spacing: -0.03em; line-height: 1; }
+  .ticket .sub { font-size: 0.115in; font-weight: 700; margin-top: 0.03in; }
+  .ticket .type {
+    background: var(--ink); color: var(--lime); padding: 0.08in 0.12in;
+    font-family: var(--mono); font-size: 0.105in; letter-spacing: 0.12em; text-transform: uppercase; text-align: center;
+  }
+
+  .top { position: relative; z-index: 3; display: grid; grid-template-columns: 1.4fr 0.8fr; gap: 0.16in; align-items: end; }
+  .brand { display: flex; align-items: center; gap: 0.12in; margin-bottom: 0.08in; }
+  .brand-mark {
+    width: 0.52in; height: 0.52in; display: block; object-fit: contain;
+  }
+  .brand-name { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.2in; line-height: 0.92; letter-spacing: -0.03em; }
+  .brand-name small { display: block; margin-top: 0.04in; font-family: var(--mono); font-weight: 400; font-size: 0.09in; letter-spacing: 0.14em; color: rgba(249,249,250,.6); }
+  .title { margin: 0; font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 1.05in; line-height: 0.84; letter-spacing: -0.045em; }
+  .title .l1 { color: var(--lime); }
+  .title .amp { color: var(--pink); }
+  .title .l2 { display: block; color: transparent; -webkit-text-stroke: 0.022in var(--paper); font-size: 0.72in; }
+  .official { margin: 0.08in 0 0; font-family: var(--mono); font-size: 0.1in; color: rgba(249,249,250,.62); }
+  .purpose { margin: 0.12in 0 0; font-size: 0.165in; line-height: 1.28; }
+  .purpose strong { color: var(--lime); }
+  .purpose em { color: var(--pink); font-style: normal; font-weight: 700; }
+  .jelly-hero {
+    width: 2.7in; height: 2.7in; justify-self: end; display: block; object-fit: contain;
+  }
+
+  .mid { position: relative; z-index: 3; display: grid; grid-template-columns: 1.15fr 1fr; gap: 0.14in; }
+  .spine { position: relative; padding-left: 0.22in; display: grid; gap: 0.14in; }
+  .spine::before {
+    content: ""; position: absolute; left: 0.055in; top: 0.1in; bottom: 0.1in; width: 0.03in; background: var(--olive);
+  }
+  .step { position: relative; padding-left: 0.12in; }
+  .step::before {
+    content: ""; position: absolute; left: -0.195in; top: 0.08in; width: 0.12in; height: 0.12in; background: var(--lime); border-radius: 50%;
+  }
+  .step:nth-child(even)::before { background: var(--pink); }
+  .step .n { font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.14em; color: var(--lime); }
+  .step h4 { margin: 0.02in 0 0.03in; font-family: var(--display); text-transform: uppercase; font-size: 0.19in; letter-spacing: -0.02em; }
+  .step p { margin: 0; font-size: 0.13in; line-height: 1.3; color: rgba(249,249,250,.72); }
+
+  .loop-col { display: grid; gap: 0.1in; }
+  .loop-card {
+    display: grid; grid-template-columns: 0.72in 1fr; gap: 0.12in; align-items: center;
+    background: rgba(249,249,250,.05); border: 1px solid rgba(249,249,250,.14); padding: 0.12in; border-radius: 0.08in;
+  }
+  .loop-card.p { border-color: rgba(149,183,71,.55); }
+  .loop-card.d { border-color: rgba(186,248,55,.55); }
+  .loop-card.a { border-color: rgba(250,74,158,.55); }
+  .dot {
+    width: 0.72in; height: 0.72in; border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.28in;
+    color: var(--ink);
+  }
+  .p .dot { background: var(--olive); }
+  .d .dot { background: var(--lime); }
+  .a .dot { background: var(--pink); }
+  .ver { font-family: var(--mono); font-size: 0.085in; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(249,249,250,.55); }
+  .loop-card h3 { margin: 0.02in 0 0.03in; font-family: var(--display); text-transform: uppercase; font-size: 0.24in; letter-spacing: -0.03em; }
+  .p h3 { color: var(--olive); }
+  .d h3 { color: var(--lime); }
+  .a h3 { color: var(--pink); }
+  .loop-card p { margin: 0; font-size: 0.12in; line-height: 1.28; color: rgba(249,249,250,.78); }
+
+  .quote {
+    position: relative; z-index: 3;
+    font-family: var(--mono); font-size: 0.12in; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink); background: var(--lime); padding: 0.1in 0.16in; font-weight: 700;
+    border-radius: 0.06in;
+  }
+  .board { position: relative; z-index: 3; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.1in; }
+  .card {
+    background: rgba(249,249,250,.05); border: 1px solid rgba(149,183,71,.35);
+    padding: 0.16in 0.14in 0.16in; min-height: 1.55in;
+  }
+  .card.wide { grid-column: span 2; background: linear-gradient(90deg, rgba(250,74,158,.28), rgba(89,19,55,.7)); border-color: var(--pink); }
+  .card .n { font-family: var(--mono); font-size: 0.1in; color: var(--lime); letter-spacing: 0.12em; }
+  .card h4 { margin: 0.06in 0 0; font-size: 0.16in; line-height: 1.22; font-weight: 700; }
+  .card.wide h4 { font-family: var(--display); text-transform: uppercase; font-size: 0.26in; letter-spacing: -0.03em; }
+  .card .tag { display: inline-block; margin-top: 0.08in; font-family: var(--mono); font-size: 0.095in; background: var(--lime); color: var(--ink); padding: 0.03in 0.08in; font-weight: 700; letter-spacing: 0.06em; }
+
+  .banner {
+    position: relative; z-index: 3;
+    background: var(--olive); color: var(--ink); padding: 0.12in 0.16in; border-radius: 0.08in;
+  }
+  .banner h3 { margin: 0 0 0.03in; font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.16em; text-transform: uppercase; }
+  .banner p { margin: 0; font-size: 0.165in; font-weight: 700; line-height: 1.25; }
+
+  .foot {
+    position: relative; z-index: 3;
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 0.14in;
+  }
+  .contact h5 { margin: 0 0 0.05in; font-family: var(--mono); font-size: 0.095in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--pink); }
+  .contact .line { font-size: 0.13in; line-height: 1.35; }
+  .contact code { font-family: var(--mono); font-size: 0.12in; color: var(--lime); }
+  .marks { display: flex; align-items: flex-end; gap: 0.08in; }
+  .logo-card {
+    background: #fff; border-radius: 0.06in; width: 1.55in; padding: 0.06in;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-card.sait { width: 1.28in; }
+  .logo-card img { width: 100%; height: auto; display: block; }
+  .qr { width: 1.12in; text-align: center; }
+  .qr .box { background: #fff; border-radius: 0.06in; padding: 0.05in; width: 1.12in; height: 1.12in; }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr .cap { font-family: var(--mono); font-size: 0.08in; letter-spacing: 0.1em; text-transform: uppercase; color: var(--lime); margin-top: 0.04in; }
+
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    body { background: #fff; padding: 0; display: block; }
+    .toolbar { display: none; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+  <a href="AI%20Agents%20Poster%20v3%20Arcade%20(11%C3%9717).pdf">Open PDF</a>
+  <a href="v1-ink.html">v1 ink</a>
+  <a href="v2-paper.html">v2 paper</a>
+</div>
+<div class="stage" id="stage">
+<div class="poster">
+  <img class="jelly-bg" src="assets/jellyfish-pink.svg" alt="">
+
+  <section class="ticket">
+    <div><h3>When</h3><div class="big">Thu Oct 1</div><div class="sub">6:00 – 8:00 PM</div></div>
+    <div><h3>Where</h3><div class="big">MB202</div><div class="sub">Stan Grad Centre · SAIT campus</div></div>
+    <div><h3>Type</h3><div class="big">Student Club</div><div class="sub">Lunch &amp; Learn · all programs</div></div>
+    <div class="type">Admit one<br>learner</div>
+  </section>
+
+  <section class="top">
+    <div>
+      <div class="brand">
+        <img class="brand-mark" src="assets/jellyfish-lime.svg" alt="">
+        <div class="brand-name">Unnatural<br>Intelligence<small>SAIT student club · Saitsa · Learn pillar</small></div>
+      </div>
+      <h1 class="title"><span class="l1">AI <span class="amp">Agents</span></span><span class="l2">What? How? Use.</span></h1>
+      <p class="official">Official title · AI Agents: What? How? &amp; Learning to Use Them</p>
+      <p class="purpose">Purpose: a friendly 2-hour workshop that demystifies AI agents. Chatbots answer. <em>Agents act.</em> <strong>No prior experience</strong> — leave having used one for a real task.</p>
+    </div>
+    <img class="jelly-hero" src="assets/jellyfish-paper.svg" alt="">
+  </section>
+
+  <section class="mid">
+    <div class="spine">
+      <article class="step"><div class="n">01 · 15 min</div><h4>Welcome</h4><p>Club presentation, Learn pillar, new member sign-ups.</p></article>
+      <article class="step"><div class="n">02 · 30 min</div><h4>What is an AI agent?</h4><p>Chatbot vs agent, everyday examples, live demos.</p></article>
+      <article class="step"><div class="n">03 · 30 min</div><h4>How do they work?</h4><p>Perceive → decide → act. Tools, limitations, and risks.</p></article>
+      <article class="step"><div class="n">04 · 30 min</div><h4>Hands-on</h4><p>Use an AI agent for studying, a resume, or a project.</p></article>
+      <article class="step"><div class="n">05 · 15 min</div><h4>Q&amp;A</h4><p>Open discussion. Bring the conflicting feelings.</p></article>
+    </div>
+    <div class="loop-col">
+      <article class="loop-card p">
+        <div class="dot">P</div>
+        <div>
+          <div class="ver">Loop 01</div>
+          <h3>Perceive</h3>
+          <p>See the task, the files, the question — more than the chat window.</p>
+        </div>
+      </article>
+      <article class="loop-card d">
+        <div class="dot">D</div>
+        <div>
+          <div class="ver">Loop 02</div>
+          <h3>Decide</h3>
+          <p>Plan a next useful step. Choose a tool instead of only talking.</p>
+        </div>
+      </article>
+      <article class="loop-card a">
+        <div class="dot">A</div>
+        <div>
+          <div class="ver">Loop 03</div>
+          <h3>Act</h3>
+          <p>Call the tool, check the result, repeat. Keep the human finish.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <p class="quote">Stay ahead of the curve · generated by AI, perfected by humans</p>
+
+  <section class="board">
+    <article class="card"><div class="n">Task A</div><h4>Studying — syllabus to a plan you will actually open</h4></article>
+    <article class="card"><div class="n">Task B</div><h4>Resume — draft with an agent, finish it so it sounds like you</h4></article>
+    <article class="card wide"><div class="n">Task C · Project</div><h4>Automate one recurring assignment</h4><span class="tag">Leave having used one</span></article>
+  </section>
+
+  <section class="banner">
+    <h3>Learn pillar · all SAIT programs</h3>
+    <p>Accessible, practical, and social. On campus · no alcohol. Bring a laptop if you have one. New members welcome.</p>
+  </section>
+
+  <footer class="foot">
+    <div class="contact">
+      <h5>Show up · Contact</h5>
+      <div class="line"><b>Unnatural Intelligence</b> — SAIT student club</div>
+      <div class="line">Email <code id="contact-email"></code></div>
+      <div class="line">Discord <code id="contact-discord"></code></div>
+    </div>
+    <div class="marks">
+      <div class="logo-card"><img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs"></div>
+      <div class="logo-card sait"><img src="assets/sait-logo.png" alt="SAIT"></div>
+      <div class="qr"><div class="box" id="qr"></div><div class="cap">Scan Discord</div></div>
+    </div>
+  </footer>
+</div>
+</div>
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: "unnaturalintelligencesait@gmail.com",
+  contactDiscord: "discord.gg/hcsQFRNUEa",
+  qrUrl: "https://discord.gg/hcsQFRNUEa"
+});
+</script>
+</body>
+</html>

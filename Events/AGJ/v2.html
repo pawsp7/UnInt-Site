@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>v2 — Unnatural Intelligence × Alberta Game Jam 2026</title>
+<style>
+  :root {
+    --navy: #0B1233;
+    --navy-2: #121B45;
+    --blue: #8FD8FF;
+    --green: #A9F5C0;
+    --ink: #0B1233;
+    --paper: #F6FAFF;
+    --muted: rgba(246, 250, 255, 0.72);
+    --display: "Inter", "Helvetica Neue", "Segoe UI", Arial, system-ui, sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", "Fira Code", ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  html, body { margin: 0; min-height: 100%; }
+
+  body {
+    background: #05081b;
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(143, 216, 255, 0.10), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(169, 245, 192, 0.10), transparent 40%);
+    font-family: var(--display);
+    color: var(--paper);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: auto;
+    padding: 72px 24px 48px;
+  }
+
+  .stage {
+    width: 11in;
+    height: 17in;
+    flex: 0 0 auto;
+    transform-origin: top center;
+    filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.6));
+  }
+
+  .toolbar {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .toolbar button {
+    cursor: pointer;
+    border: 1px solid rgba(143, 216, 255, 0.4);
+    background: rgba(11, 18, 51, 0.85);
+    color: var(--blue);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font: inherit;
+    letter-spacing: 0.04em;
+  }
+  .toolbar button:hover { background: rgba(143, 216, 255, 0.15); }
+
+  /* ---------- The 11 x 17 sheet ---------- */
+  .poster {
+    position: relative;
+    width: 11in;
+    height: 17in;
+    overflow: hidden;
+    background: var(--navy);
+    color: var(--paper);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.55in 0.55in 0.5in;
+    gap: 0.32in;
+  }
+
+  .bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .bg .grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(143, 216, 255, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(143, 216, 255, 0.07) 1px, transparent 1px);
+    background-size: 0.3in 0.3in;
+    mask-image: radial-gradient(ellipse at 50% 35%, black 30%, transparent 85%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 35%, black 30%, transparent 85%);
+  }
+  .bg .glow-a {
+    position: absolute;
+    width: 7in; height: 7in;
+    left: -2.6in; top: -2.4in;
+    background: radial-gradient(circle, rgba(143, 216, 255, 0.34), rgba(143, 216, 255, 0) 65%);
+  }
+  .bg .glow-b {
+    position: absolute;
+    width: 8in; height: 8in;
+    right: -3in; top: 3.6in;
+    background: radial-gradient(circle, rgba(169, 245, 192, 0.26), rgba(169, 245, 192, 0) 65%);
+  }
+  .bg .glow-c {
+    position: absolute;
+    width: 6in; height: 6in;
+    left: -1.5in; bottom: -2.5in;
+    background: radial-gradient(circle, rgba(143, 216, 255, 0.18), rgba(143, 216, 255, 0) 65%);
+  }
+  .bg .px {
+    position: absolute;
+    width: 0.16in; height: 0.16in;
+    background: var(--blue);
+    opacity: 0.55;
+  }
+  .bg .px.g { background: var(--green); }
+  .bg .px.s { width: 0.09in; height: 0.09in; opacity: 0.4; }
+
+  /* ---------- Header ---------- */
+  .header {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.3in;
+  }
+  .club {
+    display: flex;
+    align-items: center;
+    gap: 0.2in;
+    min-width: 0;
+  }
+  .club-mark {
+    width: 0.95in; height: 0.95in;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 0.03in;
+    padding: 0.09in;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(143, 216, 255, 0.35);
+    border-radius: 0.1in;
+    flex: 0 0 auto;
+  }
+  .club-mark i { display: block; border-radius: 1px; }
+  .club-mark i.b { background: var(--blue); }
+  .club-mark i.g { background: var(--green); }
+  .club-name {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 0.5in;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    line-height: 0.88;
+  }
+  .club-name small {
+    display: block;
+    margin-top: 0.08in;
+    font-family: var(--mono);
+    font-weight: 500;
+    font-size: 0.13in;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    line-height: 1.2;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.13in;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-align: right;
+    color: var(--muted);
+    line-height: 1.5;
+    padding-top: 0.06in;
+  }
+  .tag b {
+    display: inline-block;
+    color: var(--ink);
+    background: var(--green);
+    padding: 0.03in 0.1in;
+    border-radius: 0.04in;
+    font-weight: 700;
+    margin-bottom: 0.06in;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 0.2in;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.17in;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 0.2in;
+    display: flex;
+    align-items: center;
+    gap: 0.14in;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 0.5in; height: 0.04in;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+  }
+  .title {
+    margin: 0;
+    font-weight: 900;
+    font-size: 1.28in;
+    line-height: 0.9;
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
+  }
+  .title .l1 { display: block; color: #fff; }
+  .title .l2 {
+    display: block;
+    background: linear-gradient(90deg, var(--blue) 0%, var(--green) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .title .l3 {
+    display: block;
+    color: transparent;
+    -webkit-text-stroke: 0.035in var(--blue);
+    letter-spacing: 0.01em;
+  }
+  .tagline {
+    margin: 0.3in 0 0;
+    font-size: 0.29in;
+    line-height: 1.3;
+    font-weight: 500;
+    max-width: 6.2in;
+  }
+  .tagline strong { color: var(--green); font-weight: 800; }
+  .tagline em { color: var(--blue); font-style: normal; font-weight: 800; }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.08in;
+    margin-top: 0.22in;
+    max-width: 6.2in;
+  }
+  .chip {
+    font-family: var(--mono);
+    font-size: 0.14in;
+    letter-spacing: 0.05em;
+    padding: 0.06in 0.12in;
+    border-radius: 0.05in;
+    border: 1px solid rgba(169, 245, 192, 0.5);
+    color: var(--green);
+  }
+
+  .dino-wrap {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 0.1in;
+  }
+  .bubble {
+    font-family: var(--mono);
+    font-size: 0.14in;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    background: var(--paper);
+    padding: 0.1in 0.16in;
+    border-radius: 0.1in;
+    position: relative;
+    margin-bottom: 0.32in;
+    white-space: nowrap;
+    box-shadow: 0.06in 0.06in 0 var(--green);
+  }
+  .bubble::after {
+    content: "";
+    position: absolute;
+    left: 0.5in;
+    bottom: -0.15in;
+    border: 0.08in solid transparent;
+    border-top-color: var(--paper);
+    border-bottom: 0;
+  }
+  .dino {
+    width: 0.14in;
+    height: 0.14in;
+    /* box-shadow is generated by JS */
+    background: transparent;
+    margin-left: -2.5in;
+  }
+  .ground {
+    margin-top: 0.02in;
+    width: 3.1in;
+    height: 0.06in;
+    background: repeating-linear-gradient(90deg, var(--green) 0 0.14in, transparent 0.14in 0.28in);
+    opacity: 0.8;
+  }
+
+  /* ---------- Combined when / where ---------- */
+  .when-where {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 0.35in;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(143, 216, 255, 0.22);
+    border-radius: 0.1in;
+    padding: 0.26in 0.3in 0.28in;
+  }
+  .when-where h3 {
+    margin: 0 0 0.14in;
+    font-family: var(--mono);
+    font-size: 0.14in;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .when-where h3 span { color: var(--blue); font-weight: 700; }
+  .when-where .big {
+    font-weight: 900;
+    font-size: 0.48in;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .when-where .big small {
+    display: block;
+    font-weight: 700;
+    font-size: 0.2in;
+    letter-spacing: 0.02em;
+    margin-top: 0.08in;
+    color: var(--muted);
+  }
+  .venue { display: flex; gap: 0.12in; align-items: flex-start; font-size: 0.18in; line-height: 1.35; }
+  .venue + .venue { margin-top: 0.16in; }
+  .venue .k {
+    flex: 0 0 auto;
+    font-family: var(--mono);
+    font-size: 0.13in;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    background: var(--green);
+    padding: 0.04in 0.1in;
+    border-radius: 0.04in;
+    font-weight: 700;
+    margin-top: 0.02in;
+    min-width: 0.85in;
+    text-align: center;
+  }
+  .venue:first-of-type .k { background: var(--blue); }
+  .venue .v { color: var(--muted); }
+  .venue .v b { color: #fff; }
+  .venue .addr { display: block; font-size: 0.16in; }
+
+  /* ---------- Purpose strip ---------- */
+  .why {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 0.22in;
+    background: linear-gradient(90deg, rgba(143, 216, 255, 0.14), rgba(169, 245, 192, 0.14));
+    border: 1px solid rgba(169, 245, 192, 0.3);
+    border-radius: 0.1in;
+    padding: 0.18in 0.22in;
+    margin-top: 0.28in;
+    max-width: 6.4in;
+  }
+  .why h4 {
+    margin: 0;
+    font-weight: 900;
+    font-size: 0.34in;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+  .why h4 span { display: block; color: var(--green); }
+  .why ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.07in;
+    font-size: 0.155in;
+    line-height: 1.35;
+  }
+  .why li { position: relative; padding-left: 0.26in; color: var(--muted); }
+  .why li b { color: #fff; }
+  .why li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0.06in;
+    width: 0.12in; height: 0.12in;
+    background: var(--blue);
+  }
+  .why li:nth-child(even)::before { background: var(--green); }
+
+  /* ---------- Footer ---------- */
+  .footer {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 0.4in;
+  }
+  .brand-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.1in;
+    width: 1.85in;
+    flex: 0 0 1.85in;
+  }
+  .logo-card {
+    background: #fff;
+    border-radius: 0.08in;
+    padding: 0.08in 0.1in;
+    height: 0.58in;
+    flex: 0 0 0.58in;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo-card svg,
+  .logo-card img {
+    max-width: 100%;
+    max-height: 0.42in;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+  .contact { min-width: 0; flex: 1; }
+  .contact h5 {
+    margin: 0 0 0.1in;
+    font-family: var(--mono);
+    font-size: 0.14in;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--blue);
+  }
+  .contact .line { font-size: 0.19in; line-height: 1.45; }
+  .contact .line b { color: #fff; font-weight: 800; }
+  .contact .line span { color: var(--muted); }
+  .contact .line code { font-family: var(--mono); font-size: 0.17in; color: var(--green); }
+  .contact .fine {
+    margin-top: 0.1in;
+    font-family: var(--mono);
+    font-size: 0.11in;
+    letter-spacing: 0.06em;
+    color: rgba(246, 250, 255, 0.5);
+    line-height: 1.5;
+  }
+  .qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.06in;
+    width: 1.85in;
+    flex: 0 0 auto;
+  }
+  .qr .box {
+    background: #fff;
+    padding: 0.08in;
+    border-radius: 0.08in;
+    width: 1.85in;
+    height: 1.85in;
+    flex: 0 0 1.85in;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr .cap {
+    font-family: var(--mono);
+    font-size: 0.115in;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--green);
+    text-align: center;
+  }
+
+  /* ---------- Print ---------- */
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    body { background: #fff; display: block; overflow: visible; padding: 0; }
+    .toolbar { display: none; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button onclick="window.print()">Print / Save as PDF (11×17)</button>
+  <button onclick="location.href='index.html'">Current version</button>
+</div>
+
+<div class="stage" id="stage">
+<div class="poster" id="poster">
+
+  <div class="bg">
+    <div class="glow-a"></div>
+    <div class="glow-b"></div>
+    <div class="glow-c"></div>
+    <div class="grid"></div>
+    <i class="px"   style="left:7.1in; top:1.75in"></i>
+    <i class="px s" style="left:7.45in; top:2.1in"></i>
+    <i class="px g" style="left:9.6in; top:2.3in"></i>
+    <i class="px s g" style="left:9.95in; top:2.7in"></i>
+    <i class="px s" style="left:6.7in; top:2.1in"></i>
+    <i class="px g s" style="left:0.9in; top:6.1in"></i>
+    <i class="px"   style="left:1.3in; top:6.4in"></i>
+    <i class="px s g" style="left:10.1in; top:5.6in"></i>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="club">
+      <div class="club-mark" aria-hidden="true">
+        <i class="b"></i><i></i><i class="b"></i><i></i><i class="b"></i>
+        <i></i><i class="g"></i><i class="g"></i><i class="g"></i><i></i>
+        <i class="b"></i><i class="g"></i><i></i><i class="g"></i><i class="b"></i>
+        <i></i><i class="g"></i><i class="g"></i><i class="g"></i><i></i>
+        <i class="b"></i><i></i><i class="b"></i><i></i><i class="b"></i>
+      </div>
+      <div class="club-name">
+        Unnatural<br>Intelligence
+        <small>SAIT student club · Saitsa club</small>
+      </div>
+    </div>
+    <div class="tag">
+      <b>Team call</b><br>
+      Students of all programs welcome<br>
+      No game-dev experience required
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Calgary site · 7th annual · 48 hours</div>
+      <h1 class="title">
+        <span class="l1">Alberta</span>
+        <span class="l2">Game Jam</span>
+        <span class="l3">2026</span>
+      </h1>
+      <p class="tagline">
+        One <strong>secret theme</strong>. <em>48 hours</em>. One game.
+        Team up with Unnatural Intelligence and represent SAIT at Alberta's largest game jam.
+      </p>
+      <div class="chips">
+        <span class="chip">programmers</span>
+        <span class="chip">artists</span>
+        <span class="chip">musicians</span>
+        <span class="chip">designers</span>
+        <span class="chip">writers</span>
+      </div>
+      <section class="why">
+        <h4>Why<span>join?</span></h4>
+        <ul>
+          <li><b>Ship a real game</b> and walk away with a portfolio piece.</li>
+          <li><b>Learn by doing</b> — beginners are paired with experienced jammers.</li>
+          <li><b>Explore AI-assisted game dev</b> with the club: tools, workflows, and a lot of experiments.</li>
+          <li><b>Meet Calgary's game-dev scene</b>, snacks and door prizes included.</li>
+        </ul>
+      </section>
+    </div>
+    <div class="dino-wrap" aria-hidden="true">
+      <div class="bubble">need a team? we've got one.</div>
+      <div class="dino" id="dino"></div>
+      <div class="ground"></div>
+    </div>
+  </section>
+
+  <!-- When & where -->
+  <section class="when-where">
+    <div>
+      <h3><span>01</span> When</h3>
+      <div class="big">Sep 25 – 27<small>Friday evening to Sunday evening, 2026</small></div>
+    </div>
+    <div>
+      <h3><span>02</span> Where</h3>
+      <div class="venue">
+        <span class="k">FRI</span>
+        <span class="v"><b>Platform Calgary Innovation Centre</b><span class="addr">407 9 Ave SE, Calgary</span></span>
+      </div>
+      <div class="venue">
+        <span class="k">SAT–SUN</span>
+        <span class="v"><b>Alexandra Dance Hall</b><span class="addr">922 9 Ave SE, Inglewood, Calgary</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer: contact left · QR / Saitsa / SAIT stacked right -->
+  <footer class="footer">
+    <div class="contact">
+      <h5>Join the team · Contact</h5>
+      <div class="line"><b>Unnatural Intelligence</b> <span>— SAIT student club</span></div>
+      <div class="line"><span>Email</span> <code id="contact-email"></code></div>
+      <div class="line"><span>Discord</span> <code id="contact-discord"></code></div>
+      <div class="fine">
+        Alberta Game Jam is organized by the Calgary Game Developers Association &amp; Alberta Makes Games.<br>
+        Full rules and submissions: itch.io/jam/alberta-game-jam-2026
+      </div>
+    </div>
+
+    <div class="brand-stack">
+      <div class="qr">
+        <div class="box" id="qr"></div>
+        <div class="cap">Scan for tickets<br>&amp; event info</div>
+      </div>
+      <div class="logo-card">
+        <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" viewBox="0 0 417.67 149.76" role="img" aria-label="Saitsa Student Clubs logo">
+          <defs>
+            <style>
+              .cls-1 { fill: #603f99; }
+              .cls-2 { fill: #231f20; }
+              .cls-3 { fill: #fff; }
+            </style>
+          </defs>
+          <rect class="cls-3" width="417.67" height="149.76"/>
+          <rect class="cls-1" width="149.76" height="149.76"/>
+          <path class="cls-3" d="M41.83,104.66l19.89-25.57-30.17-7.65,6.12-19.67,29.29,11.8-1.97-32.35h19.89s-1.97,32.35-1.97,32.35l29.29-11.8,6.12,19.67-30.6,7.87,19.89,25.36-15.96,11.8-16.83-27.76-17.05,27.76-15.96-11.8Z"/>
+          <g>
+            <path class="cls-2" d="M181.63,55.47h7.19c0,4.37,2.64,6.47,7.85,6.47,4.91,0,7.37-1.8,7.37-5.39,0-3.83-2.4-5.51-9.11-6.53-9.23-1.38-12.64-4.61-12.64-11.86,0-8.09,5.03-12.22,14.5-12.22s13.96,4.01,13.96,12.28h-7.19c0-4.07-2.28-6.05-6.95-6.05s-7.07,1.86-7.07,5.27,2.34,5.15,8.63,5.99c9.64,1.32,13.12,4.85,13.12,12.4,0,8.21-4.85,12.28-14.74,12.28s-14.92-4.07-14.92-12.64Z"/>
+            <path class="cls-2" d="M217.75,57.45v-15.58h-4.91v-5.57h5.03l.48-7.97h6.59v7.97h7.01v5.57h-7.01v15.34c0,3.41.78,4.37,3.83,4.37h3.47v5.81h-5.69c-6.17,0-8.81-2.94-8.81-9.94Z"/>
+            <path class="cls-2" d="M236.31,56.85v-20.55h7.19v19.89c0,3.89,1.44,5.57,4.49,5.57s5.39-1.68,7.13-5.39v-20.07h7.19v31.09h-6.11l-.24-4.37c-2.58,3.53-5.63,5.09-9.76,5.09-6.53,0-9.88-3.83-9.88-11.26Z"/>
+            <path class="cls-2" d="M268.24,55.29v-6.83c0-8.45,4.07-12.88,11.26-12.88,3.71,0,6.53,1.2,8.87,3.95v-15.88h7.19v43.73h-6.11l-.24-4.31c-2.46,3.47-5.51,5.03-9.71,5.03-7.19,0-11.26-4.37-11.26-12.82ZM288.37,56.31v-8.93c-1.62-3.77-4.13-5.81-7.49-5.81s-5.45,2.22-5.45,6.95v6.65c0,4.67,1.98,6.95,5.51,6.95,3.29,0,5.81-2.04,7.43-5.81Z"/>
+            <path class="cls-2" d="M301.49,54.87v-6.11c0-8.57,4.73-13.18,13.48-13.18s13.54,4.67,13.54,13.24v5.15h-19.83v.96c0,5.03,2.04,7.37,6.65,7.37,3.77,0,5.87-1.62,6.11-4.31h6.89c-.36,6.65-4.97,10.12-13,10.12-9.05,0-13.84-4.55-13.84-13.24ZM321.67,48.64c0-5.03-1.98-7.25-6.47-7.25s-6.53,2.22-6.53,7.25h13Z"/>
+            <path class="cls-2" d="M334.31,36.3h6.11l.24,4.25c2.52-3.47,5.57-4.97,9.64-4.97,6.47,0,9.76,3.83,9.76,11.26v20.55h-7.19v-19.89c0-3.83-1.44-5.57-4.43-5.57s-5.21,1.74-6.95,5.27v20.19h-7.19v-31.09Z"/>
+            <path class="cls-2" d="M367.98,57.45v-15.58h-4.91v-5.57h5.03l.48-7.97h6.59v7.97h7.01v5.57h-7.01v15.34c0,3.41.78,4.37,3.83,4.37h3.47v5.81h-5.69c-6.17,0-8.81-2.94-8.81-9.94Z"/>
+          </g>
+          <g>
+            <path class="cls-2" d="M183.12,107.89v-9.47c0-11.08,5.03-16.35,15.52-16.35s14.98,4.79,15.28,14.8h-7.07c-.24-5.81-2.64-8.39-8.15-8.39-5.87,0-8.27,3-8.27,10.06v9.23c0,7.07,2.4,10.06,8.27,10.06,5.51,0,7.91-2.58,8.15-8.33h7.07c-.3,9.94-5.21,14.74-15.28,14.74s-15.52-5.27-15.52-16.35Z"/>
+            <path class="cls-2" d="M219.6,79.79h7.19v43.73h-7.19v-43.73Z"/>
+            <path class="cls-2" d="M233.68,112.98v-20.55h7.19v19.89c0,3.89,1.44,5.57,4.49,5.57s5.39-1.68,7.13-5.39v-20.07h7.19v31.09h-6.11l-.24-4.37c-2.58,3.53-5.63,5.09-9.76,5.09-6.53,0-9.88-3.83-9.88-11.26Z"/>
+            <path class="cls-2" d="M273.28,119.27l-.24,4.25h-6.11v-43.73h7.19v15.82c2.34-2.7,5.15-3.89,8.87-3.89,7.13,0,11.26,4.43,11.26,12.88v6.83c0,8.45-4.13,12.82-11.26,12.82-4.19,0-7.25-1.56-9.7-4.97ZM287.05,111.3v-6.65c0-4.73-1.98-6.95-5.45-6.95-3.29,0-5.81,1.98-7.49,5.69v9.17c1.68,3.71,4.19,5.69,7.43,5.69,3.53,0,5.51-2.28,5.51-6.95Z"/>
+            <path class="cls-2" d="M297.95,114.18h6.83c0,3.06,1.98,4.55,6.17,4.55,3.83,0,5.69-1.26,5.69-3.65,0-2.58-1.86-3.65-7.13-4.31-7.91-.96-10.96-3.47-10.96-9.23,0-6.41,4.43-9.82,12.4-9.82s12.1,3.35,12.1,9.76h-6.89c0-2.88-1.68-4.25-5.27-4.25s-5.27,1.32-5.27,3.53c0,2.46,1.86,3.47,6.95,4.01,8.09.9,11.14,3.71,11.14,9.65,0,6.53-4.25,9.82-12.76,9.82s-13-3.35-13-10.06Z"/>
+          </g>
+        </svg>
+      </div>
+      <div class="logo-card">
+        <img src="sait-logo.png" alt="SAIT">
+      </div>
+    </div>
+  </footer>
+
+</div>
+</div>
+
+<script>
+/* ============================================================
+   EDIT ME — club contact details & QR target
+   ============================================================ */
+const CONFIG = {
+  // TODO: replace with the club's real contact email before submitting
+  contactEmail: "unnatural.intelligence@edu.sait.ca",
+  // TODO: replace with the club's real Discord invite (or delete the line in the HTML)
+  contactDiscord: "discord.gg/unnatural-intelligence",
+  // Where the QR code points (Calgary site tickets + schedule)
+  qrUrl: "https://www.showpass.com/alberta-game-jam-2026-calgary-site/"
+};
+
+document.getElementById("contact-email").textContent = CONFIG.contactEmail;
+document.getElementById("contact-discord").textContent = CONFIG.contactDiscord;
+
+/* ---------- Scale to page width on screen; scroll vertically to see the rest ---------- */
+(function fit() {
+  const stage = document.getElementById("stage");
+  const W = 11 * 96, H = 17 * 96;
+  function apply() {
+    const pad = 48;
+    const s = Math.min(1, (window.innerWidth - pad) / W);
+    stage.style.transform = "scale(" + s + ")";
+    stage.style.marginBottom = ((s - 1) * H) + "px";
+  }
+  apply();
+  window.addEventListener("resize", apply);
+  window.addEventListener("beforeprint", () => {
+    stage.style.transform = "none";
+    stage.style.marginBottom = "0";
+  });
+  window.addEventListener("afterprint", apply);
+})();
+
+/* ---------- Pixel Albertosaurus (a nod to AGJ's mascot) ---------- */
+(function drawDino() {
+  const art = [
+    "..........########..",
+    ".........##########.",
+    ".........##.#######.",
+    ".........##########.",
+    ".........##########.",
+    ".........#######....",
+    ".........#########..",
+    "#........#####......",
+    "#.......#######.....",
+    "##.....#########.##.",
+    "###...##########.#..",
+    "####.###########.#..",
+    "##################..",
+    ".################...",
+    "..##############....",
+    "...############.....",
+    "....##########......",
+    ".....###.###........",
+    ".....##...##........",
+    ".....###..###......."
+  ];
+  const el = document.getElementById("dino");
+  const px = 0.14; // inches per pixel
+  const shadows = [];
+  art.forEach((row, y) => {
+    [...row].forEach((c, x) => {
+      if (c !== "#") return;
+      // Head & body in light green, legs in light blue
+      const color = y < 13 ? "#A9F5C0" : "#8FD8FF";
+      shadows.push(`${(x * px).toFixed(2)}in ${(y * px).toFixed(2)}in 0 0 ${color}`);
+    });
+  });
+  el.style.boxShadow = shadows.join(",");
+  el.style.marginLeft = `-${(art[0].length * px - px).toFixed(2)}in`;
+  el.style.marginBottom = `${((art.length - 1) * px).toFixed(2)}in`;
+})();
+
+/* ---------- Minimal QR code encoder (byte mode, EC level M, v1–v10) ----------
+   Self-contained so the poster never loads anything from the network. */
+const QR = (() => {
+  const EXP = new Uint8Array(512), LOG = new Uint8Array(256);
+  for (let i = 0, x = 1; i < 255; i++) { EXP[i] = x; LOG[x] = i; x = (x << 1) ^ (x & 0x80 ? 0x11d : 0); }
+  for (let i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
+  const mul = (a, b) => (a && b) ? EXP[LOG[a] + LOG[b]] : 0;
+
+  function rsGenerator(deg) {
+    let g = [1];
+    for (let i = 0; i < deg; i++) {
+      const ng = new Array(g.length + 1).fill(0);
+      for (let j = 0; j < g.length; j++) { ng[j] ^= g[j]; ng[j + 1] ^= mul(g[j], EXP[i]); }
+      g = ng;
+    }
+    return g;
+  }
+  function rsRemainder(data, gen) {
+    const res = new Array(gen.length - 1).fill(0);
+    for (const b of data) {
+      const f = b ^ res.shift(); res.push(0);
+      for (let i = 0; i < res.length; i++) res[i] ^= mul(gen[i + 1], f);
+    }
+    return res;
+  }
+
+  // Error-correction level M
+  const ECC_PER_BLOCK = [10, 16, 26, 18, 24, 16, 18, 22, 22, 26];
+  const NUM_BLOCKS    = [ 1,  1,  1,  2,  2,  4,  4,  4,  5,  5];
+
+  function rawDataModules(ver) {
+    let r = (16 * ver + 128) * ver + 64;
+    if (ver >= 2) {
+      const n = Math.floor(ver / 7) + 2;
+      r -= (25 * n - 10) * n - 55;
+      if (ver >= 7) r -= 36;
+    }
+    return r;
+  }
+  const totalCodewords = ver => Math.floor(rawDataModules(ver) / 8);
+  const dataCodewords = ver => totalCodewords(ver) - ECC_PER_BLOCK[ver - 1] * NUM_BLOCKS[ver - 1];
+
+  function alignPositions(ver) {
+    if (ver === 1) return [];
+    const n = Math.floor(ver / 7) + 2, size = ver * 4 + 17;
+    const step = Math.ceil((ver * 4 + 4) / (n * 2 - 2)) * 2;
+    const res = [6];
+    for (let p = size - 7; res.length < n; p -= step) res.splice(1, 0, p);
+    return res;
+  }
+
+  function encode(text) {
+    const bytes = [...new TextEncoder().encode(text)];
+    let ver = 1;
+    while (ver <= 10) {
+      const countBits = ver < 10 ? 8 : 16;
+      if (4 + countBits + bytes.length * 8 <= dataCodewords(ver) * 8) break;
+      ver++;
+    }
+    if (ver > 10) throw new Error("Text too long for this mini QR encoder");
+    const countBits = ver < 10 ? 8 : 16;
+    const capBits = dataCodewords(ver) * 8;
+
+    const bits = [];
+    const push = (val, n) => { for (let i = n - 1; i >= 0; i--) bits.push((val >>> i) & 1); };
+    push(4, 4); push(bytes.length, countBits);
+    bytes.forEach(b => push(b, 8));
+    push(0, Math.min(4, capBits - bits.length));
+    while (bits.length % 8) bits.push(0);
+    for (let pad = 0xEC; bits.length < capBits; pad ^= 0xEC ^ 0x11) push(pad, 8);
+    const data = [];
+    for (let i = 0; i < bits.length; i += 8) data.push(parseInt(bits.slice(i, i + 8).join(""), 2));
+
+    // Split into blocks, add ECC, interleave
+    const nb = NUM_BLOCKS[ver - 1], ecc = ECC_PER_BLOCK[ver - 1], raw = totalCodewords(ver);
+    const shortBlocks = nb - raw % nb, shortLen = Math.floor(raw / nb);
+    const gen = rsGenerator(ecc);
+    const blocks = [];
+    for (let i = 0, k = 0; i < nb; i++) {
+      const len = shortLen - ecc + (i < shortBlocks ? 0 : 1);
+      const dat = data.slice(k, k + len); k += len;
+      const e = rsRemainder(dat, gen);
+      if (i < shortBlocks) dat.push(0);
+      blocks.push(dat.concat(e));
+    }
+    const out = [];
+    for (let i = 0; i < blocks[0].length; i++)
+      blocks.forEach((blk, j) => { if (i !== shortLen - ecc || j >= shortBlocks) out.push(blk[i]); });
+
+    // Matrix
+    const size = ver * 4 + 17;
+    const mod = Array.from({ length: size }, () => new Array(size).fill(false));
+    const fn  = Array.from({ length: size }, () => new Array(size).fill(false));
+    const set = (x, y, d) => { mod[y][x] = d; fn[y][x] = true; };
+
+    for (let i = 0; i < size; i++) { set(6, i, i % 2 === 0); set(i, 6, i % 2 === 0); }
+    const finder = (cx, cy) => {
+      for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++) {
+        const x = cx + dx, y = cy + dy;
+        if (x < 0 || y < 0 || x >= size || y >= size) continue;
+        const d = Math.max(Math.abs(dx), Math.abs(dy));
+        set(x, y, d !== 2 && d !== 4);
+      }
+    };
+    finder(3, 3); finder(size - 4, 3); finder(3, size - 4);
+    const ap = alignPositions(ver);
+    for (let i = 0; i < ap.length; i++) for (let j = 0; j < ap.length; j++) {
+      if ((i === 0 && j === 0) || (i === 0 && j === ap.length - 1) || (i === ap.length - 1 && j === 0)) continue;
+      for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++)
+        set(ap[i] + dx, ap[j] + dy, Math.max(Math.abs(dx), Math.abs(dy)) !== 1);
+    }
+    function formatBits(mask) {
+      const data = (0 << 3) | mask; // ECL M = 00
+      let rem = data;
+      for (let i = 0; i < 10; i++) rem = (rem << 1) ^ ((rem >>> 9) * 0x537);
+      const b = ((data << 10) | rem) ^ 0x5412;
+      const bit = i => ((b >>> i) & 1) === 1;
+      for (let i = 0; i <= 5; i++) set(8, i, bit(i));
+      set(8, 7, bit(6)); set(8, 8, bit(7)); set(7, 8, bit(8));
+      for (let i = 9; i < 15; i++) set(14 - i, 8, bit(i));
+      for (let i = 0; i < 8; i++) set(size - 1 - i, 8, bit(i));
+      for (let i = 8; i < 15; i++) set(8, size - 15 + i, bit(i));
+      set(8, size - 8, true);
+    }
+    formatBits(0);
+    if (ver >= 7) {
+      let rem = ver;
+      for (let i = 0; i < 12; i++) rem = (rem << 1) ^ ((rem >>> 11) * 0x1F25);
+      const b = (ver << 12) | rem;
+      for (let i = 0; i < 18; i++) {
+        const bit = ((b >>> i) & 1) === 1, a = size - 11 + (i % 3), c = Math.floor(i / 3);
+        set(a, c, bit); set(c, a, bit);
+      }
+    }
+    // Zig-zag data placement
+    let i = 0;
+    for (let right = size - 1; right >= 1; right -= 2) {
+      if (right === 6) right = 5;
+      for (let v = 0; v < size; v++) for (let j = 0; j < 2; j++) {
+        const x = right - j, up = ((right + 1) & 2) === 0, y = up ? size - 1 - v : v;
+        if (!fn[y][x] && i < out.length * 8) { mod[y][x] = ((out[i >>> 3] >>> (7 - (i & 7))) & 1) === 1; i++; }
+      }
+    }
+    const MASKS = [
+      (x, y) => (x + y) % 2 === 0, (x, y) => y % 2 === 0, (x, y) => x % 3 === 0, (x, y) => (x + y) % 3 === 0,
+      (x, y) => (Math.floor(x / 3) + Math.floor(y / 2)) % 2 === 0, (x, y) => (x * y) % 2 + (x * y) % 3 === 0,
+      (x, y) => ((x * y) % 2 + (x * y) % 3) % 2 === 0, (x, y) => ((x + y) % 2 + (x * y) % 3) % 2 === 0
+    ];
+    const applyMask = m => { for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) if (!fn[y][x] && MASKS[m](x, y)) mod[y][x] = !mod[y][x]; };
+    const penalty = () => {
+      let p = 0;
+      for (let y = 0; y < size; y++) { // runs in rows
+        for (let x = 0, run = 0, c = null; x <= size; x++) {
+          const v = x < size ? mod[y][x] : null;
+          if (v === c) run++; else { if (run >= 5) p += 3 + (run - 5); run = 1; c = v; }
+        }
+      }
+      for (let x = 0; x < size; x++) { // runs in columns
+        for (let y = 0, run = 0, c = null; y <= size; y++) {
+          const v = y < size ? mod[y][x] : null;
+          if (v === c) run++; else { if (run >= 5) p += 3 + (run - 5); run = 1; c = v; }
+        }
+      }
+      for (let y = 0; y < size - 1; y++) for (let x = 0; x < size - 1; x++) { // 2x2 blocks
+        const c = mod[y][x];
+        if (c === mod[y][x + 1] && c === mod[y + 1][x] && c === mod[y + 1][x + 1]) p += 3;
+      }
+      let dark = 0; mod.forEach(r => r.forEach(v => { if (v) dark++; }));
+      const k = Math.ceil(Math.abs(dark * 20 - size * size * 10) / (size * size)) - 1;
+      return p + k * 10;
+    };
+    let best = 0, bestP = Infinity;
+    for (let m = 0; m < 8; m++) { applyMask(m); formatBits(m); const p = penalty(); if (p < bestP) { bestP = p; best = m; } applyMask(m); }
+    applyMask(best); formatBits(best);
+    return { size, modules: mod };
+  }
+
+  function toSVG(text) {
+    const { size, modules } = encode(text);
+    const q = 4, dim = size + q * 2;
+    let d = "";
+    for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) if (modules[y][x]) d += `M${x + q} ${y + q}h1v1h-1z`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${dim} ${dim}" shape-rendering="crispEdges"><rect width="${dim}" height="${dim}" fill="#fff"/><path d="${d}" fill="#0B1233"/></svg>`;
+  }
+  return { toSVG };
+})();
+
+document.getElementById("qr").innerHTML = QR.toSVG(CONFIG.qrUrl);
+</script>
+</body>
+</html>

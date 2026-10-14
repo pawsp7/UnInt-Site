@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jelly — fun versions</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  :root {
+    --paper: #F9F9FA; --olive: #95B747; --ink: #030205; --pink: #FA4A9E;
+    --wine: #591337; --lime: #BAF837; --cyan: #7EC8FF;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #14040c; color: var(--paper); font-family: Inter, sans-serif; }
+  header { padding: 48px 32px 8px; max-width: 1200px; margin: 0 auto; }
+  h1 {
+    font-family: "Inter Display", Inter, sans-serif; font-size: 42px; letter-spacing: -0.05em;
+    text-transform: uppercase; margin: 0 0 8px; line-height: 0.9;
+  }
+  .sub { font-family: "JetBrains Mono", monospace; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--lime); }
+  p.lede { max-width: 66ch; color: rgba(249,249,250,.72); line-height: 1.5; }
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 18px; max-width: 1200px; margin: 0 auto 24px; padding: 0 32px;
+  }
+  figure { margin: 0; border: 1px solid rgba(186,248,55,.18); background: rgba(3,2,5,.55); }
+  .frame {
+    aspect-ratio: 1; display: grid; place-items: center; padding: 18px; background: var(--ink);
+  }
+  img { max-width: 100%; max-height: 240px; display: block; }
+  figcaption { padding: 10px 12px 14px; border-top: 1px solid rgba(186,248,55,.12); }
+  figcaption strong { display: block; font-size: 13px; }
+  figcaption code {
+    display: block; margin-top: 4px; font-family: "JetBrains Mono", monospace;
+    font-size: 10px; color: var(--olive); word-break: break-all;
+  }
+  .note { margin: 6px 0 0; font-size: 12px; color: rgba(249,249,250,.55); }
+  footer {
+    max-width: 1200px; margin: 32px auto; padding: 0 32px 64px;
+    font-family: "JetBrains Mono", monospace; font-size: 11px; color: rgba(249,249,250,.45);
+    letter-spacing: 0.08em;
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="sub">Unnatural Intelligence · Jelly</div>
+  <h1>Fun<br>versions</h1>
+  <p class="lede">Same jellyfish, same proportions. The eyes stay holes in the body. Expressions swap those holes; a hat, bow, tongue, or headphones sit on top and do not reshape him. Transparent PNGs, same width as the official mascot raster, are in <code>png/</code>.</p>
+</header>
+<div class="grid">
+<figure class="dark"><div class="frame"><img src="../Jellyfish%20Mascot%20Gradient.svg" alt="Jelly, official"></div><figcaption><strong>Jelly</strong><code>Jellyfish Mascot Gradient.svg</code><p class="note">Official mascot. Eyes are holes in the body.</p></figcaption></figure>
+<figure class="dark"><div class="frame"><img src="jelly-happy.svg" alt="Happy"></div><figcaption><strong>Happy</strong><code>jelly-happy.svg</code><code>png/jelly-happy.png</code><p class="note">Smile-shaped eyes, still cut out of the body.</p></figcaption></figure><figure class="dark"><div class="frame"><img src="jelly-wink.svg" alt="Wink"></div><figcaption><strong>Wink</strong><code>jelly-wink.svg</code><code>png/jelly-wink.png</code><p class="note">One eye open, one squeezed into a smile. Bow on the bell.</p></figcaption></figure><figure class="dark"><div class="frame"><img src="jelly-whoa.svg" alt="Whoa"></div><figcaption><strong>Whoa</strong><code>jelly-whoa.svg</code><code>png/jelly-whoa.png</code><p class="note">Rounder eyes, same spot on the body.</p></figcaption></figure><figure class="dark"><div class="frame"><img src="jelly-sleepy.svg" alt="Sleepy"></div><figcaption><strong>Sleepy</strong><code>jelly-sleepy.svg</code><code>png/jelly-sleepy.png</code><p class="note">Heavy lids. The holes sit low in the same eyes.</p></figcaption></figure><figure class="dark"><div class="frame"><img src="jelly-hearts.svg" alt="Hearts"></div><figcaption><strong>Hearts</strong><code>jelly-hearts.svg</code><code>png/jelly-hearts.png</code><p class="note">Heart-shaped holes where the eyes are.</p></figcaption></figure><figure class="dark"><div class="frame"><img src="jelly-sparkle.svg" alt="Sparkle"></div><figcaption><strong>Sparkle</strong><code>jelly-sparkle.svg</code><code>png/jelly-sparkle.png</code><p class="note">Four-point eyes, same spark as the kit icon.</p></figcaption></figure><figure class="dark"><div class="frame"><img src="jelly-side-eye.svg" alt="Side-eye"></div><figcaption><strong>Side-eye</strong><code>jelly-side-eye.svg</code><code>png/jelly-side-eye.png</code><p class="note">Both eyes slid toward the left.</p></figcaption></figure><figure class="dark"><div class="frame"><img src="jelly-unamused.svg" alt="Unamused"></div><figcaption><strong>Unamused</strong><code>jelly-unamused.svg</code><code>png/jelly-unamused.png</code><p class="note">Flat lids.</p></figcaption></figure><figure class="dark"><div class="frame"><img src="jelly-glitch.svg" alt="Glitch"></div><figcaption><strong>Glitch</strong><code>jelly-glitch.svg</code><code>png/jelly-glitch.png</code><p class="note">X eyes. The club error face.</p></figcaption></figure><figure class="dark"><div class="frame"><img src="jelly-party.svg" alt="Party"></div><figcaption><strong>Party</strong><code>jelly-party.svg</code><code>png/jelly-party.png</code><p class="note">Happy eyes and a lime-and-pink hat on the bell.</p></figcaption></figure><figure class="dark"><div class="frame"><img src="jelly-blep.svg" alt="Blep"></div><figcaption><strong>Blep</strong><code>jelly-blep.svg</code><code>png/jelly-blep.png</code><p class="note">Eyes up, tongue out under the bell.</p></figcaption></figure><figure class="dark"><div class="frame"><img src="jelly-tunes.svg" alt="Tunes"></div><figcaption><strong>Tunes</strong><code>jelly-tunes.svg</code><code>png/jelly-tunes.png</code><p class="note">Headphones over the bell. Eyes half-closed.</p></figcaption></figure>
+</div>
+<footer>UNNATURALINTELLIGENCE.CLUB — regenerate with python3 generate.py</footer>
+</body>
+</html>

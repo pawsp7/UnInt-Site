@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1700" width="11in" height="17in" role="img" aria-label="Tabloid segmented border" fill="none">
+  <path d="M18 18H1082" fill="none" stroke="#BAF837" stroke-width="8" stroke-linecap="butt"/>
+  <path d="M1082 18V1682" fill="none" stroke="#FA4A9E" stroke-width="8" stroke-linecap="butt"/>
+  <path d="M1082 1682H18" fill="none" stroke="#7EC8FF" stroke-width="8" stroke-linecap="butt"/>
+  <path d="M18 1682V18" fill="none" stroke="#95B747" stroke-width="8" stroke-linecap="butt"/>
+  <rect x="36" y="36" width="1028" height="1628" fill="none" stroke="#F9F9FA" stroke-width="1.5" opacity="0.85"/>
+</svg>

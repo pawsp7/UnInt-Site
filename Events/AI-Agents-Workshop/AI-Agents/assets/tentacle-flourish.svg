@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 208 96" role="img" aria-label="Tentacle flourish" fill="none">
+
+  <defs>
+    <linearGradient id="fl" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#BAF837"/>
+      <stop offset="100%" stop-color="#FA4A9E"/>
+    </linearGradient>
+  </defs>
+  <path d="M8 20 C 40 8, 40 48, 72 36 C 104 24, 104 64, 136 52 C 168 40, 176 72, 200 64"
+        fill="none" stroke="url(#fl)" stroke-width="10" stroke-linecap="round"/>
+  <path d="M20 36 C 48 28, 56 68, 92 58 C 128 48, 132 88, 168 78"
+        fill="none" stroke="url(#fl)" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+</svg>

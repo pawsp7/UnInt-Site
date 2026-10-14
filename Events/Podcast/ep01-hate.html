@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I Hate It — podcast poster — Unnatural Intelligence</title>
+<link rel="stylesheet" href="kit.css">
+<style>
+  body { display: flex; justify-content: center; padding: 72px 24px 48px; }
+  .stage { width: 11in; height: 17in; }
+
+  .poster {
+    position: relative;
+    width: 11in; height: 17in; overflow: hidden;
+    background: var(--ink); color: var(--paper);
+    display: flex; flex-direction: column;
+    padding: 0.32in 0.4in 0.28in;
+    gap: 0.16in;
+  }
+  .poster::before {
+    content: "";
+    position: absolute; inset: 0.12in;
+    border: 0.034in dashed rgba(186, 248, 55, 0.42);
+    pointer-events: none; z-index: 6;
+  }
+  .wash {
+    position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(circle at 88% 18%, rgba(250, 74, 158, 0.28), transparent 32%),
+      radial-gradient(circle at 8% 70%, rgba(186, 248, 55, 0.12), transparent 36%);
+  }
+  .grid {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(186, 248, 55, 0.09) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(186, 248, 55, 0.09) 1px, transparent 1px);
+    background-size: 0.28in 0.28in;
+    mask-image: radial-gradient(ellipse at 70% 30%, black 20%, transparent 72%);
+  }
+  .it-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 0.1in; }
+  .it-jelly {
+    width: 2.15in; height: 2.35in; object-fit: contain; flex: 0 0 auto;
+    margin: 0 0.08in 0.06in 0;
+    filter: drop-shadow(0 0.08in 0.12in rgba(250, 74, 158, 0.35));
+  }
+
+  .ticket, .brand, .hero, .player, .facts, .foot { position: relative; z-index: 2; }
+
+  .ticket {
+    background: var(--lime); color: var(--ink);
+    display: grid; grid-template-columns: 1.25fr 1.85fr 1.25fr auto;
+    gap: 0.14in; align-items: center;
+    padding: 0.14in 0.16in 0.14in 0.18in;
+    border-radius: 0.08in;
+  }
+  .ticket h3 {
+    margin: 0 0 0.02in;
+    font-family: var(--mono); font-size: 0.095in; letter-spacing: 0.16em; text-transform: uppercase;
+  }
+  .ticket .big {
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 0.3in; letter-spacing: -0.03em; line-height: 0.92;
+  }
+  .ticket .sub { margin-top: 0.04in; font-size: 0.125in; font-weight: 600; line-height: 1.2; }
+  .stub {
+    background: var(--ink); color: var(--lime);
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 0.24in; line-height: 0.86; letter-spacing: -0.03em;
+    text-align: center; padding: 0.12in 0.14in; border-radius: 0.06in;
+    border-left: 0.03in dashed var(--olive);
+  }
+
+  .brand { display: flex; align-items: center; gap: 0.12in; }
+  .brand img { width: 0.58in; height: 0.62in; object-fit: contain; }
+  .brand-name {
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 0.22in; line-height: 0.9; letter-spacing: -0.03em;
+  }
+  .brand-name small {
+    display: block; margin-top: 0.04in;
+    font-family: var(--mono); font-weight: 400; font-size: 0.095in;
+    letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase;
+  }
+  .chip {
+    margin-left: auto;
+    background: var(--pink); color: var(--ink);
+    font-family: var(--mono); font-weight: 700; font-size: 0.12in;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 0.08in 0.12in;
+  }
+
+  .hero { margin-top: 0.02in; }
+  .kicker {
+    margin: 0 0 0.06in;
+    font-family: var(--mono); font-size: 0.12in; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--cyan);
+  }
+  .title {
+    margin: 0;
+    font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: 2.15in; line-height: 0.76; letter-spacing: -0.06em;
+  }
+  .title .hate { color: var(--lime); display: block; }
+  .title .it {
+    display: block; color: transparent;
+    -webkit-text-stroke: 0.028in var(--paper);
+    font-size: 2.55in; margin-top: 0.02in;
+  }
+  .tape-row { margin-top: -0.18in; position: relative; z-index: 3; }
+  .tape {
+    display: inline-block;
+    background: var(--pink); color: var(--ink);
+    font-family: var(--mono); font-weight: 700;
+    font-size: 0.28in; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.08in 0.16in 0.09in;
+    transform: rotate(-2.2deg);
+    box-shadow: 0.07in 0.07in 0 var(--lime);
+  }
+  .deck {
+    margin: 0.2in 0 0; max-width: 8.6in;
+    font-size: 0.22in; line-height: 1.28; font-weight: 500;
+  }
+  .deck em { color: var(--pink); font-style: normal; font-weight: 700; }
+  .deck strong { color: var(--lime); }
+
+  .player {
+    display: grid; grid-template-columns: auto 1fr; gap: 0.16in; align-items: end;
+    background: rgba(249, 249, 250, 0.04);
+    border: 1px solid rgba(249, 249, 250, 0.14);
+    padding: 0.14in 0.16in 0.12in;
+  }
+  .player .meta { font-family: var(--mono); font-size: 0.11in; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lime); }
+  .player h2 {
+    margin: 0.04in 0 0;
+    font-family: var(--display); text-transform: uppercase;
+    font-size: 0.28in; letter-spacing: -0.03em; line-height: 0.95;
+  }
+  .player h2 span { color: var(--pink); }
+
+  .facts { flex: 1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.12in; min-height: 2.15in; }
+  .fact {
+    background: rgba(249, 249, 250, 0.05);
+    border: 1px solid rgba(186, 248, 55, 0.4);
+    padding: 0.16in 0.16in 0.18in;
+    display: flex; flex-direction: column;
+  }
+  .fact .n { font-family: var(--mono); font-size: 0.11in; letter-spacing: 0.14em; color: var(--lime); }
+  .fact h3 {
+    margin: 0.08in 0 0.08in;
+    font-family: var(--display); text-transform: uppercase;
+    font-size: 0.42in; letter-spacing: -0.04em; line-height: 0.88;
+  }
+  .fact p { margin: 0; font-size: 0.16in; line-height: 1.28; color: var(--muted); }
+  .fact.hot { background: var(--pink); color: var(--ink); border-color: var(--pink); }
+  .fact.hot .n { color: var(--ink); }
+  .fact.hot p { color: rgba(3, 2, 5, 0.78); }
+  .fact.wine { background: var(--wine); border-color: rgba(250, 74, 158, 0.7); }
+  .fact.wine h3 { color: var(--lime); }
+
+  .foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 0.16in; }
+  .contact h3 {
+    margin: 0 0 0.05in;
+    font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--pink);
+  }
+  .contact .line { font-size: 0.135in; line-height: 1.35; }
+  .contact code { font-family: var(--mono); font-size: 0.125in; color: var(--lime); }
+  .marks { display: flex; align-items: flex-end; gap: 0.08in; }
+
+  @page { size: 11in 17in; margin: 0; }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+  <a href="index.html">All posters</a>
+  <a href="ep02-useful.html">E02</a>
+  <a href="ep03-finish.html">E03</a>
+  <a href="cards.html">Cards</a>
+</div>
+<div class="stage" id="stage" data-stage data-w="11" data-h="17">
+  <article class="poster">
+    <div class="wash" aria-hidden="true"></div>
+    <div class="grid" aria-hidden="true"></div>
+    <header class="ticket">
+      <div>
+        <h3>Listen</h3>
+        <div class="big">Season 1</div>
+        <div class="sub">Upcoming · episodes as they land</div>
+      </div>
+      <div>
+        <h3>Where</h3>
+        <div class="big">Club site</div>
+        <div class="sub">unnaturalintelligence.club</div>
+      </div>
+      <div>
+        <h3>Type</h3>
+        <div class="big">Podcast</div>
+        <div class="sub">Student club · all programs</div>
+      </div>
+      <div class="stub">Admit<br>one ear</div>
+    </header>
+
+    <div class="brand">
+      <img src="assets/jellyfish-gradient.svg" alt="">
+      <div class="brand-name">Unnatural<br>Intelligence<small>SAIT student club · Saitsa</small></div>
+      <div class="chip">S01 · E01</div>
+    </div>
+
+    <section class="hero">
+      <p class="kicker">The podcast · episode 01 · the feeling</p>
+      <h1 class="title"><span class="hate">I hate</span><span class="it-row"><span class="it">it</span><img class="it-jelly" src="assets/jellyfish-gradient.svg" alt=""></span></h1>
+      <div class="tape-row"><div class="tape">but it’s so useful</div></div>
+      <p class="deck">Purpose: an open argument, not a sermon. <em>Say you don’t like it.</em> Then say what you used it for this week. <strong>Both can be true.</strong> No prior experience. No purity test.</p>
+    </section>
+
+    <section class="player">
+      <div>
+        <div class="meta">Now playing</div>
+        <h2>The feeling <span>· pilot</span></h2>
+      </div>
+      <div class="wave" data-wave aria-hidden="true"></div>
+    </section>
+
+    <section class="facts">
+      <article class="fact">
+        <div class="n">01 · Say it</div>
+        <h3>Grim tool</h3>
+        <p>You are allowed to dislike the default chat box. This show starts there.</p>
+      </article>
+      <article class="fact hot">
+        <div class="n">02 · Use it</div>
+        <h3>Open tab</h3>
+        <p>And you are allowed to keep the tab open anyway. That is not hypocrisy. That is Tuesday.</p>
+      </article>
+      <article class="fact wine">
+        <div class="n">03 · Both</div>
+        <h3>The show</h3>
+        <p>Conflicting feelings, said out loud. Generated by AI. Perfected by humans.</p>
+      </article>
+    </section>
+
+    <footer class="foot">
+      <div class="contact">
+        <h3>Listen · Contact</h3>
+        <div class="line"><b>Unnatural Intelligence</b> — SAIT student club podcast</div>
+        <div class="line">Email <code data-email id="contact-email"></code></div>
+        <div class="line">Discord <code data-discord id="contact-discord"></code></div>
+      </div>
+      <div class="marks">
+        <div class="logo-card"><img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs"></div>
+        <div class="logo-card sait"><img src="assets/sait-logo.png" alt="SAIT"></div>
+        <div class="qr"><div class="box" id="qr"></div><div class="cap">Scan Discord</div></div>
+      </div>
+    </footer>
+  </article>
+</div>
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: "unnaturalintelligencesait@gmail.com",
+  contactDiscord: "discord.gg/nYeCuXGa47",
+  qrUrl: "https://discord.gg/nYeCuXGa47"
+});
+</script>
+</body>
+</html>

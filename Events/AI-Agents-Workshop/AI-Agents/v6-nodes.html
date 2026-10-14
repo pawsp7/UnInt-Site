@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agents v6 — Node map — Unnatural Intelligence</title>
+<style>
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; }
+  @font-face { font-family: "Inter"; src: url("../../charter/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "Inter Display"; src: url("../../charter/fonts/InterDisplay-Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Regular.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../charter/fonts/JetBrainsMono-Bold.ttf") format("truetype"); font-weight: 700; }
+
+  :root {
+    --paper: #F9F9FA; --olive: #95B747; --ink: #030205; --pink: #FA4A9E;
+    --wine: #591337; --lime: #BAF837; --cyan: #7EC8FF;
+    --muted: rgba(249,249,250,.72);
+    --display: "Inter Display", Inter, sans-serif;
+    --sans: Inter, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; min-height: 100%; }
+  body { background: #071018; font-family: var(--sans); color: var(--paper); display: flex; justify-content: center; padding: 72px 24px 48px; }
+  .toolbar { position: fixed; top: 16px; right: 16px; z-index: 20; display: flex; gap: 8px; font-family: var(--mono); font-size: 12px; }
+  .toolbar a, .toolbar button {
+    cursor: pointer; text-decoration: none; border: 1px solid rgba(126,200,255,.45);
+    background: rgba(3,2,5,.88); color: var(--cyan); padding: 8px 12px; font: inherit;
+  }
+  .stage { width: 11in; height: 17in; flex: 0 0 auto; transform-origin: top center; filter: drop-shadow(0 28px 50px rgba(0,0,0,.55)); }
+
+  .poster {
+    position: relative; width: 11in; height: 17in; overflow: hidden; background: var(--ink);
+    display: flex; flex-direction: column; justify-content: flex-start;
+    padding: 0 0.36in 0.28in; gap: 0.14in;
+  }
+  .glitch {
+    display: block; height: 0.42in; width: calc(100% + 0.72in); margin: 0 -0.36in 0.06in;
+    object-fit: fill; opacity: 0.85; flex: none;
+  }
+  .jelly {
+    position: absolute; left: -0.6in; bottom: 2.6in; width: 3.4in; opacity: 0.18; z-index: 0; pointer-events: none;
+  }
+  .header, .hero, .map, .sats, .agenda, .quote, .meta, .footer { position: relative; z-index: 3; }
+
+  .header { display: flex; justify-content: space-between; align-items: center; }
+  .brand { display: flex; align-items: center; gap: 0.12in; }
+  .brand img.mark { width: 0.58in; height: 0.58in; display: block; }
+  .brand-name { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.22in; line-height: 0.92; letter-spacing: -0.03em; }
+  .brand-name small { display: block; margin-top: 0.04in; font-family: var(--mono); font-weight: 400; font-size: 0.09in; letter-spacing: 0.12em; color: var(--muted); }
+  .sys {
+    display: flex; align-items: center; gap: 0.1in;
+    font-family: var(--mono); font-size: 0.1in; letter-spacing: 0.08em; text-transform: uppercase;
+    border: 1px solid rgba(126,200,255,.45); padding: 0.08in 0.12in; background: rgba(7,16,24,.7);
+  }
+  .sys img { width: 0.36in; height: 0.36in; display: block; }
+  .sys b { color: var(--cyan); }
+
+  .hero { display: grid; grid-template-columns: 1fr 1.6in; gap: 0.14in; align-items: end; }
+  .eyebrow { font-family: var(--mono); font-size: 0.11in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.08in; }
+  .title { margin: 0; font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.92in; line-height: 0.84; letter-spacing: -0.05em; }
+  .title .l1 { color: var(--cyan); }
+  .title .l2 { color: var(--pink); }
+  .title .l3 { display: block; color: transparent; -webkit-text-stroke: 0.02in var(--paper); font-size: 0.56in; }
+  .official { margin: 0.08in 0 0; font-family: var(--mono); font-size: 0.1in; color: var(--muted); }
+  .purpose { margin: 0.1in 0 0; font-size: 0.16in; line-height: 1.28; }
+  .purpose strong { color: var(--lime); }
+  .purpose em { color: var(--pink); font-style: normal; font-weight: 700; }
+  .hero img.node { width: 1.55in; height: 1.55in; display: block; }
+
+  .map { display: grid; grid-template-columns: 1fr 0.28in 1fr 0.28in 1fr; gap: 0; align-items: center; }
+  .node-card {
+    background: rgba(249,249,250,.05); border: 1px solid rgba(126,200,255,.35);
+    padding: 0.16in 0.12in 0.18in; min-height: 2.55in; text-align: center;
+  }
+  .node-card.p { border-color: rgba(149,183,71,.6); }
+  .node-card.d { border-color: rgba(186,248,55,.6); }
+  .node-card.a { border-color: rgba(250,74,158,.6); }
+  .node-card img { width: 1.12in; height: 1.12in; display: block; margin: 0 auto 0.1in; }
+  .node-card .n { font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+  .node-card h3 { margin: 0.04in 0 0.06in; font-family: var(--display); text-transform: uppercase; font-size: 0.3in; letter-spacing: -0.03em; }
+  .p h3 { color: var(--olive); }
+  .d h3 { color: var(--lime); }
+  .a h3 { color: var(--pink); }
+  .node-card p { margin: 0; font-size: 0.125in; line-height: 1.28; color: var(--muted); }
+  .arrow {
+    height: 0.06in; background: linear-gradient(90deg, var(--lime), var(--pink));
+    position: relative; align-self: center;
+  }
+  .arrow::after {
+    content: ""; position: absolute; right: -0.06in; top: -0.05in;
+    border: 0.08in solid transparent; border-left-color: var(--pink); border-right: 0;
+  }
+
+  .sats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.1in; }
+  .sat {
+    display: grid; grid-template-columns: 0.52in 1fr; gap: 0.1in; align-items: center;
+    background: rgba(249,249,250,.04); border: 1px solid rgba(249,249,250,.12);
+    padding: 0.1in; min-height: 0.95in;
+  }
+  .sat img { width: 0.52in; height: 0.52in; display: block; }
+  .sat h4 { margin: 0 0 0.02in; font-size: 0.14in; text-transform: uppercase; letter-spacing: -0.02em; }
+  .sat p { margin: 0; font-size: 0.105in; line-height: 1.22; color: var(--muted); }
+
+  .agenda { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.08in; }
+  .agenda article { background: #071018; border: 1px solid rgba(126,200,255,.22); padding: 0.1in 0.08in; min-height: 1.55in; }
+  .agenda img { width: 0.42in; height: 0.42in; display: block; margin-bottom: 0.08in; }
+  .agenda .n { font-family: var(--mono); font-size: 0.085in; color: var(--cyan); letter-spacing: 0.1em; }
+  .agenda h4 { margin: 0.04in 0; font-size: 0.125in; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.15; }
+  .agenda p { margin: 0; font-size: 0.1in; line-height: 1.25; color: var(--muted); }
+
+  .quote {
+    font-family: var(--mono); font-size: 0.12in; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink); background: var(--lime); padding: 0.1in 0.16in; font-weight: 700;
+    border-radius: 0.06in; margin-top: auto;
+  }
+  .meta {
+    display: grid; grid-template-columns: 1.15fr 1.35fr 1.2fr; gap: 0.1in;
+    background: var(--wine); color: var(--paper); padding: 0.12in 0.16in; border-radius: 0.08in;
+    border: 1px solid var(--pink);
+  }
+  .meta h3 { margin: 0 0 0.02in; font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lime); }
+  .meta .big { font-family: var(--display); font-weight: 700; text-transform: uppercase; font-size: 0.28in; letter-spacing: -0.03em; line-height: 0.95; }
+  .meta .sub { font-size: 0.12in; font-weight: 700; margin-top: 0.03in; }
+
+  .footer { display: flex; justify-content: space-between; align-items: flex-end; gap: 0.14in; }
+  .contact h5 { margin: 0 0 0.05in; font-family: var(--mono); font-size: 0.09in; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cyan); }
+  .contact .line { font-size: 0.125in; line-height: 1.35; }
+  .contact code { font-family: var(--mono); font-size: 0.11in; color: var(--lime); }
+  .fine { margin: 0.05in 0 0; font-size: 0.1in; color: var(--muted); }
+  .marks { display: flex; align-items: flex-end; gap: 0.08in; }
+  .logo-card { background: #fff; border-radius: 0.06in; width: 1.55in; padding: 0.06in; display: flex; align-items: center; justify-content: center; }
+  .logo-card.sait { width: 1.28in; }
+  .logo-card img { width: 100%; height: auto; display: block; }
+  .qr { width: 1.12in; text-align: center; }
+  .qr .box { background: #fff; border-radius: 0.06in; padding: 0.05in; width: 1.12in; height: 1.12in; }
+  .qr .box svg { width: 100%; height: 100%; display: block; }
+  .qr .cap { font-family: var(--mono); font-size: 0.08in; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cyan); margin-top: 0.04in; }
+
+  @page { size: 11in 17in; margin: 0; }
+  @media print {
+    body { background: #fff; padding: 0; display: block; }
+    .toolbar { display: none; }
+    .stage { transform: none !important; margin: 0 !important; filter: none; }
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button type="button" onclick="window.print()">Print / Save as PDF (11×17)</button>
+  <a href="AI%20Agents%20Poster%20v6%20Nodes%20(11%C3%9717).pdf">Open PDF</a>
+  <a href="index.html">all</a>
+</div>
+<div class="stage" id="stage">
+<div class="poster">
+  <img class="glitch" src="assets/glitch-bars.svg" alt="">
+  <img class="jelly" src="assets/jellyfish-pink.svg" alt="">
+
+  <header class="header">
+    <div class="brand">
+      <img class="mark" src="assets/jellyfish-lime.svg" alt="">
+      <div class="brand-name">Unnatural<br>Intelligence<small>SAIT student club · Saitsa · Learn</small></div>
+    </div>
+    <div class="sys">
+      <img src="assets/glitch.svg" alt="">
+      <span>loop=<b>perceive→decide→act</b><br>on_error=<b>halt · check · restart</b></span>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Student Club · Lunch &amp; Learn · node map</div>
+      <h1 class="title"><span class="l1">AI </span><span class="l2">Agents</span><span class="l3">What? How? Use.</span></h1>
+      <p class="official">Official title · AI Agents: What? How? &amp; Learning to Use Them</p>
+      <p class="purpose">Purpose: demystify AI agents for a non-technical audience. Chatbots answer. <em>Agents act.</em> <strong>No prior experience</strong> — leave having used one.</p>
+    </div>
+    <img class="node" src="assets/node.svg" alt="">
+  </section>
+
+  <section class="map">
+    <article class="node-card p">
+      <img src="assets/spark.svg" alt="">
+      <div class="n">Node 01</div>
+      <h3>Perceive</h3>
+      <p>See the task, the files, the question — more than the chat window.</p>
+    </article>
+    <div class="arrow" aria-hidden="true"></div>
+    <article class="node-card d">
+      <img src="assets/workflow.svg" alt="">
+      <div class="n">Node 02</div>
+      <h3>Decide</h3>
+      <p>Plan a next useful step. Choose a tool instead of only talking.</p>
+    </article>
+    <div class="arrow" aria-hidden="true"></div>
+    <article class="node-card a">
+      <img src="assets/prompt.svg" alt="">
+      <div class="n">Node 03</div>
+      <h3>Act</h3>
+      <p>Call the tool, check the result, loop. Keep a human finish.</p>
+    </article>
+  </section>
+
+  <section class="sats">
+    <article class="sat"><img src="assets/neural.svg" alt=""><div><h4>Agent</h4><p>A net of tools, not a chatbot.</p></div></article>
+    <article class="sat"><img src="assets/meter.svg" alt=""><div><h4>Limits</h4><p>It drifts. Stay in the loop.</p></div></article>
+    <article class="sat"><img src="assets/halt.svg" alt=""><div><h4>Halt</h4><p>If it improvises, freeze it.</p></div></article>
+    <article class="sat"><img src="assets/restart.svg" alt=""><div><h4>Restart</h4><p>Rewrite. Run the loop again.</p></div></article>
+  </section>
+
+  <section class="agenda">
+    <article><img src="assets/ticket.svg" alt=""><div class="n">01 · 15 min</div><h4>Welcome</h4><p>Club intro and sign-ups.</p></article>
+    <article><img src="assets/bubble.svg" alt=""><div class="n">02 · 30 min</div><h4>What?</h4><p>Chatbot vs agent. Demos.</p></article>
+    <article><img src="assets/neural.svg" alt=""><div class="n">03 · 30 min</div><h4>How?</h4><p>The loop, tools, risks.</p></article>
+    <article><img src="assets/mask.svg" alt=""><div class="n">04 · 30 min</div><h4>Use</h4><p>Study, resume, project.</p></article>
+    <article><img src="assets/commit.svg" alt=""><div class="n">05 · 15 min</div><h4>Q&amp;A</h4><p>Open discussion.</p></article>
+  </section>
+
+  <p class="quote">Stay ahead of the curve · generated by AI, perfected by humans</p>
+
+  <section class="meta">
+    <div><h3>When</h3><div class="big">Thu Oct 1</div><div class="sub">6:00 – 8:00 PM</div></div>
+    <div><h3>Where</h3><div class="big">MB202</div><div class="sub">Stan Grad Centre · SAIT campus</div></div>
+    <div><h3>Type</h3><div class="big">Student Club</div><div class="sub">Lunch &amp; Learn · all programs · free</div></div>
+  </section>
+
+  <footer class="footer">
+    <div class="contact">
+      <h5>Show up · Contact</h5>
+      <div class="line"><b>Unnatural Intelligence</b> — SAIT student club</div>
+      <div class="line">Email <code id="contact-email"></code></div>
+      <div class="line">Discord <code id="contact-discord"></code></div>
+      <p class="fine">Bring a laptop if you have one. On campus · no alcohol.</p>
+    </div>
+    <div class="marks">
+      <div class="logo-card"><img src="assets/saitsa-clubs-logo.png" alt="Saitsa Student Clubs"></div>
+      <div class="logo-card sait"><img src="assets/sait-logo.png" alt="SAIT"></div>
+      <div class="qr"><div class="box" id="qr"></div><div class="cap">Scan Discord</div></div>
+    </div>
+  </footer>
+</div>
+</div>
+<script src="poster-boot.js"></script>
+<script>
+UNIPoster.boot({
+  contactEmail: "unnaturalintelligencesait@gmail.com",
+  contactDiscord: "discord.gg/hcsQFRNUEa",
+  qrUrl: "https://discord.gg/hcsQFRNUEa"
+});
+</script>
+</body>
+</html>
