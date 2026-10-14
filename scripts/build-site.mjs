@@ -19,21 +19,28 @@ const pages = [
     dest: "events/index.html",
     page: "events",
     title: "Events — Unnatural Intelligence",
-    description: "Workshops, labs, and campus nights. Upcoming dates appear after an exec publishes them. Earlier nights stay listed."
+    description: "Workshops, labs, and campus nights from the club Rubric page. Earlier nights stay listed."
   },
   {
     file: "media.html",
     dest: "media/index.html",
     page: "media",
     title: "Media — Unnatural Intelligence",
-    description: "The club podcast I hate it but it’s so useful, plus where videos and posters will live."
+    description: "Pictures and posters from nights that already ran, plus the club podcast I hate it but it’s so useful."
   },
   {
     file: "team.html",
     dest: "team/index.html",
     page: "team",
     title: "Team — Unnatural Intelligence",
-    description: "The 2026–27 exec team: Hailey, Pierre, Alexander, Logan, and Deema."
+    description: "The 2026–27 exec team, with names, roles, and photos from the club Rubric page."
+  },
+  {
+    file: "shop.html",
+    dest: "shop/index.html",
+    page: "shop",
+    title: "Shop — Unnatural Intelligence",
+    description: "Club stickers and lanyards. Checkout is on the Rubric page."
   },
   {
     file: "connect.html",
@@ -81,6 +88,7 @@ const nav = [
   ["events", "Events", "/events/"],
   ["media", "Media", "/media/"],
   ["team", "Team", "/team/"],
+  ["shop", "Shop", "/shop/"],
   ["connect", "Connect", "/connect/"]
 ];
 
@@ -158,6 +166,7 @@ ${body}
         <li><a href="/events/">Events</a></li>
         <li><a href="/media/">Media</a></li>
         <li><a href="/team/">Team</a></li>
+        <li><a href="/shop/">Shop</a></li>
         <li><a href="/connect/">Connect</a></li>
         <li><a href="/about/">About</a></li>
       </ul>
@@ -165,10 +174,10 @@ ${body}
     <div>
       <h2>Off this site</h2>
       <ul>
-        <li><a href="https://campus.hellorubric.com/?s=16226">Join on Rubric</a></li>
-        <li><a href="https://instagram.com/unnaturalintelligence">Instagram</a></li>
-        <li><a href="https://discord.gg/hcsQFRNUEa">Discord</a></li>
-        <li><a href="mailto:unnaturalintelligencesait@gmail.com">Email the execs</a></li>
+        <li><a class="with-icon" href="https://campus.hellorubric.com/?s=16226"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="7" width="17" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M9.5 7v10" stroke="#FA4A9E" stroke-width="1.8" stroke-dasharray="1.6 2"/><circle cx="6.5" cy="12" r="1" fill="currentColor"/></svg>Join on Rubric</a></li>
+        <li><a class="with-icon" href="https://instagram.com/unnaturalintelligence"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3.6" stroke="currentColor" stroke-width="1.8"/><circle cx="17.1" cy="6.9" r="1" fill="#FA4A9E"/></svg>Instagram</a></li>
+        <li><a class="with-icon" href="https://discord.gg/hcsQFRNUEa"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="3.4" y="12" width="3.6" height="6.2" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="17" y="12" width="3.6" height="6.2" rx="1.5" stroke="currentColor" stroke-width="1.8"/><path d="M17.2 18.4c0 1.5-1.5 2.6-3.3 2.6H12" stroke="#FA4A9E" stroke-width="1.8" stroke-linecap="round"/></svg>Discord</a></li>
+        <li><a class="with-icon" href="mailto:unnaturalintelligencesait@gmail.com"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 7.5 12 13l7.5-5.5" stroke="#FA4A9E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Email the execs</a></li>
         <li><a href="/admin/">Exec desk</a></li>
       </ul>
     </div>
@@ -219,10 +228,18 @@ const copies = [
   ["charter/assets/revamp/header-squiggle.svg", "assets/header-squiggle.svg"],
   ["Events/Podcast/assets/audio-bars.svg", "assets/audio-bars.svg"],
   ["Branding/SaitsaStudentClubsPrimaryLogo.svg", "assets/saitsa.svg"],
-  ["Branding/Vector Kit/png/social/og-1200x630.png", "assets/og.png"]
+  ["Branding/Vector Kit/png/social/og-1200x630.png", "assets/og.png"],
+  ["site/assets/events/halt-restart/poster.png", "assets/events/halt-restart/poster.png"],
+  ["site/assets/events/halt-restart/group.jpg", "assets/events/halt-restart/group.jpg"],
+  ["site/assets/events/halt-restart/door.jpg", "assets/events/halt-restart/door.jpg"],
+  ["site/assets/events/halt-restart/hailey.jpg", "assets/events/halt-restart/hailey.jpg"],
+  ["site/assets/events/halt-restart/pierre.jpg", "assets/events/halt-restart/pierre.jpg"],
+  ["site/assets/events/halt-restart/models.jpg", "assets/events/halt-restart/models.jpg"]
 ];
 for (const [from, to] of copies) {
-  cpSync(join(root, from), join(out, to));
+  const dest = join(out, to);
+  mkdirSync(dirname(dest), { recursive: true });
+  cpSync(join(root, from), dest);
 }
 cpSync(join(root, "site/css"), join(out, "css"), { recursive: true });
 cpSync(join(root, "site/js"), join(out, "js"), { recursive: true });
