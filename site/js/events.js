@@ -80,7 +80,9 @@
     const head = heading
       ? '<div class="section-head"><p class="kicker">Already ran</p><h2>' + escapeHtml(event.title) + ".</h2></div>"
       : '<div class="section-head" style="margin-top:36px"><h2>' + escapeHtml(event.title) + ".</h2></div>";
+    const href = "/media/#" + encodeURIComponent(event.id || "");
     return (
+      '<a class="past-event" href="' + escapeHtml(href) + '">' +
       head +
       '<article class="ticket">' +
       '<div class="ticket-stub">' +
@@ -92,8 +94,8 @@
       '<p class="kicker" style="color: var(--wine);">' + escapeHtml(card.place || event.where) + "</p>" +
       "<h3>" + escapeHtml(event.title) + "</h3>" +
       "<p>" + escapeHtml(card.blurb || event.summary) + "</p>" +
-      '<div class="meta">' + chips + "</div>" +
-      "</div></article>"
+      '<div class="meta">' + chips + '<span class="photos-cue">Photos →</span></div>' +
+      "</div></article></a>"
     );
   }
 

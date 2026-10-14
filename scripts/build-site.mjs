@@ -26,7 +26,7 @@ const pages = [
     dest: "media/index.html",
     page: "media",
     title: "Media — Unnatural Intelligence",
-    description: "The club podcast I hate it but it’s so useful, plus where videos and posters will live."
+    description: "Pictures and posters from nights that already ran, plus the club podcast I hate it but it’s so useful."
   },
   {
     file: "team.html",
@@ -228,10 +228,18 @@ const copies = [
   ["charter/assets/revamp/header-squiggle.svg", "assets/header-squiggle.svg"],
   ["Events/Podcast/assets/audio-bars.svg", "assets/audio-bars.svg"],
   ["Branding/SaitsaStudentClubsPrimaryLogo.svg", "assets/saitsa.svg"],
-  ["Branding/Vector Kit/png/social/og-1200x630.png", "assets/og.png"]
+  ["Branding/Vector Kit/png/social/og-1200x630.png", "assets/og.png"],
+  ["site/assets/events/halt-restart/poster.png", "assets/events/halt-restart/poster.png"],
+  ["site/assets/events/halt-restart/group.jpg", "assets/events/halt-restart/group.jpg"],
+  ["site/assets/events/halt-restart/door.jpg", "assets/events/halt-restart/door.jpg"],
+  ["site/assets/events/halt-restart/hailey.jpg", "assets/events/halt-restart/hailey.jpg"],
+  ["site/assets/events/halt-restart/pierre.jpg", "assets/events/halt-restart/pierre.jpg"],
+  ["site/assets/events/halt-restart/models.jpg", "assets/events/halt-restart/models.jpg"]
 ];
 for (const [from, to] of copies) {
-  cpSync(join(root, from), join(out, to));
+  const dest = join(out, to);
+  mkdirSync(dirname(dest), { recursive: true });
+  cpSync(join(root, from), dest);
 }
 cpSync(join(root, "site/css"), join(out, "css"), { recursive: true });
 cpSync(join(root, "site/js"), join(out, "js"), { recursive: true });
