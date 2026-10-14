@@ -37,9 +37,20 @@
       "<h3>" + escapeHtml(event.title) + "</h3>" +
       "<p>" + escapeHtml(card.blurb || event.summary) + "</p>" +
       '<div class="meta">' + chips + "</div>" +
-      '<p style="margin-top: 16px;"><a class="btn btn-small" href="/events/" style="background: var(--ink); color: var(--paper);">Full event list</a></p>' +
+      '<div class="event-actions">' + actions(event, true) + "</div>" +
       "</div></article>"
     );
+  }
+
+  function actions(event, withList) {
+    const rubric = event.href
+      ? '<a class="btn btn-small btn-lime" href="' + escapeHtml(event.href) + '" target="_blank" rel="noopener noreferrer">View on Rubric</a>'
+      : "";
+    const list = withList
+      ? '<a class="btn btn-small btn-ghost" href="/events/">All events</a>'
+      : "";
+    if (!rubric && !list) return "";
+    return rubric + list;
   }
 
   function row(event) {
@@ -51,7 +62,9 @@
       "<time" + datetime + ">" + when + "</time>" +
       "<div><h3>" + escapeHtml(event.title) + "</h3>" +
       '<p class="where">' + escapeHtml(event.where) + "</p>" +
-      "<p>" + escapeHtml(event.summary) + "</p></div>" +
+      "<p>" + escapeHtml(event.summary) + "</p>" +
+      (event.href ? '<div class="event-actions">' + actions(event, false) + "</div>" : "") +
+      "</div>" +
       '<span class="chip chip-' + tone + '">' + escapeHtml(event.status) + "</span>" +
       "</article>"
     );
@@ -84,7 +97,7 @@
 
   function renderUpcoming(events) {
     if (!events.length) {
-      return '<p class="empty-state">No upcoming nights are posted yet. An exec publishes one from the desk, and it shows up here.</p>';
+      return '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>';
     }
     return '<div class="event-list">' + events.map(row).join("") + "</div>";
   }
@@ -104,12 +117,15 @@
       const events = data.events || [];
       const upcoming = events.filter(function (event) { return !event.past; });
       const past = events.filter(function (event) { return event.past; });
+      const unavailable = data.rubric === false
+        ? '<p class="empty-state">The Rubric schedule could not be loaded. Refresh in a moment.</p>'
+        : "";
       if (next) {
         next.innerHTML = upcoming.length
           ? ticket(upcoming[0])
-          : '<p class="empty-state">No events are posted yet. An exec publishes a night from the desk, and the next one shows up here.</p>';
+          : (unavailable || '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>');
       }
-      if (list) list.innerHTML = renderUpcoming(upcoming);
+      if (list) list.innerHTML = upcoming.length || !unavailable ? renderUpcoming(upcoming) : unavailable;
       if (pastSlot && past.length) pastSlot.innerHTML = renderPast(past);
     })
     .catch(function () {

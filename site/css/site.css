@@ -431,6 +431,8 @@ h3 { font-size: 22px; letter-spacing: -0.03em; line-height: 1.15; }
 .event h3 { font-size: 24px; }
 .event p { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
 .event .where { color: var(--paper); font-size: 14px; margin-top: 8px; }
+.event > .chip { justify-self: start; align-self: start; }
+.event-actions { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
 
 .cards-2, .cards-3 {
   display: grid;

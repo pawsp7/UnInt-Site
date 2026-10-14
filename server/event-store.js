@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const catalog = require("./events-catalog");
+const rubric = require("./rubric-events");
 
 const FILE = path.join(__dirname, "data", "event-visibility.json");
 const TMP_FILE = "/tmp/unnatural-event-visibility.json";
@@ -138,7 +139,15 @@ async function listAll() {
 
 async function listPublic() {
   const events = await listAll();
-  return events.filter((event) => event.past || event.visible).map(publicEvent);
+  const local = events.filter((event) => event.past || event.visible).map(publicEvent);
+  const fromRubric = await rubric.upcoming();
+  const rubricTitles = new Set(fromRubric.events.map((event) => event.title.toLowerCase()));
+  const upcoming = [
+    ...fromRubric.events,
+    ...local.filter((event) => !event.past && !rubricTitles.has(event.title.toLowerCase()))
+  ].sort((left, right) => String(left.datetime).localeCompare(String(right.datetime)) || left.title.localeCompare(right.title));
+  const past = local.filter((event) => event.past);
+  return { events: [...upcoming, ...past], rubricOk: fromRubric.ok };
 }
 
 async function setVisible(id, visible) {

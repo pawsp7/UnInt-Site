@@ -3,8 +3,8 @@ const store = require("../server/event-store");
 
 module.exports = async function handler(req, res) {
   if (req.method === "GET") {
-    const events = await store.listPublic();
-    session.send(res, 200, { events });
+    const listed = await store.listPublic();
+    session.send(res, 200, { events: listed.events, rubric: listed.rubricOk });
     return;
   }
 

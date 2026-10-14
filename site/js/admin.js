@@ -125,7 +125,7 @@
       '<article class="panel desk-card">' +
       '<p class="kicker">Events</p>' +
       "<h3>Show on the public site</h3>" +
-      "<p>Upcoming nights start hidden. Check one to publish it on the home page and the Events tab.</p>" +
+      "<p>Nights published on Rubric show on the public site on their own. Check a night below only when it is not on Rubric yet.</p>" +
       '<div class="event-toggles">' + rows + "</div>" +
       pastLine +
       '<p class="event-save" id="event-save" role="status"></p>' +
