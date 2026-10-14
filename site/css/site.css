@@ -524,8 +524,8 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
 .channels { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .channel {
   display: flex;
-  justify-content: space-between;
-  gap: 16px;
+  align-items: center;
+  gap: 14px;
   text-decoration: none;
   border: 1px solid var(--line);
   border-radius: 18px;
@@ -533,9 +533,21 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
   background: var(--card);
 }
 .channel:hover { border-color: rgba(186, 248, 55, 0.55); }
+.channel-icon {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: rgba(186, 248, 55, 0.08);
+  color: var(--lime);
+}
+.channel-icon svg { width: 26px; height: 26px; display: block; }
+.channel > div { min-width: 0; flex: 1; }
 .channel h3 { font-size: 20px; }
-.channel p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
-.channel .go { color: var(--lime); font-family: var(--mono); font-size: 12px; }
+.channel p { margin: 6px 0 0; color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
+.channel .go { margin-left: auto; color: var(--lime); font-family: var(--mono); font-size: 12px; white-space: nowrap; }
 
 .steps { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: step; }
 .steps li {
@@ -621,6 +633,8 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
 .site-footer h2 { font-size: 18px; margin-bottom: 10px; }
 .site-footer p, .site-footer li { font-size: 14px; }
 .site-footer ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.site-footer .with-icon { display: inline-flex; align-items: center; gap: 8px; }
+.site-footer .with-icon svg { width: 16px; height: 16px; flex: none; }
 .site-footer .colophon {
   border-top: 1px solid rgba(3, 2, 5, 0.12);
   padding: 14px 0 20px;

@@ -174,10 +174,10 @@ ${body}
     <div>
       <h2>Off this site</h2>
       <ul>
-        <li><a href="https://campus.hellorubric.com/?s=16226">Join on Rubric</a></li>
-        <li><a href="https://instagram.com/unnaturalintelligence">Instagram</a></li>
-        <li><a href="https://discord.gg/hcsQFRNUEa">Discord</a></li>
-        <li><a href="mailto:unnaturalintelligencesait@gmail.com">Email the execs</a></li>
+        <li><a class="with-icon" href="https://campus.hellorubric.com/?s=16226"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="7" width="17" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M9.5 7v10" stroke="#FA4A9E" stroke-width="1.8" stroke-dasharray="1.6 2"/><circle cx="6.5" cy="12" r="1" fill="currentColor"/></svg>Join on Rubric</a></li>
+        <li><a class="with-icon" href="https://instagram.com/unnaturalintelligence"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3.6" stroke="currentColor" stroke-width="1.8"/><circle cx="17.1" cy="6.9" r="1" fill="#FA4A9E"/></svg>Instagram</a></li>
+        <li><a class="with-icon" href="https://discord.gg/hcsQFRNUEa"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="3.4" y="12" width="3.6" height="6.2" rx="1.5" stroke="currentColor" stroke-width="1.8"/><rect x="17" y="12" width="3.6" height="6.2" rx="1.5" stroke="currentColor" stroke-width="1.8"/><path d="M17.2 18.4c0 1.5-1.5 2.6-3.3 2.6H12" stroke="#FA4A9E" stroke-width="1.8" stroke-linecap="round"/></svg>Discord</a></li>
+        <li><a class="with-icon" href="mailto:unnaturalintelligencesait@gmail.com"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 7.5 12 13l7.5-5.5" stroke="#FA4A9E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Email the execs</a></li>
         <li><a href="/admin/">Exec desk</a></li>
       </ul>
     </div>
