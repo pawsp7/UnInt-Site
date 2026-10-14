@@ -14,7 +14,7 @@ const MONTHS = {
   jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12
 };
 
-let cache = { at: 0, events: null };
+let cache = { at: 0, payload: null };
 
 function decodeEntities(value) {
   return String(value || "")
@@ -101,7 +101,9 @@ function shortPlace(address) {
 function money(amount) {
   const value = Number(amount);
   if (!Number.isFinite(value)) return "";
-  return Number.isInteger(value) ? String(value) : value.toFixed(2).replace(/0$/, "").replace(/\.$/, "");
+  const cents = Math.round(value * 100);
+  if (cents % 100 === 0) return String(cents / 100);
+  return (cents / 100).toFixed(2);
 }
 
 function labelFromAmounts(amounts, fallback) {
@@ -125,16 +127,72 @@ function priceLabel(info, tickets) {
   return labelFromAmounts(fromText, text.replace(/\.00/g, ""));
 }
 
-function eventLink(value, eventId) {
-  const fallback = `https://campus.hellorubric.com/?eid=${encodeURIComponent(eventId)}`;
+function rubricUrl(value, fallback) {
+  const backup = fallback || CLUB_PAGE;
   try {
-    const url = new URL(String(value || fallback));
-    if (url.protocol !== "https:" || url.hostname !== "campus.hellorubric.com") return fallback;
+    const url = new URL(String(value || backup));
+    if (url.protocol !== "https:" || url.hostname !== "campus.hellorubric.com") return backup;
     url.searchParams.delete("fromsite");
     return url.toString();
   } catch (error) {
-    return fallback;
+    return backup;
   }
+}
+
+function eventLink(value, eventId) {
+  return rubricUrl(value, `https://campus.hellorubric.com/?eid=${encodeURIComponent(eventId)}`);
+}
+
+function imageUrl(value) {
+  try {
+    const url = new URL(String(value || ""));
+    if (url.protocol !== "https:" || url.hostname !== "resources.hellorubric.com") return "";
+    return url.toString();
+  } catch (error) {
+    return "";
+  }
+}
+
+function roleRank(role) {
+  const text = String(role || "").toLowerCase();
+  if (text.includes("vice")) return 1;
+  if (text.includes("president")) return 0;
+  if (text.includes("treasurer") || text.includes("finance")) return 2;
+  if (text.includes("community")) return 3;
+  if (text.includes("training")) return 4;
+  return 5;
+}
+
+function toMember(card, index) {
+  const name = plainText(card && card.title);
+  const role = plainText(card && card.subtitle);
+  if (!name || !role) return null;
+  return {
+    id: `rubric-exec-${card.id || index}`,
+    name,
+    role,
+    photo: imageUrl(card.image),
+    href: CLUB_PAGE,
+    order: index
+  };
+}
+
+function toMerch(card) {
+  const title = plainText(card && card.title);
+  if (!title || !card.itemid) return null;
+  const price = priceLabel(card.info);
+  return {
+    id: `rubric-merch-${card.itemid}`,
+    title,
+    summary: brief(String(card.subtitle || "").replace(/<\s*br\s*\/?>/gi, " · "), 320, title)
+      .replace(/(?:\s*·\s*){2,}/g, " · ")
+      .replace(/\s*·\s*-+\s*/g, " · ")
+      .replace(/^·\s*/, "")
+      .replace(/\s*·\s*$/, ""),
+    price,
+    image: imageUrl(card.image),
+    href: rubricUrl(card.destination, `https://campus.hellorubric.com/merchandiseitem?item=${encodeURIComponent(card.itemid)}&merid=${SOCIETY_ID}`)
+  };
 }
 
 function toPublicEvent(card, details) {
@@ -206,42 +264,65 @@ async function rubricPost(endpoint, details) {
   return data;
 }
 
-async function loadUpcoming() {
+function sectionItems(sections, name) {
+  const section = sections.find((item) => item && item.sectionname === name);
+  return section && Array.isArray(section.array) ? section.array : [];
+}
+
+async function loadClub() {
   const landing = await rubricPost("getSocietyLandingPage", { societyid: SOCIETY_ID });
   const sections = Array.isArray(landing.sections) ? landing.sections : [];
-  const eventsSection = sections.find((section) => section && section.sectionname === "Events");
-  const cards = (eventsSection && Array.isArray(eventsSection.array) ? eventsSection.array : [])
+  const cards = sectionItems(sections, "Events")
     .filter((card) => card && Number(card.upcoming) === 1 && card.eventid && card.title);
 
-  const detailed = await Promise.all(cards.map(async (card) => {
+  const events = (await Promise.all(cards.map(async (card) => {
     try {
       const details = await rubricPost(DETAILS_ENDPOINT, { eventId: card.eventid });
       return toPublicEvent(card, details);
     } catch (error) {
       return toPublicEvent(card, null);
     }
-  }));
-
-  return detailed
+  })))
     .filter(Boolean)
     .sort((left, right) => left.datetime.localeCompare(right.datetime) || left.title.localeCompare(right.title));
+
+  const team = sectionItems(sections, "Committee")
+    .map(toMember)
+    .filter(Boolean)
+    .sort((left, right) => roleRank(left.role) - roleRank(right.role) || left.order - right.order)
+    .map((member) => {
+      const copy = { ...member };
+      delete copy.order;
+      return copy;
+    });
+
+  const merchandise = sectionItems(sections, "Merchandise").map(toMerch).filter(Boolean);
+  return { events, team, merchandise };
+}
+
+async function club() {
+  if (cache.payload && Date.now() - cache.at < CACHE_MS) return { ...cache.payload, ok: true };
+  try {
+    const payload = await loadClub();
+    cache = { at: Date.now(), payload };
+    return { ...payload, ok: true };
+  } catch (error) {
+    if (cache.payload) return { ...cache.payload, ok: true };
+    return { events: [], team: [], merchandise: [], ok: false };
+  }
 }
 
 async function upcoming() {
-  if (cache.events && Date.now() - cache.at < CACHE_MS) return { events: cache.events, ok: true };
-  try {
-    const events = await loadUpcoming();
-    cache = { at: Date.now(), events };
-    return { events, ok: true };
-  } catch (error) {
-    if (cache.events) return { events: cache.events, ok: true };
-    return { events: [], ok: false };
-  }
+  const result = await club();
+  return { events: result.events, ok: result.ok };
 }
 
 module.exports = {
   upcoming,
+  club,
   toPublicEvent,
+  toMember,
+  toMerch,
   brief,
   shortPlace,
   priceLabel,

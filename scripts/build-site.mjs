@@ -19,7 +19,7 @@ const pages = [
     dest: "events/index.html",
     page: "events",
     title: "Events — Unnatural Intelligence",
-    description: "Workshops, labs, and campus nights. Upcoming dates appear after an exec publishes them. Earlier nights stay listed."
+    description: "Workshops, labs, and campus nights from the club Rubric page. Earlier nights stay listed."
   },
   {
     file: "media.html",
@@ -33,7 +33,14 @@ const pages = [
     dest: "team/index.html",
     page: "team",
     title: "Team — Unnatural Intelligence",
-    description: "The 2026–27 exec team: Hailey, Pierre, Alexander, Logan, and Deema."
+    description: "The 2026–27 exec team, with names, roles, and photos from the club Rubric page."
+  },
+  {
+    file: "shop.html",
+    dest: "shop/index.html",
+    page: "shop",
+    title: "Shop — Unnatural Intelligence",
+    description: "Club stickers and lanyards. Checkout is on the Rubric page."
   },
   {
     file: "connect.html",
@@ -81,6 +88,7 @@ const nav = [
   ["events", "Events", "/events/"],
   ["media", "Media", "/media/"],
   ["team", "Team", "/team/"],
+  ["shop", "Shop", "/shop/"],
   ["connect", "Connect", "/connect/"]
 ];
 
@@ -158,6 +166,7 @@ ${body}
         <li><a href="/events/">Events</a></li>
         <li><a href="/media/">Media</a></li>
         <li><a href="/team/">Team</a></li>
+        <li><a href="/shop/">Shop</a></li>
         <li><a href="/connect/">Connect</a></li>
         <li><a href="/about/">About</a></li>
       </ul>

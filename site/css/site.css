@@ -459,7 +459,7 @@ h3 { font-size: 22px; letter-spacing: -0.03em; line-height: 1.15; }
 
 .people {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 12px;
 }
 .person {
@@ -469,7 +469,14 @@ h3 { font-size: 22px; letter-spacing: -0.03em; line-height: 1.15; }
   background: var(--card);
   text-align: center;
 }
+a.person {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
 .person img { width: 92px; height: 92px; margin: 0 auto 8px; object-fit: contain; }
+.person img.portrait { object-fit: cover; border-radius: 50%; background: #111; }
 .person h3 { font-size: 20px; }
 .person .role {
   color: var(--lime);
@@ -479,7 +486,40 @@ h3 { font-size: 22px; letter-spacing: -0.03em; line-height: 1.15; }
   text-transform: uppercase;
   margin-top: 6px;
 }
+.person .go {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--lime);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
 .person p { color: var(--muted); font-size: 14px; margin: 10px 0 0; text-align: left; }
+
+.merch-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.merch {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--card);
+  overflow: hidden;
+}
+.merch img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  background: #0c0b10;
+  padding: 16px;
+}
+.merch .body { padding: 16px 18px 18px; }
+.merch h3 { font-size: 24px; }
+.merch p { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
 
 .channels { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .channel {

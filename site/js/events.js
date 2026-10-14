@@ -2,7 +2,9 @@
   const next = document.querySelector("[data-next-event]");
   const list = document.querySelector("[data-events]");
   const pastSlot = document.querySelector("[data-past-events]");
-  if (!next && !list && !pastSlot) return;
+  const teamSlots = document.querySelectorAll("[data-team]");
+  const merchSlots = document.querySelectorAll("[data-merch]");
+  if (!next && !list && !pastSlot && !teamSlots.length && !merchSlots.length) return;
 
   function escapeHtml(value) {
     return String(value == null ? "" : value)
@@ -102,15 +104,46 @@
     return '<div class="event-list">' + events.map(row).join("") + "</div>";
   }
 
+  function personCard(member) {
+    const photo = member.photo
+      ? '<img class="portrait" src="' + escapeHtml(member.photo) + '" alt="">'
+      : '<img src="/assets/jelly-happy.svg" alt="">';
+    return (
+      '<a class="person" href="' + escapeHtml(member.href) + '" target="_blank" rel="noopener noreferrer">' +
+      photo +
+      "<h3>" + escapeHtml(member.name) + "</h3>" +
+      '<div class="role">' + escapeHtml(member.role) + "</div>" +
+      '<span class="go">On Rubric</span>' +
+      "</a>"
+    );
+  }
+
+  function merchCard(item) {
+    const image = item.image ? '<img src="' + escapeHtml(item.image) + '" alt="">' : "";
+    return (
+      '<article class="merch">' +
+      image +
+      '<div class="body"><h3>' + escapeHtml(item.title) + "</h3>" +
+      (item.summary ? "<p>" + escapeHtml(item.summary) + "</p>" : "") +
+      '<div class="meta"><span class="chip chip-' + (item.price === "Free" ? "lime" : "cyan") + '">' + escapeHtml(item.price) + "</span></div>" +
+      '<div class="event-actions"><a class="btn btn-small btn-lime" href="' + escapeHtml(item.href) + '" target="_blank" rel="noopener noreferrer">Buy on Rubric</a></div>' +
+      "</div></article>"
+    );
+  }
+
+  function fillSlots(slots, html) {
+    slots.forEach(function (slot) { slot.innerHTML = html; });
+  }
+
   function renderPast(events) {
     return events.map(function (event, index) {
       return pastBlock(event, index === 0);
     }).join("");
   }
 
-  fetch("/api/events")
+  fetch("/api/club")
     .then(function (response) {
-      if (!response.ok) throw new Error("events");
+      if (!response.ok) throw new Error("club");
       return response.json();
     })
     .then(function (data) {
@@ -118,7 +151,7 @@
       const upcoming = events.filter(function (event) { return !event.past; });
       const past = events.filter(function (event) { return event.past; });
       const unavailable = data.rubric === false
-        ? '<p class="empty-state">The Rubric schedule could not be loaded. Refresh in a moment.</p>'
+        ? '<p class="empty-state">Rubric could not be loaded. Refresh in a moment.</p>'
         : "";
       if (next) {
         next.innerHTML = upcoming.length
@@ -127,10 +160,24 @@
       }
       if (list) list.innerHTML = upcoming.length || !unavailable ? renderUpcoming(upcoming) : unavailable;
       if (pastSlot && past.length) pastSlot.innerHTML = renderPast(past);
+      if (teamSlots.length) {
+        const team = data.team || [];
+        fillSlots(teamSlots, team.length
+          ? team.map(personCard).join("")
+          : (unavailable || '<p class="empty-state">The exec list is not on Rubric yet.</p>'));
+      }
+      if (merchSlots.length) {
+        const merchandise = data.merchandise || [];
+        fillSlots(merchSlots, merchandise.length
+          ? merchandise.map(merchCard).join("")
+          : (unavailable || '<p class="empty-state">Nothing is in the Rubric shop yet.</p>'));
+      }
     })
     .catch(function () {
-      const message = '<p class="empty-state">The schedule could not be loaded. Refresh in a moment.</p>';
+      const message = '<p class="empty-state">Rubric could not be loaded. Refresh in a moment.</p>';
       if (next) next.innerHTML = message;
       if (list) list.innerHTML = message;
+      fillSlots(teamSlots, message);
+      fillSlots(merchSlots, message);
     });
 })();
