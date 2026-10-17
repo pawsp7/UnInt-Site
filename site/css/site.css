@@ -792,6 +792,48 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
   color: var(--muted);
 }
 
+.event-form { display: grid; gap: 12px; margin-top: 8px; }
+.event-form label {
+  display: grid;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.event-form input,
+.event-form textarea {
+  width: 100%;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font: 16px var(--sans);
+  letter-spacing: 0;
+  text-transform: none;
+  color-scheme: dark;
+}
+.event-form textarea { min-height: 88px; resize: vertical; }
+.event-form input:focus,
+.event-form textarea:focus { outline: 2px solid var(--lime); border-color: transparent; }
+.event-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.event-form .check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--paper);
+}
+.event-form .check input { width: 18px; height: 18px; accent-color: var(--lime); }
+.event-form .btn { justify-self: start; }
+.event-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+.event-row .event-toggle { margin: 0; }
+
 .event-toggles { display: grid; gap: 8px; }
 .event-toggle {
   display: grid;
@@ -836,7 +878,7 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
     margin: 0;
   }
   .nav.open a { padding: 12px 8px; }
-  .hero, .pillars, .cards-2, .channels, .site-footer .wrap, .ticket, .split {
+  .hero, .pillars, .cards-2, .channels, .site-footer .wrap, .ticket, .split, .event-form-row {
     grid-template-columns: 1fr;
   }
   .collage {

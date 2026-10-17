@@ -26,9 +26,29 @@ module.exports = async function handler(req, res) {
     return;
   }
 
+  if (body.action === "create") {
+    const created = await store.createCustom(body);
+    if (created.error) {
+      session.send(res, 400, { error: created.error });
+      return;
+    }
+    session.send(res, 200, created);
+    return;
+  }
+
   const id = typeof body.id === "string" ? body.id : "";
   if (!/^[a-z0-9-]{1,40}$/.test(id)) {
     session.send(res, 400, { error: "Unknown event." });
+    return;
+  }
+
+  if (body.action === "delete") {
+    const removed = await store.deleteCustom(id);
+    if (!removed) {
+      session.send(res, 404, { error: "That night is not one the desk created." });
+      return;
+    }
+    session.send(res, 200, removed);
     return;
   }
 

@@ -45,8 +45,9 @@
   }
 
   function actions(event, withList) {
+    const label = /hellorubric\.com/i.test(event.href || "") ? "View on Rubric" : "Details";
     const rubric = event.href
-      ? '<a class="btn btn-small btn-lime" href="' + escapeHtml(event.href) + '" target="_blank" rel="noopener noreferrer">View on Rubric</a>'
+      ? '<a class="btn btn-small btn-lime" href="' + escapeHtml(event.href) + '" target="_blank" rel="noopener noreferrer">' + label + "</a>"
       : "";
     const list = withList
       ? '<a class="btn btn-small btn-ghost" href="/events/">All events</a>'
@@ -80,10 +81,7 @@
     const head = heading
       ? '<div class="section-head"><p class="kicker">Already ran</p><h2>' + escapeHtml(event.title) + ".</h2></div>"
       : '<div class="section-head" style="margin-top:36px"><h2>' + escapeHtml(event.title) + ".</h2></div>";
-    const href = "/media/#" + encodeURIComponent(event.id || "");
-    return (
-      '<a class="past-event" href="' + escapeHtml(href) + '">' +
-      head +
+    const article = (
       '<article class="ticket">' +
       '<div class="ticket-stub">' +
       '<span class="kicker" style="color: var(--olive);">' + escapeHtml(card.kicker || "Past") + "</span>" +
@@ -94,9 +92,12 @@
       '<p class="kicker" style="color: var(--wine);">' + escapeHtml(card.place || event.where) + "</p>" +
       "<h3>" + escapeHtml(event.title) + "</h3>" +
       "<p>" + escapeHtml(card.blurb || event.summary) + "</p>" +
-      '<div class="meta">' + chips + '<span class="photos-cue">Photos →</span></div>' +
-      "</div></article></a>"
+      '<div class="meta">' + chips + (event.custom ? "" : '<span class="photos-cue">Photos →</span>') + "</div>" +
+      "</div></article>"
     );
+    if (event.custom) return head + article;
+    const href = "/media/#" + encodeURIComponent(event.id || "");
+    return '<a class="past-event" href="' + escapeHtml(href) + '">' + head + article + "</a>";
   }
 
   function renderUpcoming(events) {
