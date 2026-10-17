@@ -1,6 +1,7 @@
 const session = require("../server/session");
 const content = require("../server/desk-content");
 const store = require("../server/event-store");
+const log = require("../server/desk-log");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "GET") {
@@ -12,5 +13,6 @@ module.exports = async function handler(req, res) {
     return;
   }
   const events = await store.listAll();
-  session.send(res, 200, { sections: content.sections, events });
+  const thread = await log.list();
+  session.send(res, 200, { sections: content.sections, events, messages: thread.messages });
 };

@@ -39,8 +39,15 @@
   let deskData = null;
 
   function showDesk(data) {
-    deskData = data;
-    desk.innerHTML = renderDesk(data);
+    deskData = Object.assign({}, deskData, data);
+    desk.innerHTML = renderDesk(deskData);
+    const nameInput = desk.querySelector("[name='name']");
+    try {
+      const saved = localStorage.getItem("ui-desk-name");
+      if (nameInput && saved) nameInput.value = saved;
+    } catch (err) { /* private mode */ }
+    const list = desk.querySelector(".log-list");
+    if (list) list.scrollTop = list.scrollHeight;
   }
 
   function saveNote(data, yes) {
@@ -156,6 +163,77 @@
     });
   }
 
+  desk.addEventListener("submit", async function (event) {
+    const form = event.target;
+    if (!form.matches || !form.matches("#desk-log-form")) return;
+    event.preventDefault();
+    const status = document.querySelector("#log-save");
+    const button = form.querySelector("button[type='submit']");
+    const name = new FormData(form).get("name");
+    const text = new FormData(form).get("text");
+    if (status) status.textContent = "";
+    button.disabled = true;
+    try {
+      const response = await fetch("/api/log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name, text: text })
+      });
+      const data = await response.json().catch(function () { return {}; });
+      if (response.status === 401) {
+        window.location.href = "/admin/";
+        return;
+      }
+      if (!response.ok) {
+        if (status) status.textContent = data.error || "That note did not save.";
+        return;
+      }
+      try { localStorage.setItem("ui-desk-name", String(name || "").trim()); } catch (err) { /* private mode */ }
+      form.querySelector("[name='text']").value = "";
+      if (deskData) deskData.messages = data.messages;
+      paintLog(data.messages, true);
+      if (status) {
+        status.textContent = data.persisted
+          ? "Posted to the shared log."
+          : "Saved on this server for now. Set GITHUB_TOKEN on the host so the log sticks after a restart.";
+      }
+    } catch (err) {
+      if (status) status.textContent = "The desk could not be reached.";
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  desk.addEventListener("click", async function (event) {
+    const button = event.target.closest ? event.target.closest("[data-log-remove]") : null;
+    if (!button) return;
+    const status = document.querySelector("#log-save");
+    button.disabled = true;
+    try {
+      const response = await fetch("/api/log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "delete", id: button.getAttribute("data-log-remove") })
+      });
+      const data = await response.json().catch(function () { return {}; });
+      if (response.status === 401) {
+        window.location.href = "/admin/";
+        return;
+      }
+      if (!response.ok) {
+        if (status) status.textContent = data.error || "That note stayed in the log.";
+        button.disabled = false;
+        return;
+      }
+      if (deskData) deskData.messages = data.messages;
+      paintLog(data.messages, false);
+      if (status) status.textContent = "Removed from the log.";
+    } catch (err) {
+      button.disabled = false;
+      if (status) status.textContent = "The desk could not be reached.";
+    }
+  });
+
   fetch("/api/desk")
     .then(function (response) {
       if (response.status === 401) {
@@ -168,6 +246,7 @@
     .then(function (data) {
       if (!data) return;
       showDesk(data);
+      window.setInterval(refreshLog, 10000);
     })
     .catch(function () {
       desk.innerHTML = "<p class=\"lede\">The desk did not load. Refresh, or sign in again.</p>";
@@ -230,6 +309,80 @@
     );
   }
 
+  function formatWhen(iso) {
+    const date = new Date(iso);
+    if (Number.isNaN(date.getTime())) return "";
+    return date.toLocaleString("en-CA", {
+      timeZone: "America/Edmonton",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit"
+    });
+  }
+
+  function renderMessages(messages) {
+    if (!messages || !messages.length) {
+      return "<li class=\"log-empty\"><p class=\"empty-state\">Nothing in the log yet. A note here is shared with every exec who opens the desk.</p></li>";
+    }
+    return messages.map(function (message) {
+      return (
+        "<li class=\"log-item\">" +
+        "<div class=\"log-meta\"><strong>" + escapeHtml(message.name) + "</strong>" +
+        "<time datetime=\"" + escapeHtml(message.at) + "\">" + escapeHtml(formatWhen(message.at)) + "</time></div>" +
+        "<p>" + escapeHtml(message.text) + "</p>" +
+        "<button class=\"log-remove\" type=\"button\" data-log-remove=\"" + escapeHtml(message.id) + "\">Remove</button>" +
+        "</li>"
+      );
+    }).join("");
+  }
+
+  function paintLog(messages, scroll) {
+    const list = document.querySelector(".log-list");
+    if (!list) return;
+    const stamp = (messages || []).map(function (message) { return message.id; }).join(" ");
+    if (list.getAttribute("data-stamp") === stamp) return;
+    const nearBottom = list.scrollHeight - list.scrollTop - list.clientHeight < 48;
+    list.innerHTML = renderMessages(messages);
+    list.setAttribute("data-stamp", stamp);
+    if (scroll || nearBottom) list.scrollTop = list.scrollHeight;
+  }
+
+  async function refreshLog() {
+    if (document.hidden) return;
+    try {
+      const response = await fetch("/api/log");
+      if (response.status === 401) {
+        window.location.href = "/admin/";
+        return;
+      }
+      if (!response.ok) return;
+      const data = await response.json();
+      if (deskData) deskData.messages = data.messages;
+      paintLog(data.messages, false);
+    } catch (err) { /* leave the log as it is */ }
+  }
+
+  function renderLog(messages) {
+    return (
+      '<article class="panel desk-card desk-log">' +
+      '<p class="kicker">Log</p>' +
+      "<h3>Shared chat</h3>" +
+      "<p>One thread for the execs. Everyone who signs in sees the same notes, newest at the bottom. This stays off the public site — do not put bank numbers or personal phone numbers here.</p>" +
+      '<ol class="log-list" data-stamp="' + escapeHtml((messages || []).map(function (message) { return message.id; }).join(" ")) + '">' +
+      renderMessages(messages) +
+      "</ol>" +
+      '<form class="log-form" id="desk-log-form">' +
+      '<div class="log-form-row">' +
+      '<label>Your name<input name="name" maxlength="40" autocomplete="nickname" required></label>' +
+      '<label>Note<textarea name="text" maxlength="1000" rows="2" required></textarea></label>' +
+      '<button class="btn btn-lime" type="submit">Post</button>' +
+      "</div>" +
+      '<p class="log-save" id="log-save" role="status"></p>' +
+      "</form></article>"
+    );
+  }
+
   function renderDesk(data) {
     const sections = (data.sections || []).map(function (section) {
       const links = (section.links || []).map(function (link) {
@@ -250,6 +403,6 @@
         "</article>"
       );
     }).join("");
-    return "<div class=\"desk-grid\">" + renderEvents(data.events) + sections + "</div>";
+    return renderLog(data.messages) + "<div class=\"desk-grid\">" + renderEvents(data.events) + sections + "</div>";
   }
 })();
