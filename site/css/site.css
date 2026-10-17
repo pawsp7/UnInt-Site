@@ -479,6 +479,11 @@ a.past-event:focus-visible .ticket {
 }
 .shot.poster { grid-row: 1 / -1; }
 .shot.poster img { object-fit: contain; background: #0c0b10; }
+.episode-poster {
+  aspect-ratio: 11 / 17;
+  margin-bottom: 16px;
+}
+.episode-poster img { object-fit: contain; background: #0c0b10; }
 .shot.wide { grid-column: 2 / -1; }
 .shot.door img { object-position: 18% center; }
 .shot:hover,

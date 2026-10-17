@@ -26,7 +26,14 @@ const pages = [
     dest: "media/index.html",
     page: "media",
     title: "Media — Unnatural Intelligence",
-    description: "Pictures and posters from nights that already ran, plus the club podcast I hate it but it’s so useful."
+    description: "Pictures and posters from nights that already ran, and the talks still being cut."
+  },
+  {
+    file: "podcast.html",
+    dest: "podcast/index.html",
+    page: "podcast",
+    title: "Podcast — Unnatural Intelligence",
+    description: "Season 1 of I hate it but it’s so useful. Three episodes in production, with the posters."
   },
   {
     file: "team.html",
@@ -87,6 +94,7 @@ const pages = [
 const nav = [
   ["events", "Events", "/events/"],
   ["media", "Media", "/media/"],
+  ["podcast", "Podcast", "/podcast/"],
   ["team", "Team", "/team/"],
   ["shop", "Shop", "/shop/"],
   ["connect", "Connect", "/connect/"]
@@ -165,6 +173,7 @@ ${body}
       <ul>
         <li><a href="/events/">Events</a></li>
         <li><a href="/media/">Media</a></li>
+        <li><a href="/podcast/">Podcast</a></li>
         <li><a href="/team/">Team</a></li>
         <li><a href="/shop/">Shop</a></li>
         <li><a href="/connect/">Connect</a></li>
@@ -227,6 +236,9 @@ const copies = [
   ["Branding/Vector Kit/patterns/tentacle-flourish.svg", "assets/flourish.svg"],
   ["charter/assets/revamp/header-squiggle.svg", "assets/header-squiggle.svg"],
   ["Events/Podcast/assets/audio-bars.svg", "assets/audio-bars.svg"],
+  ["Events/Podcast/Podcast Poster E01 I Hate It (11x17).png", "assets/podcast/e01.png"],
+  ["Events/Podcast/Podcast Poster E02 So Useful (11x17).png", "assets/podcast/e02.png"],
+  ["Events/Podcast/Podcast Poster E03 Human Finish (11x17).png", "assets/podcast/e03.png"],
   ["Branding/SaitsaStudentClubsPrimaryLogo.svg", "assets/saitsa.svg"],
   ["Branding/Vector Kit/png/social/og-1200x630.png", "assets/og.png"],
   ["site/assets/events/halt-restart/poster.png", "assets/events/halt-restart/poster.png"],
