@@ -79,30 +79,6 @@ module.exports = {
       ]
     },
     {
-      kicker: "Calendar",
-      title: "Notes that stay off the homepage",
-      notes: [
-        "Tue 15 Sep 2026, 11:00, CA121 — Clubs Orientation. A signing exec had to be there for grants eligibility.",
-        "Fri 18 Sep 2026, 16:00–19:00, Heritage Hall AA128 — Halt & Restart. SECC-approved. Pierre and Daniil as the models.",
-        "Wed 23 Sep 2026, 14:00–15:00, E130C — Meeting: AI & Humans in Media. Damien, Hailey, Pierre, Logan.",
-        "Thu 1 Oct 2026 was the date on the AI Agents proposal (MB202, 6–8pm, still marked proposed). The live schedule instead lists Atelier: AI Agents for 28 Oct with no room. Reconcile those before promoting a day.",
-        "13–14 Oct 2026, Stan Grad Atrium — Fall Showcase. Public. Setup 10:30, event 11:00–14:00, takedown 14:00–14:30, both days.",
-        "Sat 14 Nov 2026 — One-Day AI Game Jam with Game Development Club. Proposal only.",
-        "Unnatural Games: proposed Mondays 6–8pm. Not a locked weekly series until each night (or a repeat format) is approved.",
-        "Saitsa year markers: 13 Jan 2027 orientation, 27–28 Jan 2027 winter showcase, 11 Mar 2027 clubs council, 11 Apr 2027 reports and transition docs, 30 Jun 2027 fiscal year end."
-      ]
-    },
-    {
-      kicker: "Roster",
-      title: "How the names are filed",
-      notes: [
-        "Public site: Hailey (President), Pierre (Vice President), Alexander / Alex (VP Finance), Logan (Media), Deema (Social, he/him).",
-        "Proposal paperwork names Pierre Tchio as Vice President and primary event organizer, and Hailey as President (some drafts spell Haely).",
-        "Name tags also list Daniil with type AI. Engraved plates omit Daniil. Keep Daniil off the public exec row unless the team decides otherwise.",
-        "Three signing authorities must stay filled: President, VP Operations, VP Finance. One person, one executive title. Current SAIT students in good standing who have paid the Saitsa fee, only."
-      ]
-    },
-    {
       kicker: "Channels",
       title: "Inboxes and invites",
       links: [
