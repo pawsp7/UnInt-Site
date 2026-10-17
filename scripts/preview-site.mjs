@@ -11,6 +11,7 @@ const logout = require("../api/logout.js");
 const desk = require("../api/desk.js");
 const events = require("../api/events.js");
 const club = require("../api/club.js");
+const log = require("../api/log.js");
 
 const types = {
   ".html": "text/html; charset=utf-8",
@@ -44,6 +45,7 @@ const server = createServer((req, res) => {
   if (path === "/api/desk") return desk(req, res);
   if (path === "/api/events") return events(req, res);
   if (path === "/api/club") return club(req, res);
+  if (path === "/api/log") return log(req, res);
 
   const file = fileFor(path);
   if (!file) {
