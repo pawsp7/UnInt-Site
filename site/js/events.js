@@ -46,7 +46,6 @@
 
   function posterHref(event) {
     const title = String(event.title || "").toLowerCase();
-    if (title.indexOf("unnatural games") !== -1) return "/media/#unnatural-games";
     if (title.indexOf("ai agent") !== -1) return "/media/#ai-agents";
     return "";
   }
