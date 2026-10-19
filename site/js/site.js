@@ -9,21 +9,19 @@
 })();
 
 (function () {
-  const shots = document.querySelectorAll("a.shot");
-  if (!shots.length) return;
   const dialog = document.createElement("dialog");
   dialog.className = "lightbox";
   dialog.innerHTML = '<form method="dialog"><button class="lightbox-close" type="submit">Close</button></form><img alt="">';
   document.body.appendChild(dialog);
   const img = dialog.querySelector("img");
-  shots.forEach(function (shot) {
-    shot.addEventListener("click", function (event) {
-      event.preventDefault();
-      const source = shot.querySelector("img");
-      img.src = shot.getAttribute("href");
-      img.alt = source ? source.alt : "";
-      dialog.showModal();
-    });
+  document.addEventListener("click", function (event) {
+    const shot = event.target.closest("a.shot");
+    if (!shot) return;
+    event.preventDefault();
+    const source = shot.querySelector("img");
+    img.src = shot.getAttribute("href");
+    img.alt = source ? source.alt : "";
+    dialog.showModal();
   });
   dialog.addEventListener("click", function (event) {
     if (event.target === dialog) dialog.close();

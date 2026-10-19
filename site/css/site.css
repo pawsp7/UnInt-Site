@@ -368,6 +368,18 @@ h3 { font-size: 22px; letter-spacing: -0.03em; line-height: 1.15; }
   overflow: hidden;
   position: relative;
 }
+.ticket.has-poster { grid-template-columns: 200px 168px 1fr; }
+.event-poster {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border-radius: 0;
+  align-self: stretch;
+  background: #0c0b10;
+}
+.event-poster img { object-fit: contain; background: #0c0b10; }
 .ticket-link {
   position: absolute;
   inset: 0;
@@ -581,7 +593,7 @@ a.photos-cue:hover { color: var(--ink); }
 .night + .night { margin-top: 64px; }
 .poster-feature {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 22px 16px;
   align-items: start;
 }
@@ -1075,6 +1087,14 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
   .nav.open a { padding: 12px 8px; }
   .hero, .pillars, .cards-2, .channels, .site-footer .wrap, .ticket, .split, .event-form-row {
     grid-template-columns: 1fr;
+  }
+  .ticket.has-poster { grid-template-columns: 1fr; }
+  .event-poster {
+    width: min(220px, 72%);
+    height: auto;
+    margin: 18px auto 0;
+    border-radius: 14px;
+    aspect-ratio: 11 / 17;
   }
   .collage {
     aspect-ratio: auto;
