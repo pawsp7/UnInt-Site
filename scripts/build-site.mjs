@@ -246,7 +246,22 @@ const copies = [
   ["site/assets/events/halt-restart/door.jpg", "assets/events/halt-restart/door.jpg"],
   ["site/assets/events/halt-restart/hailey.jpg", "assets/events/halt-restart/hailey.jpg"],
   ["site/assets/events/halt-restart/pierre.jpg", "assets/events/halt-restart/pierre.jpg"],
-  ["site/assets/events/halt-restart/models.jpg", "assets/events/halt-restart/models.jpg"]
+  ["site/assets/events/halt-restart/models.jpg", "assets/events/halt-restart/models.jpg"],
+  ["site/assets/events/unnatural-games/presents.png", "assets/events/unnatural-games/presents.png"],
+  ["site/assets/events/unnatural-games/scoreboard.png", "assets/events/unnatural-games/scoreboard.png"],
+  ["site/assets/events/unnatural-games/ticket.png", "assets/events/unnatural-games/ticket.png"],
+  ["site/assets/events/ai-agents/ink.png", "assets/events/ai-agents/ink.png"],
+  ["site/assets/events/ai-agents/paper.png", "assets/events/ai-agents/paper.png"],
+  ["site/assets/events/ai-agents/arcade.png", "assets/events/ai-agents/arcade.png"],
+  ["site/assets/events/ai-agents/toolkit.png", "assets/events/ai-agents/toolkit.png"],
+  ["site/assets/events/ai-agents/lime.png", "assets/events/ai-agents/lime.png"],
+  ["site/assets/events/ai-agents/nodes.png", "assets/events/ai-agents/nodes.png"],
+  ["site/assets/events/ai-agents/split.png", "assets/events/ai-agents/split.png"],
+  ["site/assets/events/ai-agents/bands.png", "assets/events/ai-agents/bands.png"],
+  ["site/assets/events/ai-agents/billboard.png", "assets/events/ai-agents/billboard.png"],
+  ["site/assets/events/ai-agents/monument.png", "assets/events/ai-agents/monument.png"],
+  ["site/assets/events/ai-agents/listings.png", "assets/events/ai-agents/listings.png"],
+  ["site/assets/events/ai-agents/versus.png", "assets/events/ai-agents/versus.png"]
 ];
 for (const [from, to] of copies) {
   const dest = join(out, to);
