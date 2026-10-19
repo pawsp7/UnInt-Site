@@ -66,6 +66,33 @@
     return rubric + posters + list;
   }
 
+  function listedTicket(event) {
+    const card = event.ticket || {};
+    const chips = (card.chips || []).map(function (chip) {
+      return '<span class="chip chip-ink">' + escapeHtml(chip) + "</span>";
+    }).join("");
+    const media = posterHref(event);
+    const rubric = event.href
+      ? '<a class="btn btn-small btn-lime" href="' + escapeHtml(event.href) + '" target="_blank" rel="noopener noreferrer">View on Rubric</a>'
+      : "";
+    return (
+      '<article class="ticket">' +
+      '<a class="ticket-link" href="' + media + '" aria-label="Posters for ' + escapeHtml(event.title) + '"></a>' +
+      '<div class="ticket-stub">' +
+      '<span class="kicker" style="color: var(--lime);">' + escapeHtml(card.kicker || "Club night") + "</span>" +
+      "<strong>" + stubBig(card.big) + "</strong>" +
+      "<span>" + escapeHtml(card.time || "") + "</span>" +
+      "</div>" +
+      '<div class="ticket-body">' +
+      '<p class="kicker" style="color: var(--wine);">' + escapeHtml(card.place || event.where) + "</p>" +
+      "<h3>" + escapeHtml(event.title) + "</h3>" +
+      "<p>" + escapeHtml(card.blurb || event.summary) + "</p>" +
+      '<div class="meta">' + chips + '<a class="photos-cue" href="' + media + '">Posters →</a></div>' +
+      (rubric ? '<div class="event-actions">' + rubric + "</div>" : "") +
+      "</div></article>"
+    );
+  }
+
   function row(event) {
     const when = escapeHtml(event.whenLabel) + (event.whenDetail ? "<br>" + escapeHtml(event.whenDetail) : "");
     const datetime = event.datetime ? ' datetime="' + escapeHtml(event.datetime) + '"' : "";
@@ -114,7 +141,9 @@
     if (!events.length) {
       return '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>';
     }
-    return '<div class="event-list">' + events.map(row).join("") + "</div>";
+    return '<div class="event-list">' + events.map(function (event) {
+      return posterHref(event) ? listedTicket(event) : row(event);
+    }).join("") + "</div>";
   }
 
   function personCard(member) {

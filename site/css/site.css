@@ -368,6 +368,25 @@ h3 { font-size: 22px; letter-spacing: -0.03em; line-height: 1.15; }
   overflow: hidden;
   position: relative;
 }
+.ticket-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.ticket-stub,
+.ticket-body { position: relative; z-index: 2; pointer-events: none; }
+.ticket .btn,
+.ticket a.photos-cue { pointer-events: auto; }
+.ticket:has(.ticket-link:hover),
+.ticket:has(.ticket-link:focus-visible) {
+  outline: 2px solid var(--lime);
+  outline-offset: 4px;
+}
+.ticket .btn-ghost {
+  color: var(--ink);
+  border-color: rgba(3, 2, 5, 0.28);
+}
+.ticket .btn-ghost:hover { color: var(--ink); border-color: var(--ink); }
 .ticket-stub {
   background: var(--ink);
   color: var(--paper);
@@ -451,7 +470,9 @@ a.past-event:focus-visible .ticket {
   text-transform: uppercase;
   color: var(--wine);
   align-self: center;
+  text-decoration: none;
 }
+a.photos-cue:hover { color: var(--ink); }
 
 .night { scroll-margin-top: calc(var(--header) + 18px); }
 .night > h2 { margin-top: 4px; }
@@ -479,6 +500,13 @@ a.past-event:focus-visible .ticket {
 }
 .shot.poster { grid-row: 1 / -1; }
 .shot.poster img { object-fit: contain; background: #0c0b10; }
+.collage.sheets {
+  aspect-ratio: auto;
+  grid-template-rows: none;
+  align-items: stretch;
+}
+.collage.sheets .shot.poster { grid-row: span 2; }
+.collage.sheets .shot img { object-fit: contain; background: #0c0b10; }
 .episode-poster {
   aspect-ratio: 11 / 17;
   margin-bottom: 16px;
@@ -487,21 +515,6 @@ a.past-event:focus-visible .ticket {
 .shot.wide { grid-column: 2 / -1; }
 .shot.door img { object-position: 18% center; }
 .night + .night { margin-top: 64px; }
-.poster-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px 16px;
-}
-.poster-grid figure { margin: 0; min-width: 0; }
-.poster-grid .episode-poster { margin-bottom: 0; }
-.poster-grid figcaption {
-  margin-top: 8px;
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
 .shot:hover,
 .shot:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
 
@@ -953,7 +966,7 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
 :focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
 
 @media (max-width: 980px) {
-  .hero, .pillars, .people, .cards-3, .poster-grid, .callout, .site-footer .wrap { grid-template-columns: 1fr 1fr; }
+  .hero, .pillars, .people, .cards-3, .callout, .site-footer .wrap { grid-template-columns: 1fr 1fr; }
   .people { grid-template-columns: 1fr 1fr; }
   .callout { grid-template-columns: 1fr; }
   .callout img { margin: 0; }
@@ -992,7 +1005,13 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
     aspect-ratio: 11 / 16;
   }
   .shot.wide { grid-column: 1 / -1; }
-  .poster-grid { grid-template-columns: 1fr; }
+  .collage.sheets { grid-template-columns: 1fr; }
+  .collage.sheets .shot,
+  .collage.sheets .shot.poster {
+    grid-row: auto;
+    grid-column: auto;
+    aspect-ratio: 11 / 17;
+  }
   .episode-poster { aspect-ratio: 11 / 17; }
   .hero { padding-top: 36px; }
   .hero-art { min-height: 0; }
