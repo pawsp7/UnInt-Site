@@ -514,6 +514,70 @@ a.photos-cue:hover { color: var(--ink); }
 .episode-poster img { object-fit: contain; background: #0c0b10; }
 .shot.wide { grid-column: 2 / -1; }
 .shot.door img { object-position: 18% center; }
+.shot.sheet img { object-fit: contain; background: #0c0b10; }
+.recap {
+  display: grid;
+  grid-template-columns: 1.15fr 2fr;
+  gap: 10px;
+  aspect-ratio: 1.72 / 1;
+}
+.recap > .shot.poster { grid-row: auto; min-height: 0; }
+.recap-side {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+.recap-view {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+.recap-view::-webkit-scrollbar { display: none; }
+.recap-page {
+  flex: 0 0 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1.15fr 1fr 1fr;
+  gap: 10px;
+  height: 100%;
+  scroll-snap-align: start;
+}
+.recap-page .wide { grid-column: 1 / -1; }
+.recap-page:not(:has(.wide)) { grid-template-rows: 1fr; }
+.recap-page:not(:has(.wide)):has(.shot:nth-child(3)) { grid-template-rows: 1fr 1fr; }
+.recap-page:not(:has(.wide)):has(.shot:nth-child(5)) { grid-template-rows: 1.15fr 1fr 1fr; }
+.recap-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(249, 249, 250, 0.35);
+  border-radius: 999px;
+  background: rgba(3, 2, 5, 0.82);
+  color: var(--paper);
+  font: 700 28px/1 var(--sans);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+.recap-prev { left: 10px; }
+.recap-next { right: 10px; }
+.recap-arrow:hover:not(:disabled),
+.recap-arrow:focus-visible {
+  background: var(--lime);
+  color: var(--ink);
+  border-color: var(--lime);
+}
+.recap-arrow[hidden] { display: none; }
+.recap-arrow:disabled { opacity: 0.35; cursor: default; }
 .night + .night { margin-top: 64px; }
 .shot:hover,
 .shot:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
@@ -1006,6 +1070,14 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
   }
   .shot.wide { grid-column: 1 / -1; }
   .collage.sheets { grid-template-columns: 1fr; }
+  .recap {
+    aspect-ratio: auto;
+    grid-template-columns: 1fr;
+  }
+  .recap > .shot.poster { aspect-ratio: 11 / 17; }
+  .recap .shot { aspect-ratio: auto; }
+  .recap-side { height: auto; }
+  .recap-view { aspect-ratio: 1.15 / 1; height: auto; }
   .collage.sheets .shot,
   .collage.sheets .shot.poster {
     grid-row: auto;
@@ -1025,5 +1097,6 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
 
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
+  .recap-view { scroll-behavior: auto; }
   html { scroll-behavior: auto; }
 }

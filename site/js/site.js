@@ -32,3 +32,30 @@
     img.removeAttribute("src");
   });
 })();
+
+(function () {
+  const frames = document.querySelectorAll("[data-recap]");
+  if (!frames.length) return;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  frames.forEach(function (frame) {
+    const view = frame.querySelector(".recap-view");
+    const pages = frame.querySelectorAll(".recap-page");
+    const prev = frame.querySelector(".recap-prev");
+    const next = frame.querySelector(".recap-next");
+    if (!view || !prev || !next || pages.length < 2) return;
+    prev.hidden = false;
+    next.hidden = false;
+    function update() {
+      const max = view.scrollWidth - view.clientWidth;
+      prev.disabled = view.scrollLeft <= 2;
+      next.disabled = view.scrollLeft >= max - 2;
+    }
+    function slide(direction) {
+      view.scrollBy({ left: direction * view.clientWidth, behavior: reduce ? "auto" : "smooth" });
+    }
+    prev.addEventListener("click", function () { slide(-1); });
+    next.addEventListener("click", function () { slide(1); });
+    view.addEventListener("scroll", update, { passive: true });
+    update();
+  });
+})();
