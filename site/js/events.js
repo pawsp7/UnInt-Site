@@ -22,13 +22,39 @@
       .replace(/&lt;br\s*\/?&gt;/gi, "<br>");
   }
 
+  function posterFor(event) {
+    const title = String(event.title || "").toLowerCase();
+    if (title.indexOf("ai agent") !== -1) {
+      return {
+        src: "/assets/events/ai-agents/ink.png",
+        width: 1651,
+        height: 2550,
+        alt: "AI Agents poster, Ink. Perceive, decide, act.",
+        href: "/media/#ai-agents"
+      };
+    }
+    return null;
+  }
+
+  function posterPreview(event) {
+    const poster = posterFor(event);
+    if (!poster) return "";
+    return (
+      '<a class="shot episode-poster event-poster" href="' + escapeHtml(poster.src) + '">' +
+      '<img src="' + escapeHtml(poster.src) + '" width="' + poster.width + '" height="' + poster.height + '" alt="' + escapeHtml(poster.alt) + '">' +
+      "</a>"
+    );
+  }
+
   function ticket(event) {
     const card = event.ticket || {};
     const chips = (card.chips || []).map(function (chip) {
       return '<span class="chip chip-ink">' + escapeHtml(chip) + "</span>";
     }).join("");
+    const poster = posterPreview(event);
     return (
-      '<article class="ticket">' +
+      '<article class="ticket' + (poster ? " has-poster" : "") + '">' +
+      poster +
       '<div class="ticket-stub">' +
       '<span class="kicker" style="color: var(--lime);">' + escapeHtml(card.kicker || "") + "</span>" +
       "<strong>" + stubBig(card.big) + "</strong>" +
@@ -45,9 +71,8 @@
   }
 
   function posterHref(event) {
-    const title = String(event.title || "").toLowerCase();
-    if (title.indexOf("ai agent") !== -1) return "/media/#ai-agents";
-    return "";
+    const poster = posterFor(event);
+    return poster ? poster.href : "";
   }
 
   function actions(event, withList) {
@@ -75,7 +100,8 @@
       ? '<a class="btn btn-small btn-lime" href="' + escapeHtml(event.href) + '" target="_blank" rel="noopener noreferrer">View on Rubric</a>'
       : "";
     return (
-      '<article class="ticket">' +
+      '<article class="ticket has-poster">' +
+      posterPreview(event) +
       '<a class="ticket-link" href="' + media + '" aria-label="Posters for ' + escapeHtml(event.title) + '"></a>' +
       '<div class="ticket-stub">' +
       '<span class="kicker" style="color: var(--lime);">' + escapeHtml(card.kicker || "Club night") + "</span>" +
