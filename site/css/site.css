@@ -515,6 +515,25 @@ a.photos-cue:hover { color: var(--ink); }
 .shot.wide { grid-column: 2 / -1; }
 .shot.door img { object-position: 18% center; }
 .night + .night { margin-top: 64px; }
+.poster-feature {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px 16px;
+  align-items: start;
+}
+.poster-feature figure { margin: 0; min-width: 0; }
+.poster-feature .episode-poster { margin-bottom: 12px; }
+.poster-feature figcaption { display: grid; gap: 4px; }
+.poster-feature figcaption a {
+  color: inherit;
+  text-decoration: none;
+  font-family: var(--display);
+  font-size: 22px;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+.poster-feature figcaption a:hover { color: var(--lime); }
+.poster-feature figcaption span { color: var(--muted); font-size: 14px; }
 .shot:hover,
 .shot:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
 
@@ -1005,6 +1024,7 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
     aspect-ratio: 11 / 16;
   }
   .shot.wide { grid-column: 1 / -1; }
+  .poster-feature,
   .collage.sheets { grid-template-columns: 1fr; }
   .collage.sheets .shot,
   .collage.sheets .shot.poster {
