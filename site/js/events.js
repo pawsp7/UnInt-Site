@@ -44,16 +44,26 @@
     );
   }
 
+  function posterHref(event) {
+    const title = String(event.title || "").toLowerCase();
+    if (title.indexOf("unnatural games") !== -1) return "/media/#unnatural-games";
+    if (title.indexOf("ai agent") !== -1) return "/media/#ai-agents";
+    return "";
+  }
+
   function actions(event, withList) {
     const label = /hellorubric\.com/i.test(event.href || "") ? "View on Rubric" : "Details";
     const rubric = event.href
       ? '<a class="btn btn-small btn-lime" href="' + escapeHtml(event.href) + '" target="_blank" rel="noopener noreferrer">' + label + "</a>"
       : "";
+    const posters = posterHref(event)
+      ? '<a class="btn btn-small btn-ghost" href="' + posterHref(event) + '">Posters</a>'
+      : "";
     const list = withList
       ? '<a class="btn btn-small btn-ghost" href="/events/">All events</a>'
       : "";
-    if (!rubric && !list) return "";
-    return rubric + list;
+    if (!rubric && !posters && !list) return "";
+    return rubric + posters + list;
   }
 
   function row(event) {
@@ -66,7 +76,7 @@
       "<div><h3>" + escapeHtml(event.title) + "</h3>" +
       '<p class="where">' + escapeHtml(event.where) + "</p>" +
       "<p>" + escapeHtml(event.summary) + "</p>" +
-      (event.href ? '<div class="event-actions">' + actions(event, false) + "</div>" : "") +
+      (event.href || posterHref(event) ? '<div class="event-actions">' + actions(event, false) + "</div>" : "") +
       "</div>" +
       '<span class="chip chip-' + tone + '">' + escapeHtml(event.status) + "</span>" +
       "</article>"
