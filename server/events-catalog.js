@@ -4,26 +4,6 @@
  */
 module.exports = [
   {
-    id: "fall-showcase",
-    title: "Clubs Fall Showcase",
-    whenLabel: "13–14 Oct 2026",
-    whenDetail: "11:00–2:00",
-    datetime: "2026-10-13",
-    where: "Stan Grad Atrium · setup from 10:30 both days",
-    summary: "Saitsa’s fall clubs expo. Our table is the easiest place to meet the execs, hear what the semester actually looks like, and join. Bring a friend from another program.",
-    status: "Confirmed",
-    tone: "lime",
-    past: false,
-    ticket: {
-      kicker: "Showcase",
-      big: "13–14<br>Oct",
-      time: "11:00–2:00",
-      place: "Confirmed · Stan Grad Atrium",
-      blurb: "Two days at the Saitsa clubs expo. Come say hello, try a one-minute demo, and join if the room feels like yours. Open to every SAIT student.",
-      chips: ["Free", "All programs", "No experience needed"]
-    }
-  },
-  {
     id: "ai-agents",
     title: "Atelier: AI Agents",
     whenLabel: "Late October 2026",

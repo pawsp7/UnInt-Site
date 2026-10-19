@@ -246,6 +246,12 @@ function publicEvent(event) {
   return copy;
 }
 
+function isClubExpo(event) {
+  const title = String(event.title || "").toLowerCase();
+  const id = String(event.id || "").toLowerCase();
+  return id === "fall-showcase" || title.includes("club expo") || title.includes("clubs expo") || title.includes("fall showcase");
+}
+
 function byWhen(left, right) {
   const a = left.datetime || "9999-99-99";
   const b = right.datetime || "9999-99-99";
@@ -265,8 +271,8 @@ async function listPublic() {
   const upcoming = [
     ...fromRubric.events,
     ...local.filter((event) => !event.past && !rubricTitles.has(event.title.toLowerCase()))
-  ].sort(byWhen);
-  const past = local.filter((event) => event.past).sort(byWhen);
+  ].filter((event) => !isClubExpo(event)).sort(byWhen);
+  const past = local.filter((event) => event.past && !isClubExpo(event)).sort(byWhen);
   return { events: [...upcoming, ...past], rubricOk: fromRubric.ok };
 }
 
