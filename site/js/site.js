@@ -31,16 +31,18 @@
   });
 })();
 
-(function () {
-  const frames = document.querySelectorAll("[data-recap]");
+window.initRecaps = function (root) {
+  const frames = (root || document).querySelectorAll("[data-recap]");
   if (!frames.length) return;
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   frames.forEach(function (frame) {
+    if (frame.getAttribute("data-recap-ready") === "true") return;
     const view = frame.querySelector(".recap-view");
     const pages = frame.querySelectorAll(".recap-page");
     const prev = frame.querySelector(".recap-prev");
     const next = frame.querySelector(".recap-next");
     if (!view || !prev || !next || pages.length < 2) return;
+    frame.setAttribute("data-recap-ready", "true");
     prev.hidden = false;
     next.hidden = false;
     function update() {
@@ -56,4 +58,5 @@
     view.addEventListener("scroll", update, { passive: true });
     update();
   });
-})();
+};
+window.initRecaps();

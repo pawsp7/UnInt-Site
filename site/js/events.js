@@ -75,6 +75,89 @@
     return poster ? poster.href : "";
   }
 
+  function shot(image) {
+    const lazy = image.lazy ? " loading=\"lazy\"" : "";
+    const klass = image.className ? " " + image.className : "";
+    return (
+      '<a class="shot' + klass + '" href="' + escapeHtml(image.src) + '">' +
+      '<img src="' + escapeHtml(image.src) + '" width="' + image.width + '" height="' + image.height + '" alt="' + escapeHtml(image.alt) + '"' + lazy + ">" +
+      "</a>"
+    );
+  }
+
+  const recaps = {
+    "halt-restart": {
+      label: "Pictures from Halt & Restart",
+      poster: {
+        className: "poster",
+        src: "/assets/events/halt-restart/poster.png",
+        width: 2200,
+        height: 3400,
+        alt: "Halt & Restart poster. Friday 18 September, 4:00–7:00 PM, Heritage Hall AA128."
+      },
+      pages: [[
+        { className: "wide", src: "/assets/events/halt-restart/group.jpg", width: 1800, height: 1197, alt: "The room at Halt & Restart, in jellyfish hats, with the laptop and the task sheets." },
+        { src: "/assets/events/halt-restart/hailey.jpg", width: 1800, height: 1195, alt: "Hailey at the whiteboard during Halt & Restart." },
+        { src: "/assets/events/halt-restart/pierre.jpg", width: 1800, height: 1195, alt: "Pierre in a jellyfish hat during Halt & Restart." },
+        { src: "/assets/events/halt-restart/models.jpg", width: 1800, height: 1195, alt: "The models in jellyfish hats, mid-task at the table." },
+        { className: "door", src: "/assets/events/halt-restart/door.jpg", width: 1800, height: 1197, alt: "A jellyfish hat on the door of classroom AA128." }
+      ]]
+    },
+    "ai-agents": {
+      label: "AI Agents sheets",
+      poster: {
+        className: "poster",
+        src: "/assets/events/ai-agents/ink.png",
+        width: 1651,
+        height: 2550,
+        alt: "AI Agents poster, Ink. Perceive, decide, act."
+      },
+      pages: [
+        [
+          { className: "sheet", src: "/assets/events/ai-agents/paper.png", width: 1651, height: 2550, alt: "AI Agents poster, Paper." },
+          { className: "sheet", src: "/assets/events/ai-agents/arcade.png", width: 1651, height: 2550, alt: "AI Agents poster, Arcade." },
+          { className: "sheet", src: "/assets/events/ai-agents/toolkit.png", width: 1651, height: 2550, alt: "AI Agents poster, Toolkit. Chatbot versus agent." },
+          { className: "sheet", src: "/assets/events/ai-agents/lime.png", width: 1651, height: 2550, alt: "AI Agents poster, Lime. What, how, and use." },
+          { className: "sheet", src: "/assets/events/ai-agents/nodes.png", width: 1651, height: 2550, alt: "AI Agents poster, Nodes. Perceive, decide, act." },
+          { className: "sheet", src: "/assets/events/ai-agents/split.png", width: 1651, height: 2550, alt: "AI Agents poster, Split." }
+        ],
+        [
+          { className: "sheet", src: "/assets/events/ai-agents/bands.png", width: 1651, height: 2550, alt: "AI Agents poster, Bands. What, how, and use.", lazy: true },
+          { className: "sheet", src: "/assets/events/ai-agents/billboard.png", width: 1650, height: 2550, alt: "AI Agents poster, Billboard.", lazy: true },
+          { className: "sheet", src: "/assets/events/ai-agents/monument.png", width: 1651, height: 2550, alt: "AI Agents poster, Monument.", lazy: true },
+          { className: "sheet", src: "/assets/events/ai-agents/listings.png", width: 1651, height: 2550, alt: "AI Agents poster, Listings. Studying, a resume, and a project.", lazy: true },
+          { className: "sheet", src: "/assets/events/ai-agents/versus.png", width: 1651, height: 2550, alt: "AI Agents poster, Versus. Chatbots answer. Agents act.", lazy: true }
+        ]
+      ]
+    }
+  };
+
+  function recapKey(event) {
+    const id = String(event.id || "").toLowerCase();
+    const title = String(event.title || "").toLowerCase();
+    if (id === "halt-restart" || (title.indexOf("halt") !== -1 && title.indexOf("restart") !== -1)) return "halt-restart";
+    if (id === "ai-agents" || title.indexOf("ai agent") !== -1) return "ai-agents";
+    return "";
+  }
+
+  function recapHtml(event) {
+    const recap = recaps[recapKey(event)];
+    if (!recap) return "";
+    const pages = recap.pages.map(function (page) {
+      return '<div class="recap-page">' + page.map(shot).join("") + "</div>";
+    }).join("");
+    const hidden = recap.pages.length > 1 ? "" : " hidden";
+    return (
+      '<div class="event-recap">' +
+      '<div class="recap" data-recap aria-label="' + escapeHtml(recap.label) + '">' +
+      shot(recap.poster) +
+      '<div class="recap-side"><div class="recap-view">' + pages + "</div>" +
+      '<button type="button" class="recap-arrow recap-prev" aria-label="Previous pictures"' + hidden + ">‹</button>" +
+      '<button type="button" class="recap-arrow recap-next" aria-label="Next pictures"' + hidden + ">›</button>" +
+      "</div></div></div>"
+    );
+  }
+
   function actions(event, withList) {
     const label = /hellorubric\.com/i.test(event.href || "") ? "View on Rubric" : "Details";
     const rubric = event.href
@@ -157,9 +240,10 @@
       '<div class="meta">' + chips + (event.custom ? "" : '<span class="photos-cue">Photos →</span>') + "</div>" +
       "</div></article>"
     );
-    if (event.custom) return head + article;
-    const href = "/media/#" + encodeURIComponent(event.id || "");
-    return '<a class="past-event" href="' + escapeHtml(href) + '">' + head + article + "</a>";
+    const linked = event.custom
+      ? head + article
+      : '<a class="past-event" href="' + escapeHtml("/media/#" + encodeURIComponent(event.id || "")) + '">' + head + article + "</a>";
+    return '<div class="past-night">' + linked + recapHtml(event) + "</div>";
   }
 
   function renderUpcoming(events) {
@@ -167,7 +251,8 @@
       return '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>';
     }
     return '<div class="event-list">' + events.map(function (event) {
-      return posterHref(event) ? listedTicket(event) : row(event);
+      const card = posterHref(event) ? listedTicket(event) : row(event);
+      return card + recapHtml(event);
     }).join("") + "</div>";
   }
 
@@ -227,6 +312,7 @@
       }
       if (list) list.innerHTML = upcoming.length || !unavailable ? renderUpcoming(upcoming) : unavailable;
       if (pastSlot && past.length) pastSlot.innerHTML = renderPast(past);
+      if (window.initRecaps) window.initRecaps();
       if (teamSlots.length) {
         const team = data.team || [];
         fillSlots(teamSlots, team.length
