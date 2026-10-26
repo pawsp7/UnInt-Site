@@ -241,6 +241,7 @@ const copies = [
   ["Events/Podcast/Podcast Poster E03 Human Finish (11x17).png", "assets/podcast/e03.png"],
   ["Branding/SaitsaStudentClubsPrimaryLogo.svg", "assets/saitsa.svg"],
   ["Branding/Vector Kit/png/social/og-1200x630.png", "assets/og.png"],
+  // Photographs published below are the web copies of Events/Halt-Restart/recap/.
   ["site/assets/events/halt-restart/poster.png", "assets/events/halt-restart/poster.png"],
   ["site/assets/events/halt-restart/group.jpg", "assets/events/halt-restart/group.jpg"],
   ["site/assets/events/halt-restart/door.jpg", "assets/events/halt-restart/door.jpg"],

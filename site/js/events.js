@@ -135,6 +135,42 @@
     );
   }
 
+  function shotLink(shot, extraClass) {
+    const classes = ["shot"].concat(extraClass || []).join(" ");
+    return (
+      '<a class="' + classes + '" href="' + escapeHtml(shot.src) + '">' +
+      '<img src="' + escapeHtml(shot.src) + '" width="' + Number(shot.width) + '" height="' + Number(shot.height) + '" alt="' + escapeHtml(shot.alt || "") + '">' +
+      "</a>"
+    );
+  }
+
+  function recapFrame(event) {
+    const poster = event.poster;
+    const shots = event.recap || [];
+    if (!poster || !shots.length) return "";
+    const pages = [];
+    for (let index = 0; index < shots.length; index += 5) pages.push(shots.slice(index, index + 5));
+    return (
+      '<div class="recap past-recap" data-recap>' +
+      shotLink(poster, ["poster"]) +
+      '<div class="recap-side"><div class="recap-view">' +
+      pages.map(function (page) {
+        return '<div class="recap-page">' + page.map(function (shot) {
+          const extra = [];
+          if (shot.wide) extra.push("wide");
+          if (shot.door) extra.push("door");
+          return shotLink(shot, extra);
+        }).join("") + "</div>";
+      }).join("") +
+      "</div>" +
+      (pages.length > 1
+        ? '<button type="button" class="recap-arrow recap-prev" aria-label="Previous pictures" hidden>‹</button>' +
+          '<button type="button" class="recap-arrow recap-next" aria-label="Next pictures" hidden>›</button>'
+        : "") +
+      "</div></div>"
+    );
+  }
+
   function pastBlock(event, heading) {
     const card = event.ticket || {};
     const chips = (card.chips || []).map(function (chip) {
@@ -143,6 +179,7 @@
     const head = heading
       ? '<div class="section-head"><p class="kicker">Already ran</p><h2>' + escapeHtml(event.title) + ".</h2></div>"
       : '<div class="section-head" style="margin-top:36px"><h2>' + escapeHtml(event.title) + ".</h2></div>";
+    const frame = recapFrame(event);
     const article = (
       '<article class="ticket">' +
       '<div class="ticket-stub">' +
@@ -154,12 +191,13 @@
       '<p class="kicker" style="color: var(--wine);">' + escapeHtml(card.place || event.where) + "</p>" +
       "<h3>" + escapeHtml(event.title) + "</h3>" +
       "<p>" + escapeHtml(card.blurb || event.summary) + "</p>" +
-      '<div class="meta">' + chips + (event.custom ? "" : '<span class="photos-cue">Photos →</span>') + "</div>" +
+      '<div class="meta">' + chips + (event.custom || frame ? "" : '<span class="photos-cue">Photos →</span>') + "</div>" +
       "</div></article>"
     );
     if (event.custom) return head + article;
     const href = "/media/#" + encodeURIComponent(event.id || "");
-    return '<a class="past-event" href="' + escapeHtml(href) + '">' + head + article + "</a>";
+    const ticketLink = '<a class="past-event" href="' + escapeHtml(href) + '">' + (frame ? "" : head) + article + "</a>";
+    return frame ? head + frame + ticketLink : ticketLink;
   }
 
   function renderUpcoming(events) {
