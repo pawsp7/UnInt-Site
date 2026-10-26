@@ -127,18 +127,75 @@ img { max-width: 100%; display: block; }
   position: sticky;
   top: 0;
   z-index: 10;
-  height: var(--header);
+  height: auto;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   border-bottom: 1px solid var(--line);
   background: rgba(3, 2, 5, 0.82);
   backdrop-filter: blur(16px);
 }
 
-.site-header .wrap {
+.site-header > .wrap {
   display: flex;
   align-items: center;
   gap: 28px;
+  min-height: 76px;
+}
+
+.week-events { border-top: 1px solid var(--line); }
+.week-events[hidden] { display: none; }
+.week-events .wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 0;
+  padding-block: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.week-events .wrap::-webkit-scrollbar { display: none; }
+.week-kicker {
+  flex: none;
+  margin: 0;
+  color: var(--lime);
+}
+.week-events a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  flex: none;
+  text-decoration: none;
+  color: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 12px;
+  background: rgba(186, 248, 55, 0.08);
+}
+.week-events a:hover,
+.week-events a:focus-visible {
+  border-color: var(--lime);
+  color: var(--lime);
+}
+.week-events time {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--lime);
+}
+.week-events strong {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.03em;
+}
+.week-events em {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .brand {
@@ -1085,6 +1142,16 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
     margin: 0;
   }
   .nav.open a { padding: 12px 8px; }
+  .week-events .wrap { flex-wrap: wrap; align-items: center; }
+  .week-events a {
+    flex: 1 1 12rem;
+    min-width: 0;
+    max-width: 100%;
+    flex-wrap: wrap;
+    border-radius: 16px;
+    white-space: normal;
+  }
+  .week-events strong { flex: 1 1 8rem; min-width: 0; }
   .hero, .pillars, .cards-2, .channels, .site-footer .wrap, .ticket, .split, .event-form-row {
     grid-template-columns: 1fr;
   }
