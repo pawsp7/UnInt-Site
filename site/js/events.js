@@ -225,7 +225,7 @@
     }).join("");
     const head = heading
       ? '<div class="section-head"><p class="kicker">Already ran</p><h2>' + escapeHtml(event.title) + ".</h2></div>"
-      : '<div class="section-head" style="margin-top:36px"><h2>' + escapeHtml(event.title) + ".</h2></div>";
+      : '<div class="section-head"><h2>' + escapeHtml(event.title) + ".</h2></div>";
     const article = (
       '<article class="ticket">' +
       '<div class="ticket-stub">' +
@@ -251,8 +251,7 @@
       return '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>';
     }
     return '<div class="event-list">' + events.map(function (event) {
-      const card = posterHref(event) ? listedTicket(event) : row(event);
-      return card + recapHtml(event);
+      return posterHref(event) ? listedTicket(event) : row(event);
     }).join("") + "</div>";
   }
 
@@ -287,8 +286,31 @@
     slots.forEach(function (slot) { slot.innerHTML = html; });
   }
 
+  function agentsNight() {
+    return {
+      id: "ai-agents",
+      title: "AI Agents",
+      datetime: "2026-10-28",
+      where: "MB202, Stan Grad Centre",
+      summary: "What an agent is, how the loop works, and using one on a real task.",
+      ticket: {
+        kicker: "Workshop",
+        big: "28<br>Oct",
+        time: "6:00–8:30 PM",
+        place: "MB202, Stan Grad Centre",
+        blurb: "What an agent is, how the loop works, and using one on a real task.",
+        chips: ["Past", "All programs"]
+      }
+    };
+  }
+
   function renderPast(events) {
-    return events.map(function (event, index) {
+    const nights = events.slice();
+    if (!nights.some(function (event) { return recapKey(event) === "ai-agents"; })) nights.push(agentsNight());
+    nights.sort(function (left, right) {
+      return String(left.datetime || "").localeCompare(String(right.datetime || ""));
+    });
+    return nights.map(function (event, index) {
       return pastBlock(event, index === 0);
     }).join("");
   }
@@ -311,7 +333,7 @@
           : (unavailable || '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>');
       }
       if (list) list.innerHTML = upcoming.length || !unavailable ? renderUpcoming(upcoming) : unavailable;
-      if (pastSlot && past.length) pastSlot.innerHTML = renderPast(past);
+      if (pastSlot) pastSlot.innerHTML = renderPast(past);
       if (window.initRecaps) window.initRecaps();
       if (teamSlots.length) {
         const team = data.team || [];
