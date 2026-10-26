@@ -81,6 +81,46 @@ module.exports = [
       place: "Heritage Hall AA128 · SECC-approved",
       blurb: "A live prompting lab. Write it tight. If the model drifts, halt and restart.",
       chips: ["Past", "All students"]
-    }
+    },
+    poster: {
+      src: "/assets/events/halt-restart/poster.png",
+      width: 2200,
+      height: 3400,
+      alt: "Halt & Restart poster. Friday 18 September, 4:00–7:00 PM, Heritage Hall AA128."
+    },
+    recap: [
+      {
+        src: "/assets/events/halt-restart/group.jpg",
+        width: 1800,
+        height: 1197,
+        alt: "The room at Halt & Restart, in jellyfish hats, with the laptop and the task sheets.",
+        wide: true
+      },
+      {
+        src: "/assets/events/halt-restart/hailey.jpg",
+        width: 1800,
+        height: 1195,
+        alt: "Hailey at the whiteboard during Halt & Restart."
+      },
+      {
+        src: "/assets/events/halt-restart/pierre.jpg",
+        width: 1800,
+        height: 1195,
+        alt: "Pierre in a jellyfish hat during Halt & Restart."
+      },
+      {
+        src: "/assets/events/halt-restart/models.jpg",
+        width: 1800,
+        height: 1195,
+        alt: "The models in jellyfish hats, mid-task at the table."
+      },
+      {
+        src: "/assets/events/halt-restart/door.jpg",
+        width: 1800,
+        height: 1197,
+        alt: "A jellyfish hat on the door of classroom AA128.",
+        door: true
+      }
+    ]
   }
 ];

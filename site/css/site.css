@@ -465,6 +465,7 @@ h3 { font-size: 22px; letter-spacing: -0.03em; line-height: 1.15; }
 .event > .chip { justify-self: start; align-self: start; }
 .event-actions { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
 
+.past-recap { margin: 0 0 18px; }
 a.past-event {
   display: block;
   text-decoration: none;
