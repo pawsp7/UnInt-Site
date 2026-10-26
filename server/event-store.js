@@ -253,9 +253,8 @@ function isClubExpo(event) {
 }
 
 function hiddenForNow(event) {
-  const title = String(event.title || "").toLowerCase();
-  const id = String(event.id || "").toLowerCase();
-  return id === "unnatural-games" || title.includes("unnatural games");
+  // The catalog row is an undated proposal. The booked Monday nights come from Rubric.
+  return String(event.id || "").toLowerCase() === "unnatural-games";
 }
 
 function byWhen(left, right) {

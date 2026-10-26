@@ -22,6 +22,10 @@
       .replace(/&lt;br\s*\/?&gt;/gi, "<br>");
   }
 
+  function isWeeklyGame(event) {
+    return String(event.title || "").toLowerCase().indexOf("unnatural games") !== -1;
+  }
+
   function posterFor(event) {
     const title = String(event.title || "").toLowerCase();
     if (title.indexOf("ai agent") !== -1) {
@@ -221,8 +225,9 @@
         ? '<p class="empty-state">Rubric could not be loaded. Refresh in a moment.</p>'
         : "";
       if (next) {
-        next.innerHTML = upcoming.length
-          ? ticket(upcoming[0])
+        const featured = upcoming.find(function (event) { return !isWeeklyGame(event); }) || upcoming[0];
+        next.innerHTML = featured
+          ? ticket(featured)
           : (unavailable || '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>');
       }
       if (list) list.innerHTML = upcoming.length || !unavailable ? renderUpcoming(upcoming) : unavailable;

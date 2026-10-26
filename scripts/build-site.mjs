@@ -19,7 +19,7 @@ const pages = [
     dest: "events/index.html",
     page: "events",
     title: "Events — Unnatural Intelligence",
-    description: "Workshops, labs, and campus nights from the club Rubric page. Earlier nights stay listed."
+    description: "Workshops, labs, and weekly game nights from the club Rubric page. Earlier nights stay listed."
   },
   {
     file: "media.html",
