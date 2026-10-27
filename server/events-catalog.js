@@ -26,19 +26,19 @@ module.exports = [
   {
     id: "unnatural-games",
     title: "Unnatural Games",
-    whenLabel: "Mondays · proposed",
+    whenLabel: "Mondays",
     whenDetail: "6:00–8:00 PM",
     datetime: "",
-    where: "SAIT campus · room TBA",
-    summary: "One chessboard. One language model. The room plays as a single team: debate the move, vote, then hear the model explain itself. Bragging rights only. Free, on campus, no alcohol. Each night needs its own approval, so “Mondays” is the slot we are asking for, not a locked series.",
-    status: "Proposed",
-    tone: "ghost",
+    where: "MB224",
+    summary: "One chessboard. One language model. The room plays as a single team: debate the move, vote, then hear the model explain itself. Bragging rights only. Free, on campus, no alcohol.",
+    status: "Game night",
+    tone: "lime",
     past: false,
     ticket: {
       kicker: "Game night",
       big: "Mon<br>6–8",
-      time: "Proposed",
-      place: "Proposed · room TBA",
+      time: "6:00–8:00 PM",
+      place: "Mondays · MB224",
       blurb: "The room plays one side. The model plays the other. Bragging rights only.",
       chips: ["Free", "No alcohol"]
     }

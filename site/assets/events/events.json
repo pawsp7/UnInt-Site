@@ -25,6 +25,18 @@
       }
     },
     {
+      "id": "unnatural-games",
+      "match": ["unnatural games"],
+      "poster": {
+        "className": "poster",
+        "src": "/assets/events/unnatural-games/presents.png",
+        "width": 1210,
+        "height": 1870,
+        "alt": "Unnatural Games poster, Presents. Mondays, 6:00–8:00 PM. One board, one language model, one room.",
+        "href": "/media/#unnatural-games"
+      }
+    },
+    {
       "id": "ai-agents",
       "match": ["ai agent"],
       "poster": {

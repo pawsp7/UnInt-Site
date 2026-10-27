@@ -252,12 +252,6 @@ function isClubExpo(event) {
   return id === "fall-showcase" || title.includes("club expo") || title.includes("clubs expo") || title.includes("fall showcase");
 }
 
-function hiddenForNow(event) {
-  const title = String(event.title || "").toLowerCase();
-  const id = String(event.id || "").toLowerCase();
-  return id === "unnatural-games" || title.includes("unnatural games");
-}
-
 function byWhen(left, right) {
   const a = left.datetime || "9999-99-99";
   const b = right.datetime || "9999-99-99";
@@ -266,7 +260,7 @@ function byWhen(left, right) {
 
 async function listAll() {
   const { record } = await currentRecord();
-  return decorate(record).filter((event) => !hiddenForNow(event));
+  return decorate(record);
 }
 
 async function listPublic() {
@@ -277,8 +271,8 @@ async function listPublic() {
   const upcoming = [
     ...fromRubric.events,
     ...local.filter((event) => !event.past && !rubricTitles.has(event.title.toLowerCase()))
-  ].filter((event) => !isClubExpo(event) && !hiddenForNow(event)).sort(byWhen);
-  const past = local.filter((event) => event.past && !isClubExpo(event) && !hiddenForNow(event)).sort(byWhen);
+  ].filter((event) => !isClubExpo(event)).sort(byWhen);
+  const past = local.filter((event) => event.past && !isClubExpo(event)).sort(byWhen);
   return { events: [...upcoming, ...past], rubricOk: fromRubric.ok };
 }
 

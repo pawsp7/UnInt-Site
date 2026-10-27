@@ -255,6 +255,45 @@
     }).join("");
   }
 
+  function isUnnaturalGames(event) {
+    const id = String(event.id || "").toLowerCase();
+    const title = String(event.title || "").toLowerCase();
+    return id === "unnatural-games" || title.indexOf("unnatural games") !== -1;
+  }
+
+  function seriesKey(event) {
+    if (isUnnaturalGames(event)) return "unnatural-games";
+    return String(event.title || "").toLowerCase();
+  }
+
+  function uniqueSoonest(events) {
+    const seen = {};
+    const out = [];
+    events.forEach(function (event) {
+      const key = seriesKey(event);
+      if (seen[key]) return;
+      seen[key] = true;
+      out.push(event);
+    });
+    return out;
+  }
+
+  function homeUpcoming(events, limit) {
+    const unique = uniqueSoonest(events);
+    const featured = [];
+    const rest = [];
+    unique.forEach(function (event) {
+      if (isUnnaturalGames(event)) featured.push(event);
+      else rest.push(event);
+    });
+    const slots = Math.max(0, limit - featured.length);
+    return rest.slice(0, slots).concat(featured).sort(function (left, right) {
+      const a = left.datetime || "9999-99-99";
+      const b = right.datetime || "9999-99-99";
+      return a.localeCompare(b);
+    }).slice(0, limit);
+  }
+
   function paint(data) {
       const events = data.events || [];
       const upcoming = events.filter(function (event) { return !event.past; });
@@ -263,8 +302,9 @@
         ? '<p class="empty-state">Rubric could not be loaded. Refresh in a moment.</p>'
         : "";
       if (next) {
-        next.innerHTML = upcoming.length
-          ? ticket(upcoming[0])
+        const shown = homeUpcoming(upcoming, 3);
+        next.innerHTML = shown.length
+          ? shown.map(ticket).join("")
           : (unavailable || '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>');
       }
       if (list) list.innerHTML = upcoming.length || !unavailable ? renderUpcoming(upcoming) : unavailable;
