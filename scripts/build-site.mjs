@@ -1,10 +1,7 @@
-import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-import { optimizeImage, writeJson } from "./event-media.mjs";
-import { featuredHtml, inject, loadEvents, mediaHtml, pastHtml, publicEvent, splitEvents, upcomingHtml } from "./events-lib.mjs";
-import { optimizeEventTree } from "./optimize-event-images.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const out = join(root, "docs");
@@ -103,27 +100,8 @@ const nav = [
   ["connect", "Connect", "/connect/"]
 ];
 
-optimizeEventTree(root);
-const clubEvents = loadEvents(root);
-const eventGroups = splitEvents(clubEvents);
-
-function contentFor(page) {
-  let body = readFileSync(join(root, "site/content", page.file), "utf8");
-  if (page.file === "events.html") {
-    body = inject(body, "upcoming", upcomingHtml(eventGroups.upcoming));
-    body = inject(body, "past", pastHtml(eventGroups.past));
-  }
-  if (page.file === "media.html") {
-    body = inject(body, "nights", mediaHtml(eventGroups.media));
-  }
-  if (page.file === "home.html") {
-    body = inject(body, "featured", featuredHtml(eventGroups.featured));
-  }
-  return body;
-}
-
 function layout(page) {
-  const body = contentFor(page);
+  const body = readFileSync(join(root, "site/content", page.file), "utf8");
   const links = nav
     .map(([id, label, href]) => {
       const current = page.page === id ? ' aria-current="page"' : "";
@@ -264,25 +242,12 @@ const copies = [
   ["Branding/SaitsaStudentClubsPrimaryLogo.svg", "assets/saitsa.svg"],
   ["Branding/Vector Kit/png/social/og-1200x630.png", "assets/og.png"]
 ];
-
-for (const event of clubEvents) {
-  const destRoot = join(out, "assets/events", event.id);
-  if (event.posterFile && existsSync(join(event.dir, event.posterFile))) {
-    optimizeImage(join(event.dir, event.posterFile), join(destRoot, event.posterFile), { kind: "poster" });
-  }
-  for (const file of event.recapFiles) {
-    optimizeImage(join(event.dir, "recap", file), join(destRoot, "recap", file), { kind: "photo" });
-  }
-  for (const file of event.posterFiles) {
-    optimizeImage(join(event.dir, "posters", file), join(destRoot, "posters", file), { kind: "poster" });
-  }
-}
-writeJson(join(out, "events/data.json"), { events: clubEvents.map(publicEvent) });
 for (const [from, to] of copies) {
   const dest = join(out, to);
   mkdirSync(dirname(dest), { recursive: true });
   cpSync(join(root, from), dest);
 }
+cpSync(join(root, "site/assets/events"), join(out, "assets/events"), { recursive: true });
 cpSync(join(root, "site/css"), join(out, "css"), { recursive: true });
 cpSync(join(root, "site/js"), join(out, "js"), { recursive: true });
 

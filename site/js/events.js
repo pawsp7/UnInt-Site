@@ -22,41 +22,27 @@
       .replace(/&lt;br\s*\/?&gt;/gi, "<br>");
   }
 
-  function mediaById(catalog) {
-    const map = {};
-    (catalog || []).forEach(function (event) {
-      if (event && event.id) map[event.id] = event;
-    });
-    return map;
-  }
+  let mediaItems = [];
 
-  function matchMedia(event, catalog) {
-    if (!event) return null;
-    const map = mediaById(catalog);
-    if (event.id && map[event.id]) return map[event.id];
+  function mediaFor(event) {
+    const id = String(event.id || "").toLowerCase();
     const title = String(event.title || "").toLowerCase();
-    for (let i = 0; i < (catalog || []).length; i += 1) {
-      const item = catalog[i];
-      const name = String(item.title || "").toLowerCase();
-      if (!name) continue;
-      if (title === name || title.indexOf(name) !== -1 || name.indexOf(title) !== -1) return item;
+    for (let i = 0; i < mediaItems.length; i += 1) {
+      const item = mediaItems[i];
+      if (item.id === id) return item;
+      const parts = item.match || [];
+      if (parts.length && parts.every(function (part) { return title.indexOf(part) !== -1; })) return item;
     }
     return null;
   }
 
-  function shot(image) {
-    if (!image) return "";
-    const lazy = image.lazy ? " loading=\"lazy\"" : "";
-    const klass = image.className ? " " + image.className : "";
-    return (
-      '<a class="shot' + klass + '" href="' + escapeHtml(image.src) + '">' +
-      '<img src="' + escapeHtml(image.src) + '" width="' + image.width + '" height="' + image.height + '" alt="' + escapeHtml(image.alt) + '"' + lazy + ">" +
-      "</a>"
-    );
+  function posterFor(event) {
+    const item = mediaFor(event);
+    return item && item.poster ? item.poster : null;
   }
 
-  function posterPreview(event, media) {
-    const poster = (media && media.poster) || event.poster;
+  function posterPreview(event) {
+    const poster = posterFor(event);
     if (!poster) return "";
     return (
       '<a class="shot episode-poster event-poster" href="' + escapeHtml(poster.src) + '">' +
@@ -65,42 +51,12 @@
     );
   }
 
-  function recapHtml(media) {
-    if (!media || !media.recap || !media.poster) return "";
-    const pages = (media.recap.pages || []).map(function (page) {
-      return '<div class="recap-page">' + page.map(shot).join("") + "</div>";
-    }).join("");
-    const hidden = (media.recap.pages || []).length > 1 ? "" : " hidden";
-    return (
-      '<div class="event-recap">' +
-      '<div class="recap" data-recap aria-label="' + escapeHtml(media.recap.label) + '">' +
-      shot(media.poster) +
-      '<div class="recap-side"><div class="recap-view">' + pages + "</div>" +
-      '<button type="button" class="recap-arrow recap-prev" aria-label="Previous pictures"' + hidden + ">‹</button>" +
-      '<button type="button" class="recap-arrow recap-next" aria-label="Next pictures"' + hidden + ">›</button>" +
-      "</div></div></div>"
-    );
-  }
-
-  function actions(event, media, withList) {
-    const label = /hellorubric\.com/i.test(event.href || "") ? "View on Rubric" : "Details";
-    const rubric = event.href
-      ? '<a class="btn btn-small btn-lime" href="' + escapeHtml(event.href) + '" target="_blank" rel="noopener noreferrer">' + label + "</a>"
-      : "";
-    const posters = media && media.poster
-      ? '<a class="btn btn-small btn-ghost" href="/media/#' + encodeURIComponent(media.id) + '">Posters</a>'
-      : "";
-    const listLink = withList ? '<a class="btn btn-small btn-ghost" href="/events/">All events</a>' : "";
-    if (!rubric && !posters && !listLink) return "";
-    return rubric + posters + listLink;
-  }
-
-  function ticket(event, media) {
+  function ticket(event) {
     const card = event.ticket || {};
     const chips = (card.chips || []).map(function (chip) {
       return '<span class="chip chip-ink">' + escapeHtml(chip) + "</span>";
     }).join("");
-    const poster = posterPreview(event, media);
+    const poster = posterPreview(event);
     return (
       '<article class="ticket' + (poster ? " has-poster" : "") + '">' +
       poster +
@@ -114,27 +70,73 @@
       "<h3>" + escapeHtml(event.title) + "</h3>" +
       "<p>" + escapeHtml(card.blurb || event.summary) + "</p>" +
       '<div class="meta">' + chips + "</div>" +
-      '<div class="event-actions">' + actions(event, media, true) + "</div>" +
+      '<div class="event-actions">' + actions(event, true) + "</div>" +
       "</div></article>"
     );
   }
 
-  function listedTicket(event, media) {
+  function posterHref(event) {
+    const poster = posterFor(event);
+    return poster ? poster.href : "";
+  }
+
+  function shot(image) {
+    const lazy = image.lazy ? " loading=\"lazy\"" : "";
+    const klass = image.className ? " " + image.className : "";
+    return (
+      '<a class="shot' + klass + '" href="' + escapeHtml(image.src) + '">' +
+      '<img src="' + escapeHtml(image.src) + '" width="' + image.width + '" height="' + image.height + '" alt="' + escapeHtml(image.alt) + '"' + lazy + ">" +
+      "</a>"
+    );
+  }
+
+  function recapHtml(event) {
+    const item = mediaFor(event);
+    const recap = item && item.recap;
+    if (!recap) return "";
+    const pages = recap.pages.map(function (page) {
+      return '<div class="recap-page">' + page.map(shot).join("") + "</div>";
+    }).join("");
+    const hidden = recap.pages.length > 1 ? "" : " hidden";
+    return (
+      '<div class="event-recap">' +
+      '<div class="recap" data-recap aria-label="' + escapeHtml(recap.label) + '">' +
+      shot(recap.poster) +
+      '<div class="recap-side"><div class="recap-view">' + pages + "</div>" +
+      '<button type="button" class="recap-arrow recap-prev" aria-label="Previous pictures"' + hidden + ">‹</button>" +
+      '<button type="button" class="recap-arrow recap-next" aria-label="Next pictures"' + hidden + ">›</button>" +
+      "</div></div></div>"
+    );
+  }
+
+  function actions(event, withList) {
+    const label = /hellorubric\.com/i.test(event.href || "") ? "View on Rubric" : "Details";
+    const rubric = event.href
+      ? '<a class="btn btn-small btn-lime" href="' + escapeHtml(event.href) + '" target="_blank" rel="noopener noreferrer">' + label + "</a>"
+      : "";
+    const posters = posterHref(event)
+      ? '<a class="btn btn-small btn-ghost" href="' + posterHref(event) + '">Posters</a>'
+      : "";
+    const list = withList
+      ? '<a class="btn btn-small btn-ghost" href="/events/">All events</a>'
+      : "";
+    if (!rubric && !posters && !list) return "";
+    return rubric + posters + list;
+  }
+
+  function listedTicket(event) {
     const card = event.ticket || {};
     const chips = (card.chips || []).map(function (chip) {
       return '<span class="chip chip-ink">' + escapeHtml(chip) + "</span>";
     }).join("");
-    const href = media && media.poster ? "/media/#" + encodeURIComponent(media.id) : (event.href || "");
+    const media = posterHref(event);
     const rubric = event.href
       ? '<a class="btn btn-small btn-lime" href="' + escapeHtml(event.href) + '" target="_blank" rel="noopener noreferrer">View on Rubric</a>'
       : "";
-    const cue = media && media.poster
-      ? '<a class="photos-cue" href="' + href + '">' + (media.recap ? "Photos →" : "Posters →") + "</a>"
-      : "";
     return (
       '<article class="ticket has-poster">' +
-      posterPreview(event, media) +
-      (href ? '<a class="ticket-link" href="' + escapeHtml(href) + '" aria-label="Open ' + escapeHtml(event.title) + '"></a>' : "") +
+      posterPreview(event) +
+      '<a class="ticket-link" href="' + media + '" aria-label="Posters for ' + escapeHtml(event.title) + '"></a>' +
       '<div class="ticket-stub">' +
       '<span class="kicker" style="color: var(--lime);">' + escapeHtml(card.kicker || "Club night") + "</span>" +
       "<strong>" + stubBig(card.big) + "</strong>" +
@@ -144,13 +146,13 @@
       '<p class="kicker" style="color: var(--wine);">' + escapeHtml(card.place || event.where) + "</p>" +
       "<h3>" + escapeHtml(event.title) + "</h3>" +
       "<p>" + escapeHtml(card.blurb || event.summary) + "</p>" +
-      '<div class="meta">' + chips + cue + "</div>" +
+      '<div class="meta">' + chips + '<a class="photos-cue" href="' + media + '">Posters →</a></div>' +
       (rubric ? '<div class="event-actions">' + rubric + "</div>" : "") +
       "</div></article>"
     );
   }
 
-  function row(event, media) {
+  function row(event) {
     const when = escapeHtml(event.whenLabel) + (event.whenDetail ? "<br>" + escapeHtml(event.whenDetail) : "");
     const datetime = event.datetime ? ' datetime="' + escapeHtml(event.datetime) + '"' : "";
     const tone = event.tone === "lime" || event.tone === "cyan" ? event.tone : "ghost";
@@ -160,14 +162,14 @@
       "<div><h3>" + escapeHtml(event.title) + "</h3>" +
       '<p class="where">' + escapeHtml(event.where) + "</p>" +
       "<p>" + escapeHtml(event.summary) + "</p>" +
-      (event.href || (media && media.poster) ? '<div class="event-actions">' + actions(event, media, false) + "</div>" : "") +
+      (event.href || posterHref(event) ? '<div class="event-actions">' + actions(event, false) + "</div>" : "") +
       "</div>" +
       '<span class="chip chip-' + tone + '">' + escapeHtml(event.status) + "</span>" +
       "</article>"
     );
   }
 
-  function pastBlock(event, media, heading) {
+  function pastBlock(event, heading) {
     const card = event.ticket || {};
     const chips = (card.chips || []).map(function (chip) {
       return '<span class="chip chip-ink">' + escapeHtml(chip) + "</span>";
@@ -175,10 +177,8 @@
     const head = heading
       ? '<div class="section-head"><p class="kicker">Already ran</p><h2>' + escapeHtml(event.title) + ".</h2></div>"
       : '<div class="section-head"><h2>' + escapeHtml(event.title) + ".</h2></div>";
-    const poster = !media || !media.recap ? posterPreview(event, media) : "";
     const article = (
-      '<article class="ticket' + (poster ? " has-poster" : "") + '">' +
-      poster +
+      '<article class="ticket">' +
       '<div class="ticket-stub">' +
       '<span class="kicker" style="color: var(--olive);">' + escapeHtml(card.kicker || "Past") + "</span>" +
       "<strong>" + stubBig(card.big) + "</strong>" +
@@ -188,22 +188,21 @@
       '<p class="kicker" style="color: var(--wine);">' + escapeHtml(card.place || event.where) + "</p>" +
       "<h3>" + escapeHtml(event.title) + "</h3>" +
       "<p>" + escapeHtml(card.blurb || event.summary) + "</p>" +
-      '<div class="meta">' + chips + (media && (media.recap || media.poster) ? '<span class="photos-cue">Photos →</span>' : "") + "</div>" +
+      '<div class="meta">' + chips + (event.custom ? "" : '<span class="photos-cue">Photos →</span>') + "</div>" +
       "</div></article>"
     );
-    const linked = media && (media.recap || media.poster)
-      ? '<a class="past-event" href="' + escapeHtml("/media/#" + encodeURIComponent(media.id || event.id || "")) + '">' + head + article + "</a>"
-      : head + article;
-    return '<div class="past-night">' + linked + recapHtml(media) + "</div>";
+    const linked = event.custom
+      ? head + article
+      : '<a class="past-event" href="' + escapeHtml("/media/#" + encodeURIComponent(event.id || "")) + '">' + head + article + "</a>";
+    return '<div class="past-night">' + linked + recapHtml(event) + "</div>";
   }
 
-  function renderUpcoming(events, catalog) {
+  function renderUpcoming(events) {
     if (!events.length) {
       return '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>';
     }
     return '<div class="event-list">' + events.map(function (event) {
-      const media = matchMedia(event, catalog);
-      return media && media.poster ? listedTicket(event, media) : row(event, media);
+      return posterHref(event) ? listedTicket(event) : row(event);
     }).join("") + "</div>";
   }
 
@@ -238,69 +237,69 @@
     slots.forEach(function (slot) { slot.innerHTML = html; });
   }
 
-  function renderPast(events, catalog) {
+  function renderPast(events) {
     const nights = events.slice();
-    (catalog || []).forEach(function (item) {
-      if (!item.past || !item.listed) return;
+    mediaItems.forEach(function (item) {
+      if (!item.recap || !item.fallback) return;
       const exists = nights.some(function (event) {
-        return event.id === item.id || String(event.title || "").toLowerCase() === String(item.title || "").toLowerCase();
+        const found = mediaFor(event);
+        return found && found.id === item.id;
       });
-      if (!exists) nights.push(item);
+      if (!exists) nights.push(Object.assign({ id: item.id }, item.fallback));
     });
     nights.sort(function (left, right) {
       return String(left.datetime || "").localeCompare(String(right.datetime || ""));
     });
     return nights.map(function (event, index) {
-      return pastBlock(event, matchMedia(event, catalog), index === 0);
+      return pastBlock(event, index === 0);
     }).join("");
   }
 
-  function apply(data, catalog) {
-    const events = data.events || [];
-    const upcoming = events.filter(function (event) { return !event.past; });
-    const past = events.filter(function (event) { return event.past; });
-    const unavailable = data.rubric === false
-      ? '<p class="empty-state">Rubric could not be loaded. Refresh in a moment.</p>'
-      : "";
-    if (next) {
-      const media = upcoming[0] ? matchMedia(upcoming[0], catalog) : null;
-      next.innerHTML = upcoming.length
-        ? ticket(upcoming[0], media)
-        : (unavailable || '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>');
-    }
-    if (list) list.innerHTML = upcoming.length || !unavailable ? renderUpcoming(upcoming, catalog) : unavailable;
-    if (pastSlot) pastSlot.innerHTML = renderPast(past, catalog);
-    if (window.initRecaps) window.initRecaps();
-    if (teamSlots.length) {
-      const team = data.team || [];
-      fillSlots(teamSlots, team.length
-        ? team.map(personCard).join("")
-        : (unavailable || '<p class="empty-state">The exec list is not on Rubric yet.</p>'));
-    }
-    if (merchSlots.length) {
-      const merchandise = data.merchandise || [];
-      fillSlots(merchSlots, merchandise.length
-        ? merchandise.map(merchCard).join("")
-        : (unavailable || '<p class="empty-state">Nothing is in the Rubric shop yet.</p>'));
-    }
+  function paint(data) {
+      const events = data.events || [];
+      const upcoming = events.filter(function (event) { return !event.past; });
+      const past = events.filter(function (event) { return event.past; });
+      const unavailable = data.rubric === false
+        ? '<p class="empty-state">Rubric could not be loaded. Refresh in a moment.</p>'
+        : "";
+      if (next) {
+        next.innerHTML = upcoming.length
+          ? ticket(upcoming[0])
+          : (unavailable || '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>');
+      }
+      if (list) list.innerHTML = upcoming.length || !unavailable ? renderUpcoming(upcoming) : unavailable;
+      if (pastSlot) pastSlot.innerHTML = renderPast(past);
+      if (window.initRecaps) window.initRecaps();
+      if (teamSlots.length) {
+        const team = data.team || [];
+        fillSlots(teamSlots, team.length
+          ? team.map(personCard).join("")
+          : (unavailable || '<p class="empty-state">The exec list is not on Rubric yet.</p>'));
+      }
+      if (merchSlots.length) {
+        const merchandise = data.merchandise || [];
+        fillSlots(merchSlots, merchandise.length
+          ? merchandise.map(merchCard).join("")
+          : (unavailable || '<p class="empty-state">Nothing is in the Rubric shop yet.</p>'));
+      }
   }
 
   Promise.all([
-    fetch("/events/data.json").then(function (response) {
-      if (!response.ok) throw new Error("events");
-      return response.json();
+    fetch("/assets/events/events.json").then(function (response) {
+      return response.ok ? response.json() : { events: [] };
     }).catch(function () { return { events: [] }; }),
     fetch("/api/club").then(function (response) {
       if (!response.ok) throw new Error("club");
       return response.json();
     })
   ]).then(function (results) {
-    apply(results[1], (results[0] && results[0].events) || []);
+    mediaItems = (results[0] && results[0].events) || [];
+    paint(results[1]);
   }).catch(function () {
-    const message = '<p class="empty-state">Rubric could not be loaded. Refresh in a moment.</p>';
-    if (next) next.innerHTML = message;
-    if (list) list.innerHTML = message;
-    fillSlots(teamSlots, message);
-    fillSlots(merchSlots, message);
-  });
+      const message = '<p class="empty-state">Rubric could not be loaded. Refresh in a moment.</p>';
+      if (next) next.innerHTML = message;
+      if (list) list.innerHTML = message;
+      fillSlots(teamSlots, message);
+      fillSlots(merchSlots, message);
+    });
 })();
