@@ -1,7 +1,10 @@
-import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { optimizeImage, writeJson } from "./event-media.mjs";
+import { featuredHtml, inject, loadEvents, mediaHtml, pastHtml, publicEvent, splitEvents, upcomingHtml } from "./events-lib.mjs";
+import { optimizeEventTree } from "./optimize-event-images.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const out = join(root, "docs");
@@ -100,8 +103,27 @@ const nav = [
   ["connect", "Connect", "/connect/"]
 ];
 
+optimizeEventTree(root);
+const clubEvents = loadEvents(root);
+const eventGroups = splitEvents(clubEvents);
+
+function contentFor(page) {
+  let body = readFileSync(join(root, "site/content", page.file), "utf8");
+  if (page.file === "events.html") {
+    body = inject(body, "upcoming", upcomingHtml(eventGroups.upcoming));
+    body = inject(body, "past", pastHtml(eventGroups.past));
+  }
+  if (page.file === "media.html") {
+    body = inject(body, "nights", mediaHtml(eventGroups.media));
+  }
+  if (page.file === "home.html") {
+    body = inject(body, "featured", featuredHtml(eventGroups.featured));
+  }
+  return body;
+}
+
 function layout(page) {
-  const body = readFileSync(join(root, "site/content", page.file), "utf8");
+  const body = contentFor(page);
   const links = nav
     .map(([id, label, href]) => {
       const current = page.page === id ? ' aria-current="page"' : "";
@@ -240,50 +262,22 @@ const copies = [
   ["Events/Podcast/Podcast Poster E02 So Useful (11x17).png", "assets/podcast/e02.png"],
   ["Events/Podcast/Podcast Poster E03 Human Finish (11x17).png", "assets/podcast/e03.png"],
   ["Branding/SaitsaStudentClubsPrimaryLogo.svg", "assets/saitsa.svg"],
-  ["Branding/Vector Kit/png/social/og-1200x630.png", "assets/og.png"],
-  ["site/assets/events/halt-restart/poster.png", "assets/events/halt-restart/poster.png"],
-  ["site/assets/events/halt-restart/group.jpg", "assets/events/halt-restart/group.jpg"],
-  ["site/assets/events/halt-restart/door.jpg", "assets/events/halt-restart/door.jpg"],
-  ["site/assets/events/halt-restart/hailey.jpg", "assets/events/halt-restart/hailey.jpg"],
-  ["site/assets/events/halt-restart/pierre.jpg", "assets/events/halt-restart/pierre.jpg"],
-  ["site/assets/events/halt-restart/models.jpg", "assets/events/halt-restart/models.jpg"],
-  ["site/assets/events/unnatural-games/presents.png", "assets/events/unnatural-games/presents.png"],
-  ["site/assets/events/unnatural-games/scoreboard.png", "assets/events/unnatural-games/scoreboard.png"],
-  ["site/assets/events/unnatural-games/ticket.png", "assets/events/unnatural-games/ticket.png"],
-  ["site/assets/events/ai-agents/ink.png", "assets/events/ai-agents/ink.png"],
-  ["site/assets/events/ai-agents/paper.png", "assets/events/ai-agents/paper.png"],
-  ["site/assets/events/ai-agents/arcade.png", "assets/events/ai-agents/arcade.png"],
-  ["site/assets/events/ai-agents/toolkit.png", "assets/events/ai-agents/toolkit.png"],
-  ["site/assets/events/ai-agents/lime.png", "assets/events/ai-agents/lime.png"],
-  ["site/assets/events/ai-agents/nodes.png", "assets/events/ai-agents/nodes.png"],
-  ["site/assets/events/ai-agents/split.png", "assets/events/ai-agents/split.png"],
-  ["site/assets/events/ai-agents/bands.png", "assets/events/ai-agents/bands.png"],
-  ["site/assets/events/ai-agents/billboard.png", "assets/events/ai-agents/billboard.png"],
-  ["site/assets/events/ai-agents/monument.png", "assets/events/ai-agents/monument.png"],
-  ["site/assets/events/ai-agents/listings.png", "assets/events/ai-agents/listings.png"],
-  ["site/assets/events/ai-agents/versus.png", "assets/events/ai-agents/versus.png"],
-  ["site/assets/events/ai-agents/recap/1100738.jpg", "assets/events/ai-agents/recap/1100738.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0001.jpg", "assets/events/ai-agents/recap/img_0001.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0006.jpg", "assets/events/ai-agents/recap/img_0006.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0023.jpg", "assets/events/ai-agents/recap/img_0023.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0025.jpg", "assets/events/ai-agents/recap/img_0025.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0029.jpg", "assets/events/ai-agents/recap/img_0029.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0046.jpg", "assets/events/ai-agents/recap/img_0046.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0047.jpg", "assets/events/ai-agents/recap/img_0047.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0050.jpg", "assets/events/ai-agents/recap/img_0050.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0056.jpg", "assets/events/ai-agents/recap/img_0056.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0068.jpg", "assets/events/ai-agents/recap/img_0068.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0069.jpg", "assets/events/ai-agents/recap/img_0069.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0077.jpg", "assets/events/ai-agents/recap/img_0077.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0080.jpg", "assets/events/ai-agents/recap/img_0080.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0085.jpg", "assets/events/ai-agents/recap/img_0085.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0088.jpg", "assets/events/ai-agents/recap/img_0088.jpg"],
-  ["site/assets/events/ai-agents/recap/img_9973.jpg", "assets/events/ai-agents/recap/img_9973.jpg"],
-  ["site/assets/events/ai-agents/recap/img_9976.jpg", "assets/events/ai-agents/recap/img_9976.jpg"],
-  ["site/assets/events/ai-agents/recap/img_9978.jpg", "assets/events/ai-agents/recap/img_9978.jpg"],
-  ["site/assets/events/ai-agents/recap/img_9983.jpg", "assets/events/ai-agents/recap/img_9983.jpg"],
-  ["site/assets/events/ai-agents/recap/img_9987.jpg", "assets/events/ai-agents/recap/img_9987.jpg"]
+  ["Branding/Vector Kit/png/social/og-1200x630.png", "assets/og.png"]
 ];
+
+for (const event of clubEvents) {
+  const destRoot = join(out, "assets/events", event.id);
+  if (event.posterFile && existsSync(join(event.dir, event.posterFile))) {
+    optimizeImage(join(event.dir, event.posterFile), join(destRoot, event.posterFile), { kind: "poster" });
+  }
+  for (const file of event.recapFiles) {
+    optimizeImage(join(event.dir, "recap", file), join(destRoot, "recap", file), { kind: "photo" });
+  }
+  for (const file of event.posterFiles) {
+    optimizeImage(join(event.dir, "posters", file), join(destRoot, "posters", file), { kind: "poster" });
+  }
+}
+writeJson(join(out, "events/data.json"), { events: clubEvents.map(publicEvent) });
 for (const [from, to] of copies) {
   const dest = join(out, to);
   mkdirSync(dirname(dest), { recursive: true });

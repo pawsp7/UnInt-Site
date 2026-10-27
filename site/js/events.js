@@ -22,22 +22,41 @@
       .replace(/&lt;br\s*\/?&gt;/gi, "<br>");
   }
 
-  function posterFor(event) {
+  function mediaById(catalog) {
+    const map = {};
+    (catalog || []).forEach(function (event) {
+      if (event && event.id) map[event.id] = event;
+    });
+    return map;
+  }
+
+  function matchMedia(event, catalog) {
+    if (!event) return null;
+    const map = mediaById(catalog);
+    if (event.id && map[event.id]) return map[event.id];
     const title = String(event.title || "").toLowerCase();
-    if (title.indexOf("ai agent") !== -1) {
-      return {
-        src: "/assets/events/ai-agents/ink.png",
-        width: 1651,
-        height: 2550,
-        alt: "AI Agents poster, Ink. Perceive, decide, act.",
-        href: "/media/#ai-agents"
-      };
+    for (let i = 0; i < (catalog || []).length; i += 1) {
+      const item = catalog[i];
+      const name = String(item.title || "").toLowerCase();
+      if (!name) continue;
+      if (title === name || title.indexOf(name) !== -1 || name.indexOf(title) !== -1) return item;
     }
     return null;
   }
 
-  function posterPreview(event) {
-    const poster = posterFor(event);
+  function shot(image) {
+    if (!image) return "";
+    const lazy = image.lazy ? " loading=\"lazy\"" : "";
+    const klass = image.className ? " " + image.className : "";
+    return (
+      '<a class="shot' + klass + '" href="' + escapeHtml(image.src) + '">' +
+      '<img src="' + escapeHtml(image.src) + '" width="' + image.width + '" height="' + image.height + '" alt="' + escapeHtml(image.alt) + '"' + lazy + ">" +
+      "</a>"
+    );
+  }
+
+  function posterPreview(event, media) {
+    const poster = (media && media.poster) || event.poster;
     if (!poster) return "";
     return (
       '<a class="shot episode-poster event-poster" href="' + escapeHtml(poster.src) + '">' +
@@ -46,12 +65,42 @@
     );
   }
 
-  function ticket(event) {
+  function recapHtml(media) {
+    if (!media || !media.recap || !media.poster) return "";
+    const pages = (media.recap.pages || []).map(function (page) {
+      return '<div class="recap-page">' + page.map(shot).join("") + "</div>";
+    }).join("");
+    const hidden = (media.recap.pages || []).length > 1 ? "" : " hidden";
+    return (
+      '<div class="event-recap">' +
+      '<div class="recap" data-recap aria-label="' + escapeHtml(media.recap.label) + '">' +
+      shot(media.poster) +
+      '<div class="recap-side"><div class="recap-view">' + pages + "</div>" +
+      '<button type="button" class="recap-arrow recap-prev" aria-label="Previous pictures"' + hidden + ">‹</button>" +
+      '<button type="button" class="recap-arrow recap-next" aria-label="Next pictures"' + hidden + ">›</button>" +
+      "</div></div></div>"
+    );
+  }
+
+  function actions(event, media, withList) {
+    const label = /hellorubric\.com/i.test(event.href || "") ? "View on Rubric" : "Details";
+    const rubric = event.href
+      ? '<a class="btn btn-small btn-lime" href="' + escapeHtml(event.href) + '" target="_blank" rel="noopener noreferrer">' + label + "</a>"
+      : "";
+    const posters = media && media.poster
+      ? '<a class="btn btn-small btn-ghost" href="/media/#' + encodeURIComponent(media.id) + '">Posters</a>'
+      : "";
+    const listLink = withList ? '<a class="btn btn-small btn-ghost" href="/events/">All events</a>' : "";
+    if (!rubric && !posters && !listLink) return "";
+    return rubric + posters + listLink;
+  }
+
+  function ticket(event, media) {
     const card = event.ticket || {};
     const chips = (card.chips || []).map(function (chip) {
       return '<span class="chip chip-ink">' + escapeHtml(chip) + "</span>";
     }).join("");
-    const poster = posterPreview(event);
+    const poster = posterPreview(event, media);
     return (
       '<article class="ticket' + (poster ? " has-poster" : "") + '">' +
       poster +
@@ -65,141 +114,27 @@
       "<h3>" + escapeHtml(event.title) + "</h3>" +
       "<p>" + escapeHtml(card.blurb || event.summary) + "</p>" +
       '<div class="meta">' + chips + "</div>" +
-      '<div class="event-actions">' + actions(event, true) + "</div>" +
+      '<div class="event-actions">' + actions(event, media, true) + "</div>" +
       "</div></article>"
     );
   }
 
-  function posterHref(event) {
-    const poster = posterFor(event);
-    return poster ? poster.href : "";
-  }
-
-  function shot(image) {
-    const lazy = image.lazy ? " loading=\"lazy\"" : "";
-    const klass = image.className ? " " + image.className : "";
-    return (
-      '<a class="shot' + klass + '" href="' + escapeHtml(image.src) + '">' +
-      '<img src="' + escapeHtml(image.src) + '" width="' + image.width + '" height="' + image.height + '" alt="' + escapeHtml(image.alt) + '"' + lazy + ">" +
-      "</a>"
-    );
-  }
-
-  const recaps = {
-    "halt-restart": {
-      label: "Pictures from Halt & Restart",
-      poster: {
-        className: "poster",
-        src: "/assets/events/halt-restart/poster.png",
-        width: 2200,
-        height: 3400,
-        alt: "Halt & Restart poster. Friday 18 September, 4:00–7:00 PM, Heritage Hall AA128."
-      },
-      pages: [[
-        { className: "wide", src: "/assets/events/halt-restart/group.jpg", width: 1800, height: 1197, alt: "The room at Halt & Restart, in jellyfish hats, with the laptop and the task sheets." },
-        { src: "/assets/events/halt-restart/hailey.jpg", width: 1800, height: 1195, alt: "Hailey at the whiteboard during Halt & Restart." },
-        { src: "/assets/events/halt-restart/pierre.jpg", width: 1800, height: 1195, alt: "Pierre in a jellyfish hat during Halt & Restart." },
-        { src: "/assets/events/halt-restart/models.jpg", width: 1800, height: 1195, alt: "The models in jellyfish hats, mid-task at the table." },
-        { className: "door", src: "/assets/events/halt-restart/door.jpg", width: 1800, height: 1197, alt: "A jellyfish hat on the door of classroom AA128." }
-      ]]
-    },
-    "ai-agents": {
-      label: "Pictures from AI Agents",
-      poster: {
-        className: "poster",
-        src: "/assets/events/ai-agents/ink.png",
-        width: 1651,
-        height: 2550,
-        alt: "AI Agents poster, Ink. Perceive, decide, act."
-      },
-      pages: [
-        [
-          { className: "wide", src: "/assets/events/ai-agents/recap/1100738.jpg", width: 1800, height: 1013, alt: "The AI Agents workshop, with laptops open and a slide on the screen." },
-          { src: "/assets/events/ai-agents/recap/img_9973.jpg", width: 1800, height: 1200, alt: "The classroom set for AI Agents, poster on the board and desks still empty." },
-          { src: "/assets/events/ai-agents/recap/img_9976.jpg", width: 1800, height: 1200, alt: "Laptops and notebooks laid out on a desk before the workshop." },
-          { src: "/assets/events/ai-agents/recap/img_9978.jpg", width: 1800, height: 1200, alt: "A speaker at the front of the room during AI Agents." },
-          { src: "/assets/events/ai-agents/recap/img_9983.jpg", width: 1800, height: 1200, alt: "A presenter at the front, with laptops open and the slide on the screen." }
-        ],
-        [
-          { src: "/assets/events/ai-agents/recap/img_9987.jpg", width: 1800, height: 1200, alt: "People at their laptops during the AI Agents workshop.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0001.jpg", width: 1200, height: 1800, alt: "A speaker presenting at the front of AI Agents.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0006.jpg", width: 1800, height: 1200, alt: "Three people at a laptop during AI Agents, one standing behind the chair.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0023.jpg", width: 1800, height: 1200, alt: "Three people leaning in over a laptop during AI Agents.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0025.jpg", width: 1800, height: 1200, alt: "Three people at a table with a laptop during AI Agents.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0029.jpg", width: 1800, height: 1200, alt: "Three people working through a task on a laptop during AI Agents.", lazy: true }
-        ],
-        [
-          { src: "/assets/events/ai-agents/recap/img_0046.jpg", width: 1800, height: 1200, alt: "A speaker at the board during AI Agents, with the group watching.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0047.jpg", width: 1800, height: 1200, alt: "A presenter talking with two people at a laptop during AI Agents.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0050.jpg", width: 1200, height: 1800, alt: "Three people at a laptop during AI Agents.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0056.jpg", width: 1800, height: 1200, alt: "Three people around a laptop during AI Agents.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0068.jpg", width: 1800, height: 1200, alt: "Two people working side by side on a laptop during AI Agents.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0069.jpg", width: 1800, height: 1200, alt: "Three people gathered around one laptop during AI Agents.", lazy: true }
-        ],
-        [
-          { src: "/assets/events/ai-agents/recap/img_0077.jpg", width: 1800, height: 1200, alt: "A laptop on the table during AI Agents, with the task on the screen.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0080.jpg", width: 1800, height: 1200, alt: "Two people at a laptop during AI Agents.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0085.jpg", width: 1800, height: 1200, alt: "Four people around a laptop during AI Agents, one standing.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0088.jpg", width: 1800, height: 1200, alt: "The group around a table with laptops at the end of AI Agents.", lazy: true }
-        ]
-      ]
-    }
-  };
-
-  function recapKey(event) {
-    const id = String(event.id || "").toLowerCase();
-    const title = String(event.title || "").toLowerCase();
-    if (id === "halt-restart" || (title.indexOf("halt") !== -1 && title.indexOf("restart") !== -1)) return "halt-restart";
-    if (id === "ai-agents" || title.indexOf("ai agent") !== -1) return "ai-agents";
-    return "";
-  }
-
-  function recapHtml(event) {
-    const recap = recaps[recapKey(event)];
-    if (!recap) return "";
-    const pages = recap.pages.map(function (page) {
-      return '<div class="recap-page">' + page.map(shot).join("") + "</div>";
-    }).join("");
-    const hidden = recap.pages.length > 1 ? "" : " hidden";
-    return (
-      '<div class="event-recap">' +
-      '<div class="recap" data-recap aria-label="' + escapeHtml(recap.label) + '">' +
-      shot(recap.poster) +
-      '<div class="recap-side"><div class="recap-view">' + pages + "</div>" +
-      '<button type="button" class="recap-arrow recap-prev" aria-label="Previous pictures"' + hidden + ">‹</button>" +
-      '<button type="button" class="recap-arrow recap-next" aria-label="Next pictures"' + hidden + ">›</button>" +
-      "</div></div></div>"
-    );
-  }
-
-  function actions(event, withList) {
-    const label = /hellorubric\.com/i.test(event.href || "") ? "View on Rubric" : "Details";
-    const rubric = event.href
-      ? '<a class="btn btn-small btn-lime" href="' + escapeHtml(event.href) + '" target="_blank" rel="noopener noreferrer">' + label + "</a>"
-      : "";
-    const posters = posterHref(event)
-      ? '<a class="btn btn-small btn-ghost" href="' + posterHref(event) + '">Posters</a>'
-      : "";
-    const list = withList
-      ? '<a class="btn btn-small btn-ghost" href="/events/">All events</a>'
-      : "";
-    if (!rubric && !posters && !list) return "";
-    return rubric + posters + list;
-  }
-
-  function listedTicket(event) {
+  function listedTicket(event, media) {
     const card = event.ticket || {};
     const chips = (card.chips || []).map(function (chip) {
       return '<span class="chip chip-ink">' + escapeHtml(chip) + "</span>";
     }).join("");
-    const media = posterHref(event);
+    const href = media && media.poster ? "/media/#" + encodeURIComponent(media.id) : (event.href || "");
     const rubric = event.href
       ? '<a class="btn btn-small btn-lime" href="' + escapeHtml(event.href) + '" target="_blank" rel="noopener noreferrer">View on Rubric</a>'
       : "";
+    const cue = media && media.poster
+      ? '<a class="photos-cue" href="' + href + '">' + (media.recap ? "Photos →" : "Posters →") + "</a>"
+      : "";
     return (
       '<article class="ticket has-poster">' +
-      posterPreview(event) +
-      '<a class="ticket-link" href="' + media + '" aria-label="Posters for ' + escapeHtml(event.title) + '"></a>' +
+      posterPreview(event, media) +
+      (href ? '<a class="ticket-link" href="' + escapeHtml(href) + '" aria-label="Open ' + escapeHtml(event.title) + '"></a>' : "") +
       '<div class="ticket-stub">' +
       '<span class="kicker" style="color: var(--lime);">' + escapeHtml(card.kicker || "Club night") + "</span>" +
       "<strong>" + stubBig(card.big) + "</strong>" +
@@ -209,13 +144,13 @@
       '<p class="kicker" style="color: var(--wine);">' + escapeHtml(card.place || event.where) + "</p>" +
       "<h3>" + escapeHtml(event.title) + "</h3>" +
       "<p>" + escapeHtml(card.blurb || event.summary) + "</p>" +
-      '<div class="meta">' + chips + '<a class="photos-cue" href="' + media + '">Posters →</a></div>' +
+      '<div class="meta">' + chips + cue + "</div>" +
       (rubric ? '<div class="event-actions">' + rubric + "</div>" : "") +
       "</div></article>"
     );
   }
 
-  function row(event) {
+  function row(event, media) {
     const when = escapeHtml(event.whenLabel) + (event.whenDetail ? "<br>" + escapeHtml(event.whenDetail) : "");
     const datetime = event.datetime ? ' datetime="' + escapeHtml(event.datetime) + '"' : "";
     const tone = event.tone === "lime" || event.tone === "cyan" ? event.tone : "ghost";
@@ -225,14 +160,14 @@
       "<div><h3>" + escapeHtml(event.title) + "</h3>" +
       '<p class="where">' + escapeHtml(event.where) + "</p>" +
       "<p>" + escapeHtml(event.summary) + "</p>" +
-      (event.href || posterHref(event) ? '<div class="event-actions">' + actions(event, false) + "</div>" : "") +
+      (event.href || (media && media.poster) ? '<div class="event-actions">' + actions(event, media, false) + "</div>" : "") +
       "</div>" +
       '<span class="chip chip-' + tone + '">' + escapeHtml(event.status) + "</span>" +
       "</article>"
     );
   }
 
-  function pastBlock(event, heading) {
+  function pastBlock(event, media, heading) {
     const card = event.ticket || {};
     const chips = (card.chips || []).map(function (chip) {
       return '<span class="chip chip-ink">' + escapeHtml(chip) + "</span>";
@@ -240,8 +175,10 @@
     const head = heading
       ? '<div class="section-head"><p class="kicker">Already ran</p><h2>' + escapeHtml(event.title) + ".</h2></div>"
       : '<div class="section-head"><h2>' + escapeHtml(event.title) + ".</h2></div>";
+    const poster = !media || !media.recap ? posterPreview(event, media) : "";
     const article = (
-      '<article class="ticket">' +
+      '<article class="ticket' + (poster ? " has-poster" : "") + '">' +
+      poster +
       '<div class="ticket-stub">' +
       '<span class="kicker" style="color: var(--olive);">' + escapeHtml(card.kicker || "Past") + "</span>" +
       "<strong>" + stubBig(card.big) + "</strong>" +
@@ -251,21 +188,22 @@
       '<p class="kicker" style="color: var(--wine);">' + escapeHtml(card.place || event.where) + "</p>" +
       "<h3>" + escapeHtml(event.title) + "</h3>" +
       "<p>" + escapeHtml(card.blurb || event.summary) + "</p>" +
-      '<div class="meta">' + chips + (event.custom ? "" : '<span class="photos-cue">Photos →</span>') + "</div>" +
+      '<div class="meta">' + chips + (media && (media.recap || media.poster) ? '<span class="photos-cue">Photos →</span>' : "") + "</div>" +
       "</div></article>"
     );
-    const linked = event.custom
-      ? head + article
-      : '<a class="past-event" href="' + escapeHtml("/media/#" + encodeURIComponent(event.id || "")) + '">' + head + article + "</a>";
-    return '<div class="past-night">' + linked + recapHtml(event) + "</div>";
+    const linked = media && (media.recap || media.poster)
+      ? '<a class="past-event" href="' + escapeHtml("/media/#" + encodeURIComponent(media.id || event.id || "")) + '">' + head + article + "</a>"
+      : head + article;
+    return '<div class="past-night">' + linked + recapHtml(media) + "</div>";
   }
 
-  function renderUpcoming(events) {
+  function renderUpcoming(events, catalog) {
     if (!events.length) {
       return '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>';
     }
     return '<div class="event-list">' + events.map(function (event) {
-      return posterHref(event) ? listedTicket(event) : row(event);
+      const media = matchMedia(event, catalog);
+      return media && media.poster ? listedTicket(event, media) : row(event, media);
     }).join("") + "</div>";
   }
 
@@ -300,73 +238,69 @@
     slots.forEach(function (slot) { slot.innerHTML = html; });
   }
 
-  function agentsNight() {
-    return {
-      id: "ai-agents",
-      title: "AI Agents",
-      datetime: "2026-10-28",
-      where: "MB202, Stan Grad Centre",
-      summary: "What an agent is, how the loop works, and using one on a real task.",
-      ticket: {
-        kicker: "Workshop",
-        big: "28<br>Oct",
-        time: "6:00–8:30 PM",
-        place: "MB202, Stan Grad Centre",
-        blurb: "What an agent is, how the loop works, and using one on a real task.",
-        chips: ["Past", "All programs"]
-      }
-    };
-  }
-
-  function renderPast(events) {
+  function renderPast(events, catalog) {
     const nights = events.slice();
-    if (!nights.some(function (event) { return recapKey(event) === "ai-agents"; })) nights.push(agentsNight());
+    (catalog || []).forEach(function (item) {
+      if (!item.past || !item.listed) return;
+      const exists = nights.some(function (event) {
+        return event.id === item.id || String(event.title || "").toLowerCase() === String(item.title || "").toLowerCase();
+      });
+      if (!exists) nights.push(item);
+    });
     nights.sort(function (left, right) {
       return String(left.datetime || "").localeCompare(String(right.datetime || ""));
     });
     return nights.map(function (event, index) {
-      return pastBlock(event, index === 0);
+      return pastBlock(event, matchMedia(event, catalog), index === 0);
     }).join("");
   }
 
-  fetch("/api/club")
-    .then(function (response) {
+  function apply(data, catalog) {
+    const events = data.events || [];
+    const upcoming = events.filter(function (event) { return !event.past; });
+    const past = events.filter(function (event) { return event.past; });
+    const unavailable = data.rubric === false
+      ? '<p class="empty-state">Rubric could not be loaded. Refresh in a moment.</p>'
+      : "";
+    if (next) {
+      const media = upcoming[0] ? matchMedia(upcoming[0], catalog) : null;
+      next.innerHTML = upcoming.length
+        ? ticket(upcoming[0], media)
+        : (unavailable || '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>');
+    }
+    if (list) list.innerHTML = upcoming.length || !unavailable ? renderUpcoming(upcoming, catalog) : unavailable;
+    if (pastSlot) pastSlot.innerHTML = renderPast(past, catalog);
+    if (window.initRecaps) window.initRecaps();
+    if (teamSlots.length) {
+      const team = data.team || [];
+      fillSlots(teamSlots, team.length
+        ? team.map(personCard).join("")
+        : (unavailable || '<p class="empty-state">The exec list is not on Rubric yet.</p>'));
+    }
+    if (merchSlots.length) {
+      const merchandise = data.merchandise || [];
+      fillSlots(merchSlots, merchandise.length
+        ? merchandise.map(merchCard).join("")
+        : (unavailable || '<p class="empty-state">Nothing is in the Rubric shop yet.</p>'));
+    }
+  }
+
+  Promise.all([
+    fetch("/events/data.json").then(function (response) {
+      if (!response.ok) throw new Error("events");
+      return response.json();
+    }).catch(function () { return { events: [] }; }),
+    fetch("/api/club").then(function (response) {
       if (!response.ok) throw new Error("club");
       return response.json();
     })
-    .then(function (data) {
-      const events = data.events || [];
-      const upcoming = events.filter(function (event) { return !event.past; });
-      const past = events.filter(function (event) { return event.past; });
-      const unavailable = data.rubric === false
-        ? '<p class="empty-state">Rubric could not be loaded. Refresh in a moment.</p>'
-        : "";
-      if (next) {
-        next.innerHTML = upcoming.length
-          ? ticket(upcoming[0])
-          : (unavailable || '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>');
-      }
-      if (list) list.innerHTML = upcoming.length || !unavailable ? renderUpcoming(upcoming) : unavailable;
-      if (pastSlot) pastSlot.innerHTML = renderPast(past);
-      if (window.initRecaps) window.initRecaps();
-      if (teamSlots.length) {
-        const team = data.team || [];
-        fillSlots(teamSlots, team.length
-          ? team.map(personCard).join("")
-          : (unavailable || '<p class="empty-state">The exec list is not on Rubric yet.</p>'));
-      }
-      if (merchSlots.length) {
-        const merchandise = data.merchandise || [];
-        fillSlots(merchSlots, merchandise.length
-          ? merchandise.map(merchCard).join("")
-          : (unavailable || '<p class="empty-state">Nothing is in the Rubric shop yet.</p>'));
-      }
-    })
-    .catch(function () {
-      const message = '<p class="empty-state">Rubric could not be loaded. Refresh in a moment.</p>';
-      if (next) next.innerHTML = message;
-      if (list) list.innerHTML = message;
-      fillSlots(teamSlots, message);
-      fillSlots(merchSlots, message);
-    });
+  ]).then(function (results) {
+    apply(results[1], (results[0] && results[0].events) || []);
+  }).catch(function () {
+    const message = '<p class="empty-state">Rubric could not be loaded. Refresh in a moment.</p>';
+    if (next) next.innerHTML = message;
+    if (list) list.innerHTML = message;
+    fillSlots(teamSlots, message);
+    fillSlots(merchSlots, message);
+  });
 })();

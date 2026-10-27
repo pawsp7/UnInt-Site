@@ -599,6 +599,12 @@ a.photos-cue:hover { color: var(--ink); }
   gap: 22px 16px;
   align-items: start;
 }
+.poster-feature.sheets {
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  margin-top: 8px;
+}
+.night-sheets-head { margin-top: 32px; }
+.night .event-recap { margin-top: 0; }
 .poster-feature figure { margin: 0; min-width: 0; }
 .poster-feature .episode-poster { margin-bottom: 12px; }
 .poster-feature figcaption { display: grid; gap: 4px; }
@@ -1112,6 +1118,7 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
   .shot.wide { grid-column: 1 / -1; }
   .poster-feature,
   .collage.sheets { grid-template-columns: 1fr; }
+  .poster-feature.sheets { grid-template-columns: repeat(2, 1fr); }
   .recap {
     aspect-ratio: auto;
     grid-template-columns: 1fr;

@@ -3,7 +3,7 @@
   "outputDirectory": "docs",
   "functions": {
     "api/**/*.js": {
-      "includeFiles": "server/**"
+      "includeFiles": "{server/**,site/events/events.json}"
     }
   },
   "headers": [
