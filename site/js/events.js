@@ -81,6 +81,7 @@
   }
 
   function shot(image) {
+    if (!image || !image.src) return "";
     const lazy = image.lazy ? " loading=\"lazy\"" : "";
     const klass = image.className ? " " + image.className : "";
     return (
@@ -93,7 +94,8 @@
   function recapHtml(event) {
     const item = mediaFor(event);
     const recap = item && item.recap;
-    if (!recap) return "";
+    if (!recap || !recap.pages || !recap.pages.length) return "";
+    const poster = recap.poster || item.poster;
     const pages = recap.pages.map(function (page) {
       return '<div class="recap-page">' + page.map(shot).join("") + "</div>";
     }).join("");
@@ -101,7 +103,7 @@
     return (
       '<div class="event-recap">' +
       '<div class="recap" data-recap aria-label="' + escapeHtml(recap.label) + '">' +
-      shot(recap.poster) +
+      shot(poster) +
       '<div class="recap-side"><div class="recap-view">' + pages + "</div>" +
       '<button type="button" class="recap-arrow recap-prev" aria-label="Previous pictures"' + hidden + ">‹</button>" +
       '<button type="button" class="recap-arrow recap-next" aria-label="Next pictures"' + hidden + ">›</button>" +
