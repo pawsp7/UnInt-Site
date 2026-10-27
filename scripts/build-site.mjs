@@ -261,7 +261,28 @@ const copies = [
   ["site/assets/events/ai-agents/billboard.png", "assets/events/ai-agents/billboard.png"],
   ["site/assets/events/ai-agents/monument.png", "assets/events/ai-agents/monument.png"],
   ["site/assets/events/ai-agents/listings.png", "assets/events/ai-agents/listings.png"],
-  ["site/assets/events/ai-agents/versus.png", "assets/events/ai-agents/versus.png"]
+  ["site/assets/events/ai-agents/versus.png", "assets/events/ai-agents/versus.png"],
+  ["site/assets/events/ai-agents/recap/1100738.jpg", "assets/events/ai-agents/recap/1100738.jpg"],
+  ["site/assets/events/ai-agents/recap/img_0001.jpg", "assets/events/ai-agents/recap/img_0001.jpg"],
+  ["site/assets/events/ai-agents/recap/img_0006.jpg", "assets/events/ai-agents/recap/img_0006.jpg"],
+  ["site/assets/events/ai-agents/recap/img_0023.jpg", "assets/events/ai-agents/recap/img_0023.jpg"],
+  ["site/assets/events/ai-agents/recap/img_0025.jpg", "assets/events/ai-agents/recap/img_0025.jpg"],
+  ["site/assets/events/ai-agents/recap/img_0029.jpg", "assets/events/ai-agents/recap/img_0029.jpg"],
+  ["site/assets/events/ai-agents/recap/img_0046.jpg", "assets/events/ai-agents/recap/img_0046.jpg"],
+  ["site/assets/events/ai-agents/recap/img_0047.jpg", "assets/events/ai-agents/recap/img_0047.jpg"],
+  ["site/assets/events/ai-agents/recap/img_0050.jpg", "assets/events/ai-agents/recap/img_0050.jpg"],
+  ["site/assets/events/ai-agents/recap/img_0056.jpg", "assets/events/ai-agents/recap/img_0056.jpg"],
+  ["site/assets/events/ai-agents/recap/img_0068.jpg", "assets/events/ai-agents/recap/img_0068.jpg"],
+  ["site/assets/events/ai-agents/recap/img_0069.jpg", "assets/events/ai-agents/recap/img_0069.jpg"],
+  ["site/assets/events/ai-agents/recap/img_0077.jpg", "assets/events/ai-agents/recap/img_0077.jpg"],
+  ["site/assets/events/ai-agents/recap/img_0080.jpg", "assets/events/ai-agents/recap/img_0080.jpg"],
+  ["site/assets/events/ai-agents/recap/img_0085.jpg", "assets/events/ai-agents/recap/img_0085.jpg"],
+  ["site/assets/events/ai-agents/recap/img_0088.jpg", "assets/events/ai-agents/recap/img_0088.jpg"],
+  ["site/assets/events/ai-agents/recap/img_9973.jpg", "assets/events/ai-agents/recap/img_9973.jpg"],
+  ["site/assets/events/ai-agents/recap/img_9976.jpg", "assets/events/ai-agents/recap/img_9976.jpg"],
+  ["site/assets/events/ai-agents/recap/img_9978.jpg", "assets/events/ai-agents/recap/img_9978.jpg"],
+  ["site/assets/events/ai-agents/recap/img_9983.jpg", "assets/events/ai-agents/recap/img_9983.jpg"],
+  ["site/assets/events/ai-agents/recap/img_9987.jpg", "assets/events/ai-agents/recap/img_9987.jpg"]
 ];
 for (const [from, to] of copies) {
   const dest = join(out, to);
