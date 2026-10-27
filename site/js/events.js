@@ -22,18 +22,23 @@
       .replace(/&lt;br\s*\/?&gt;/gi, "<br>");
   }
 
-  function posterFor(event) {
+  let mediaItems = [];
+
+  function mediaFor(event) {
+    const id = String(event.id || "").toLowerCase();
     const title = String(event.title || "").toLowerCase();
-    if (title.indexOf("ai agent") !== -1) {
-      return {
-        src: "/assets/events/ai-agents/ink.png",
-        width: 1651,
-        height: 2550,
-        alt: "AI Agents poster, Ink. Perceive, decide, act.",
-        href: "/media/#ai-agents"
-      };
+    for (let i = 0; i < mediaItems.length; i += 1) {
+      const item = mediaItems[i];
+      if (item.id === id) return item;
+      const parts = item.match || [];
+      if (parts.length && parts.every(function (part) { return title.indexOf(part) !== -1; })) return item;
     }
     return null;
+  }
+
+  function posterFor(event) {
+    const item = mediaFor(event);
+    return item && item.poster ? item.poster : null;
   }
 
   function posterPreview(event) {
@@ -85,77 +90,9 @@
     );
   }
 
-  const recaps = {
-    "halt-restart": {
-      label: "Pictures from Halt & Restart",
-      poster: {
-        className: "poster",
-        src: "/assets/events/halt-restart/poster.png",
-        width: 2200,
-        height: 3400,
-        alt: "Halt & Restart poster. Friday 18 September, 4:00–7:00 PM, Heritage Hall AA128."
-      },
-      pages: [[
-        { className: "wide", src: "/assets/events/halt-restart/group.jpg", width: 1800, height: 1197, alt: "The room at Halt & Restart, in jellyfish hats, with the laptop and the task sheets." },
-        { src: "/assets/events/halt-restart/hailey.jpg", width: 1800, height: 1195, alt: "Hailey at the whiteboard during Halt & Restart." },
-        { src: "/assets/events/halt-restart/pierre.jpg", width: 1800, height: 1195, alt: "Pierre in a jellyfish hat during Halt & Restart." },
-        { src: "/assets/events/halt-restart/models.jpg", width: 1800, height: 1195, alt: "The models in jellyfish hats, mid-task at the table." },
-        { className: "door", src: "/assets/events/halt-restart/door.jpg", width: 1800, height: 1197, alt: "A jellyfish hat on the door of classroom AA128." }
-      ]]
-    },
-    "ai-agents": {
-      label: "Pictures from AI Agents",
-      poster: {
-        className: "poster",
-        src: "/assets/events/ai-agents/ink.png",
-        width: 1651,
-        height: 2550,
-        alt: "AI Agents poster, Ink. Perceive, decide, act."
-      },
-      pages: [
-        [
-          { className: "wide", src: "/assets/events/ai-agents/recap/1100738.jpg", width: 1800, height: 1013, alt: "The AI Agents workshop, with laptops open and a slide on the screen." },
-          { src: "/assets/events/ai-agents/recap/img_9973.jpg", width: 1800, height: 1200, alt: "The classroom set for AI Agents, poster on the board and desks still empty." },
-          { src: "/assets/events/ai-agents/recap/img_9976.jpg", width: 1800, height: 1200, alt: "Laptops and notebooks laid out on a desk before the workshop." },
-          { src: "/assets/events/ai-agents/recap/img_9978.jpg", width: 1800, height: 1200, alt: "A speaker at the front of the room during AI Agents." },
-          { src: "/assets/events/ai-agents/recap/img_9983.jpg", width: 1800, height: 1200, alt: "A presenter at the front, with laptops open and the slide on the screen." }
-        ],
-        [
-          { src: "/assets/events/ai-agents/recap/img_9987.jpg", width: 1800, height: 1200, alt: "People at their laptops during the AI Agents workshop.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0001.jpg", width: 1200, height: 1800, alt: "A speaker presenting at the front of AI Agents.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0006.jpg", width: 1800, height: 1200, alt: "Three people at a laptop during AI Agents, one standing behind the chair.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0023.jpg", width: 1800, height: 1200, alt: "Three people leaning in over a laptop during AI Agents.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0025.jpg", width: 1800, height: 1200, alt: "Three people at a table with a laptop during AI Agents.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0029.jpg", width: 1800, height: 1200, alt: "Three people working through a task on a laptop during AI Agents.", lazy: true }
-        ],
-        [
-          { src: "/assets/events/ai-agents/recap/img_0046.jpg", width: 1800, height: 1200, alt: "A speaker at the board during AI Agents, with the group watching.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0047.jpg", width: 1800, height: 1200, alt: "A presenter talking with two people at a laptop during AI Agents.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0050.jpg", width: 1200, height: 1800, alt: "Three people at a laptop during AI Agents.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0056.jpg", width: 1800, height: 1200, alt: "Three people around a laptop during AI Agents.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0068.jpg", width: 1800, height: 1200, alt: "Two people working side by side on a laptop during AI Agents.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0069.jpg", width: 1800, height: 1200, alt: "Three people gathered around one laptop during AI Agents.", lazy: true }
-        ],
-        [
-          { src: "/assets/events/ai-agents/recap/img_0077.jpg", width: 1800, height: 1200, alt: "A laptop on the table during AI Agents, with the task on the screen.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0080.jpg", width: 1800, height: 1200, alt: "Two people at a laptop during AI Agents.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0085.jpg", width: 1800, height: 1200, alt: "Four people around a laptop during AI Agents, one standing.", lazy: true },
-          { src: "/assets/events/ai-agents/recap/img_0088.jpg", width: 1800, height: 1200, alt: "The group around a table with laptops at the end of AI Agents.", lazy: true }
-        ]
-      ]
-    }
-  };
-
-  function recapKey(event) {
-    const id = String(event.id || "").toLowerCase();
-    const title = String(event.title || "").toLowerCase();
-    if (id === "halt-restart" || (title.indexOf("halt") !== -1 && title.indexOf("restart") !== -1)) return "halt-restart";
-    if (id === "ai-agents" || title.indexOf("ai agent") !== -1) return "ai-agents";
-    return "";
-  }
-
   function recapHtml(event) {
-    const recap = recaps[recapKey(event)];
+    const item = mediaFor(event);
+    const recap = item && item.recap;
     if (!recap) return "";
     const pages = recap.pages.map(function (page) {
       return '<div class="recap-page">' + page.map(shot).join("") + "</div>";
@@ -300,27 +237,16 @@
     slots.forEach(function (slot) { slot.innerHTML = html; });
   }
 
-  function agentsNight() {
-    return {
-      id: "ai-agents",
-      title: "AI Agents",
-      datetime: "2026-10-28",
-      where: "MB202, Stan Grad Centre",
-      summary: "What an agent is, how the loop works, and using one on a real task.",
-      ticket: {
-        kicker: "Workshop",
-        big: "28<br>Oct",
-        time: "6:00–8:30 PM",
-        place: "MB202, Stan Grad Centre",
-        blurb: "What an agent is, how the loop works, and using one on a real task.",
-        chips: ["Past", "All programs"]
-      }
-    };
-  }
-
   function renderPast(events) {
     const nights = events.slice();
-    if (!nights.some(function (event) { return recapKey(event) === "ai-agents"; })) nights.push(agentsNight());
+    mediaItems.forEach(function (item) {
+      if (!item.recap || !item.fallback) return;
+      const exists = nights.some(function (event) {
+        const found = mediaFor(event);
+        return found && found.id === item.id;
+      });
+      if (!exists) nights.push(Object.assign({ id: item.id }, item.fallback));
+    });
     nights.sort(function (left, right) {
       return String(left.datetime || "").localeCompare(String(right.datetime || ""));
     });
@@ -329,12 +255,7 @@
     }).join("");
   }
 
-  fetch("/api/club")
-    .then(function (response) {
-      if (!response.ok) throw new Error("club");
-      return response.json();
-    })
-    .then(function (data) {
+  function paint(data) {
       const events = data.events || [];
       const upcoming = events.filter(function (event) { return !event.past; });
       const past = events.filter(function (event) { return event.past; });
@@ -361,8 +282,20 @@
           ? merchandise.map(merchCard).join("")
           : (unavailable || '<p class="empty-state">Nothing is in the Rubric shop yet.</p>'));
       }
+  }
+
+  Promise.all([
+    fetch("/assets/events/events.json").then(function (response) {
+      return response.ok ? response.json() : { events: [] };
+    }).catch(function () { return { events: [] }; }),
+    fetch("/api/club").then(function (response) {
+      if (!response.ok) throw new Error("club");
+      return response.json();
     })
-    .catch(function () {
+  ]).then(function (results) {
+    mediaItems = (results[0] && results[0].events) || [];
+    paint(results[1]);
+  }).catch(function () {
       const message = '<p class="empty-state">Rubric could not be loaded. Refresh in a moment.</p>';
       if (next) next.innerHTML = message;
       if (list) list.innerHTML = message;

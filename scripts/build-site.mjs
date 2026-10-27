@@ -240,55 +240,14 @@ const copies = [
   ["Events/Podcast/Podcast Poster E02 So Useful (11x17).png", "assets/podcast/e02.png"],
   ["Events/Podcast/Podcast Poster E03 Human Finish (11x17).png", "assets/podcast/e03.png"],
   ["Branding/SaitsaStudentClubsPrimaryLogo.svg", "assets/saitsa.svg"],
-  ["Branding/Vector Kit/png/social/og-1200x630.png", "assets/og.png"],
-  ["site/assets/events/halt-restart/poster.png", "assets/events/halt-restart/poster.png"],
-  ["site/assets/events/halt-restart/group.jpg", "assets/events/halt-restart/group.jpg"],
-  ["site/assets/events/halt-restart/door.jpg", "assets/events/halt-restart/door.jpg"],
-  ["site/assets/events/halt-restart/hailey.jpg", "assets/events/halt-restart/hailey.jpg"],
-  ["site/assets/events/halt-restart/pierre.jpg", "assets/events/halt-restart/pierre.jpg"],
-  ["site/assets/events/halt-restart/models.jpg", "assets/events/halt-restart/models.jpg"],
-  ["site/assets/events/unnatural-games/presents.png", "assets/events/unnatural-games/presents.png"],
-  ["site/assets/events/unnatural-games/scoreboard.png", "assets/events/unnatural-games/scoreboard.png"],
-  ["site/assets/events/unnatural-games/ticket.png", "assets/events/unnatural-games/ticket.png"],
-  ["site/assets/events/ai-agents/ink.png", "assets/events/ai-agents/ink.png"],
-  ["site/assets/events/ai-agents/paper.png", "assets/events/ai-agents/paper.png"],
-  ["site/assets/events/ai-agents/arcade.png", "assets/events/ai-agents/arcade.png"],
-  ["site/assets/events/ai-agents/toolkit.png", "assets/events/ai-agents/toolkit.png"],
-  ["site/assets/events/ai-agents/lime.png", "assets/events/ai-agents/lime.png"],
-  ["site/assets/events/ai-agents/nodes.png", "assets/events/ai-agents/nodes.png"],
-  ["site/assets/events/ai-agents/split.png", "assets/events/ai-agents/split.png"],
-  ["site/assets/events/ai-agents/bands.png", "assets/events/ai-agents/bands.png"],
-  ["site/assets/events/ai-agents/billboard.png", "assets/events/ai-agents/billboard.png"],
-  ["site/assets/events/ai-agents/monument.png", "assets/events/ai-agents/monument.png"],
-  ["site/assets/events/ai-agents/listings.png", "assets/events/ai-agents/listings.png"],
-  ["site/assets/events/ai-agents/versus.png", "assets/events/ai-agents/versus.png"],
-  ["site/assets/events/ai-agents/recap/1100738.jpg", "assets/events/ai-agents/recap/1100738.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0001.jpg", "assets/events/ai-agents/recap/img_0001.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0006.jpg", "assets/events/ai-agents/recap/img_0006.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0023.jpg", "assets/events/ai-agents/recap/img_0023.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0025.jpg", "assets/events/ai-agents/recap/img_0025.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0029.jpg", "assets/events/ai-agents/recap/img_0029.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0046.jpg", "assets/events/ai-agents/recap/img_0046.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0047.jpg", "assets/events/ai-agents/recap/img_0047.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0050.jpg", "assets/events/ai-agents/recap/img_0050.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0056.jpg", "assets/events/ai-agents/recap/img_0056.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0068.jpg", "assets/events/ai-agents/recap/img_0068.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0069.jpg", "assets/events/ai-agents/recap/img_0069.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0077.jpg", "assets/events/ai-agents/recap/img_0077.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0080.jpg", "assets/events/ai-agents/recap/img_0080.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0085.jpg", "assets/events/ai-agents/recap/img_0085.jpg"],
-  ["site/assets/events/ai-agents/recap/img_0088.jpg", "assets/events/ai-agents/recap/img_0088.jpg"],
-  ["site/assets/events/ai-agents/recap/img_9973.jpg", "assets/events/ai-agents/recap/img_9973.jpg"],
-  ["site/assets/events/ai-agents/recap/img_9976.jpg", "assets/events/ai-agents/recap/img_9976.jpg"],
-  ["site/assets/events/ai-agents/recap/img_9978.jpg", "assets/events/ai-agents/recap/img_9978.jpg"],
-  ["site/assets/events/ai-agents/recap/img_9983.jpg", "assets/events/ai-agents/recap/img_9983.jpg"],
-  ["site/assets/events/ai-agents/recap/img_9987.jpg", "assets/events/ai-agents/recap/img_9987.jpg"]
+  ["Branding/Vector Kit/png/social/og-1200x630.png", "assets/og.png"]
 ];
 for (const [from, to] of copies) {
   const dest = join(out, to);
   mkdirSync(dirname(dest), { recursive: true });
   cpSync(join(root, from), dest);
 }
+cpSync(join(root, "site/assets/events"), join(out, "assets/events"), { recursive: true });
 cpSync(join(root, "site/css"), join(out, "css"), { recursive: true });
 cpSync(join(root, "site/js"), join(out, "js"), { recursive: true });
 
