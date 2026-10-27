@@ -104,7 +104,7 @@
       ]]
     },
     "ai-agents": {
-      label: "AI Agents sheets",
+      label: "Pictures from AI Agents",
       poster: {
         className: "poster",
         src: "/assets/events/ai-agents/ink.png",
@@ -114,19 +114,33 @@
       },
       pages: [
         [
-          { className: "sheet", src: "/assets/events/ai-agents/paper.png", width: 1651, height: 2550, alt: "AI Agents poster, Paper." },
-          { className: "sheet", src: "/assets/events/ai-agents/arcade.png", width: 1651, height: 2550, alt: "AI Agents poster, Arcade." },
-          { className: "sheet", src: "/assets/events/ai-agents/toolkit.png", width: 1651, height: 2550, alt: "AI Agents poster, Toolkit. Chatbot versus agent." },
-          { className: "sheet", src: "/assets/events/ai-agents/lime.png", width: 1651, height: 2550, alt: "AI Agents poster, Lime. What, how, and use." },
-          { className: "sheet", src: "/assets/events/ai-agents/nodes.png", width: 1651, height: 2550, alt: "AI Agents poster, Nodes. Perceive, decide, act." },
-          { className: "sheet", src: "/assets/events/ai-agents/split.png", width: 1651, height: 2550, alt: "AI Agents poster, Split." }
+          { className: "wide", src: "/assets/events/ai-agents/recap/1100738.jpg", width: 1800, height: 1013, alt: "The AI Agents workshop, with laptops open and a slide on the screen." },
+          { src: "/assets/events/ai-agents/recap/img_9973.jpg", width: 1800, height: 1200, alt: "The classroom set for AI Agents, poster on the board and desks still empty." },
+          { src: "/assets/events/ai-agents/recap/img_9976.jpg", width: 1800, height: 1200, alt: "Laptops and notebooks laid out on a desk before the workshop." },
+          { src: "/assets/events/ai-agents/recap/img_9978.jpg", width: 1800, height: 1200, alt: "A speaker at the front of the room during AI Agents." },
+          { src: "/assets/events/ai-agents/recap/img_9983.jpg", width: 1800, height: 1200, alt: "A presenter at the front, with laptops open and the slide on the screen." }
         ],
         [
-          { className: "sheet", src: "/assets/events/ai-agents/bands.png", width: 1651, height: 2550, alt: "AI Agents poster, Bands. What, how, and use.", lazy: true },
-          { className: "sheet", src: "/assets/events/ai-agents/billboard.png", width: 1650, height: 2550, alt: "AI Agents poster, Billboard.", lazy: true },
-          { className: "sheet", src: "/assets/events/ai-agents/monument.png", width: 1651, height: 2550, alt: "AI Agents poster, Monument.", lazy: true },
-          { className: "sheet", src: "/assets/events/ai-agents/listings.png", width: 1651, height: 2550, alt: "AI Agents poster, Listings. Studying, a resume, and a project.", lazy: true },
-          { className: "sheet", src: "/assets/events/ai-agents/versus.png", width: 1651, height: 2550, alt: "AI Agents poster, Versus. Chatbots answer. Agents act.", lazy: true }
+          { src: "/assets/events/ai-agents/recap/img_9987.jpg", width: 1800, height: 1200, alt: "People at their laptops during the AI Agents workshop.", lazy: true },
+          { src: "/assets/events/ai-agents/recap/img_0001.jpg", width: 1200, height: 1800, alt: "A speaker presenting at the front of AI Agents.", lazy: true },
+          { src: "/assets/events/ai-agents/recap/img_0006.jpg", width: 1800, height: 1200, alt: "Three people at a laptop during AI Agents, one standing behind the chair.", lazy: true },
+          { src: "/assets/events/ai-agents/recap/img_0023.jpg", width: 1800, height: 1200, alt: "Three people leaning in over a laptop during AI Agents.", lazy: true },
+          { src: "/assets/events/ai-agents/recap/img_0025.jpg", width: 1800, height: 1200, alt: "Three people at a table with a laptop during AI Agents.", lazy: true },
+          { src: "/assets/events/ai-agents/recap/img_0029.jpg", width: 1800, height: 1200, alt: "Three people working through a task on a laptop during AI Agents.", lazy: true }
+        ],
+        [
+          { src: "/assets/events/ai-agents/recap/img_0046.jpg", width: 1800, height: 1200, alt: "A speaker at the board during AI Agents, with the group watching.", lazy: true },
+          { src: "/assets/events/ai-agents/recap/img_0047.jpg", width: 1800, height: 1200, alt: "A presenter talking with two people at a laptop during AI Agents.", lazy: true },
+          { src: "/assets/events/ai-agents/recap/img_0050.jpg", width: 1200, height: 1800, alt: "Three people at a laptop during AI Agents.", lazy: true },
+          { src: "/assets/events/ai-agents/recap/img_0056.jpg", width: 1800, height: 1200, alt: "Three people around a laptop during AI Agents.", lazy: true },
+          { src: "/assets/events/ai-agents/recap/img_0068.jpg", width: 1800, height: 1200, alt: "Two people working side by side on a laptop during AI Agents.", lazy: true },
+          { src: "/assets/events/ai-agents/recap/img_0069.jpg", width: 1800, height: 1200, alt: "Three people gathered around one laptop during AI Agents.", lazy: true }
+        ],
+        [
+          { src: "/assets/events/ai-agents/recap/img_0077.jpg", width: 1800, height: 1200, alt: "A laptop on the table during AI Agents, with the task on the screen.", lazy: true },
+          { src: "/assets/events/ai-agents/recap/img_0080.jpg", width: 1800, height: 1200, alt: "Two people at a laptop during AI Agents.", lazy: true },
+          { src: "/assets/events/ai-agents/recap/img_0085.jpg", width: 1800, height: 1200, alt: "Four people around a laptop during AI Agents, one standing.", lazy: true },
+          { src: "/assets/events/ai-agents/recap/img_0088.jpg", width: 1800, height: 1200, alt: "The group around a table with laptops at the end of AI Agents.", lazy: true }
         ]
       ]
     }
