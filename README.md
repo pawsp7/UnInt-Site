@@ -19,4 +19,4 @@ The club repo keeps **the** display poster in `Events/<EventName>/poster/` (pref
 4. Copy an object in `site/assets/events/events.json`. Set `id`, `match` (title fragments), and `poster.alt`. The build fills `src` / width / height from the `poster/` folder. Optional: `ticket`, `place`, `datetime` if the public card should use those instead of Rubric.
 5. Run `node scripts/build-site.mjs`. No HTML or JS edits.
 
-Private-repo recaps not in this tree (Unnatural Games `Recap/IMG_2230–2237`, AI-Assisted Game Jam v1–v3) were not readable here. Drop those files into `recap/` and add the JSON object when you have them.
+Game Jam posters still live in the club repo (`Events/Game-Jam/AI-Assisted-Game-Jam`). Drop a chosen sheet into `poster/` here when it should show.

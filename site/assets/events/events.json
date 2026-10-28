@@ -24,6 +24,37 @@
       "match": ["unnatural games"],
       "poster": {
         "alt": "Unnatural Games poster. Beat the bot. Mondays, 6:00–8:00 PM, MB224."
+      },
+      "recap": {
+        "label": "Pictures from Unnatural Games",
+        "pages": [
+          [
+            { "className": "wide", "src": "/assets/events/unnatural-games/recap/img_2234.jpg", "width": 1800, "height": 1350, "alt": "The room at Unnatural Games, watching the board." },
+            { "src": "/assets/events/unnatural-games/recap/img_2230.jpg", "width": 1800, "height": 1350, "alt": "People at a table during Unnatural Games." },
+            { "src": "/assets/events/unnatural-games/recap/img_2231.jpg", "width": 1800, "height": 1350, "alt": "A presenter at the front during Unnatural Games, with HUMANS vs AI on the screen." },
+            { "src": "/assets/events/unnatural-games/recap/img_2237.jpg", "width": 1800, "height": 1350, "alt": "The room at Unnatural Games, with Duel, Siege, and Mastermind on the screen." },
+            { "src": "/assets/events/unnatural-games/recap/img_2232.jpg", "width": 1800, "height": 1350, "alt": "The HUMANS vs AI slide at Unnatural Games." }
+          ],
+          [
+            { "src": "/assets/events/unnatural-games/recap/img_2235.jpg", "width": 1800, "height": 1350, "alt": "People at the front desk during Unnatural Games.", "lazy": true },
+            { "src": "/assets/events/unnatural-games/recap/img_2236.jpg", "width": 1800, "height": 1350, "alt": "Two people at a laptop during Unnatural Games.", "lazy": true },
+            { "src": "/assets/events/unnatural-games/recap/img_2233.jpg", "width": 1800, "height": 1350, "alt": "Hailey at the table before Unnatural Games.", "lazy": true }
+          ]
+        ]
+      },
+      "fallback": {
+        "title": "Unnatural Games",
+        "datetime": "2026-10-19",
+        "where": "MB224, SAIT Campus Centre",
+        "summary": "One chessboard. One language model. The room plays as a single team.",
+        "ticket": {
+          "kicker": "Game night",
+          "big": "19<br>Oct",
+          "time": "6:00–8:00 PM",
+          "place": "MB224, SAIT Campus Centre",
+          "blurb": "One chessboard. One language model. The room plays as a single team.",
+          "chips": ["Past", "Free"]
+        }
       }
     },
     {
