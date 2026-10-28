@@ -561,6 +561,10 @@ a.photos-cue:hover { color: var(--ink); }
   margin-bottom: 16px;
 }
 .episode-poster img { object-fit: contain; background: #0c0b10; }
+.night-poster {
+  width: min(400px, 100%);
+  aspect-ratio: 11 / 17;
+}
 .shot.wide { grid-column: 2 / -1; }
 .shot.door img { object-position: 18% center; }
 .shot.sheet img { object-fit: contain; background: #0c0b10; }
@@ -1152,6 +1156,7 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
     grid-column: 1 / -1;
     aspect-ratio: 11 / 16;
   }
+  .night-poster { aspect-ratio: 11 / 17; }
   .shot.wide { grid-column: 1 / -1; }
   .poster-feature,
   .collage.sheets { grid-template-columns: 1fr; }
