@@ -70,30 +70,6 @@
     );
   }
 
-  function ticket(event) {
-    const card = event.ticket || {};
-    const chips = (card.chips || []).map(function (chip) {
-      return '<span class="chip chip-ink">' + escapeHtml(chip) + "</span>";
-    }).join("");
-    const poster = posterPreview(event);
-    return (
-      '<article class="ticket' + (poster ? " has-poster" : "") + '">' +
-      poster +
-      '<div class="ticket-stub">' +
-      '<span class="kicker" style="color: var(--lime);">' + escapeHtml(card.kicker || "") + "</span>" +
-      "<strong>" + stubBig(card.big) + "</strong>" +
-      "<span>" + escapeHtml(card.time || "") + "</span>" +
-      "</div>" +
-      '<div class="ticket-body">' +
-      '<p class="kicker" style="color: var(--wine);">' + escapeHtml(card.place || "") + "</p>" +
-      "<h3>" + escapeHtml(event.title) + "</h3>" +
-      "<p>" + escapeHtml(card.blurb || event.summary) + "</p>" +
-      '<div class="meta">' + chips + "</div>" +
-      '<div class="event-actions">' + actions(event, true) + "</div>" +
-      "</div></article>"
-    );
-  }
-
   function shot(image) {
     if (!image || !image.src) return "";
     const lazy = image.lazy ? " loading=\"lazy\"" : "";
@@ -232,14 +208,16 @@
     );
   }
 
+  function calendarCard(event) {
+    if (isUnnaturalGames(event)) return gamesBanner(event);
+    return posterFor(event) ? listedTicket(event) : row(event);
+  }
+
   function renderUpcoming(events) {
     if (!events.length) {
       return '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>';
     }
-    return '<div class="event-list">' + events.map(function (event) {
-      if (isUnnaturalGames(event)) return gamesBanner(event);
-      return posterFor(event) ? listedTicket(event) : row(event);
-    }).join("") + "</div>";
+    return '<div class="event-list">' + events.map(calendarCard).join("") + "</div>";
   }
 
   function personCard(member) {
@@ -340,7 +318,7 @@
       if (next) {
         const shown = homeUpcoming(upcoming, 3);
         next.innerHTML = shown.length
-          ? shown.map(ticket).join("")
+          ? shown.map(calendarCard).join("")
           : (unavailable || '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>');
       }
       if (list) list.innerHTML = upcoming.length || !unavailable ? renderUpcoming(upcoming) : unavailable;
