@@ -82,6 +82,13 @@
       }
     },
     {
+      "id": "game-jam",
+      "match": ["game jam"],
+      "poster": {
+        "alt": "AI-Assisted Game Jam poster. Press start. Saturday 21 November, Aldred Hall."
+      }
+    },
+    {
       "id": "ai-project-showcase",
       "match": ["project showcase"],
       "place": "MacDonald Hall, SAIT",
