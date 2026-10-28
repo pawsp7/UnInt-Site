@@ -4,12 +4,7 @@
       "id": "halt-restart",
       "match": ["halt", "restart"],
       "poster": {
-        "className": "poster",
-        "src": "/assets/events/halt-restart/poster.png",
-        "width": 2200,
-        "height": 3400,
-        "alt": "Halt & Restart poster. Friday 18 September, 4:00–7:00 PM, Heritage Hall AA128.",
-        "href": "/media/#halt-restart"
+        "alt": "Halt & Restart poster. Friday 18 September, 4:00–7:00 PM, Heritage Hall AA128."
       },
       "recap": {
         "label": "Pictures from Halt & Restart",
@@ -28,24 +23,14 @@
       "id": "unnatural-games",
       "match": ["unnatural games"],
       "poster": {
-        "className": "poster",
-        "src": "/assets/events/unnatural-games/presents.png",
-        "width": 1210,
-        "height": 1870,
-        "alt": "Unnatural Games poster, Presents. Mondays, 6:00–8:00 PM. One board, one language model, one room.",
-        "href": "/media/#unnatural-games"
+        "alt": "Unnatural Games poster. Mondays, 6:00–8:00 PM. One board, one language model, one room."
       }
     },
     {
       "id": "ai-agents",
       "match": ["ai agent"],
       "poster": {
-        "className": "poster",
-        "src": "/assets/events/ai-agents/ink.png",
-        "width": 1651,
-        "height": 2550,
-        "alt": "AI Agents poster, Ink. Perceive, decide, act.",
-        "href": "/media/#ai-agents"
+        "alt": "AI Agents poster. Perceive, decide, act."
       },
       "recap": {
         "label": "Pictures from AI Agents",
@@ -94,6 +79,25 @@
           "blurb": "What an agent is, how the loop works, and using one on a real task.",
           "chips": ["Past", "All programs"]
         }
+      }
+    },
+    {
+      "id": "ai-project-showcase",
+      "match": ["project showcase"],
+      "place": "MacDonald Hall, SAIT",
+      "datetime": "2026-11-26T17:00",
+      "whenLabel": "Thu 26 Nov",
+      "whenDetail": "5:00–8:00 PM",
+      "poster": {
+        "alt": "AI Project Showcase poster. Show your work. Thursday 26 November, 5:00–8:00 PM, MacDonald Hall, SAIT."
+      },
+      "ticket": {
+        "kicker": "Showcase",
+        "big": "26<br>Nov",
+        "time": "5:00–8:00 PM",
+        "place": "MacDonald Hall, SAIT",
+        "blurb": "End-of-semester AI Project Showcase. Bring a class project, a side quest, or something almost working.",
+        "chips": ["Student club", "Demos"]
       }
     }
   ]
