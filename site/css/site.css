@@ -443,6 +443,41 @@ h3 { font-size: 22px; letter-spacing: -0.03em; line-height: 1.15; }
 .on-ink .chip-ghost { color: var(--faint); }
 
 .event-list { display: grid; gap: 14px; }
+.games-banner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px 18px;
+  min-height: 88px;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.games-banner.has-art { grid-template-columns: 120px 1fr auto; }
+.games-banner-art {
+  display: block;
+  height: 88px;
+  margin: 0;
+  border-radius: 0;
+  background: #0c0b10;
+}
+.games-banner-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 22%;
+}
+.games-banner-copy { min-width: 0; padding: 10px 0; }
+.games-banner-copy .kicker { color: var(--wine); }
+.games-banner-copy h3 { font-size: 22px; line-height: 1.1; }
+.games-banner-copy .where {
+  margin: 4px 0 0;
+  color: #2a292c;
+  font-size: 14px;
+}
+.games-banner:not(.has-art) .games-banner-copy { padding-left: 18px; }
+.games-banner-action { padding-right: 16px; }
 .event {
   display: grid;
   grid-template-columns: 150px 1fr auto;
@@ -526,6 +561,10 @@ a.photos-cue:hover { color: var(--ink); }
   margin-bottom: 16px;
 }
 .episode-poster img { object-fit: contain; background: #0c0b10; }
+.night-poster {
+  width: min(400px, 100%);
+  aspect-ratio: 11 / 17;
+}
 .shot.wide { grid-column: 2 / -1; }
 .shot.door img { object-position: 18% center; }
 .shot.sheet img { object-fit: contain; background: #0c0b10; }
@@ -1068,6 +1107,9 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
   .callout { grid-template-columns: 1fr; }
   .callout img { margin: 0; }
   .event { grid-template-columns: 1fr; }
+  .games-banner,
+  .games-banner.has-art { grid-template-columns: 88px 1fr; }
+  .games-banner-action { grid-column: 2; padding: 0 14px 12px 0; }
 }
 
 @media (max-width: 800px) {
@@ -1090,6 +1132,11 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
   .hero, .pillars, .cards-2, .channels, .site-footer .wrap, .ticket, .split, .event-form-row {
     grid-template-columns: 1fr;
   }
+  .games-banner,
+  .games-banner.has-art { grid-template-columns: 1fr; }
+  .games-banner-art { width: 100%; height: 72px; }
+  .games-banner-copy { padding: 4px 16px 0; }
+  .games-banner-action { grid-column: auto; padding: 0 16px 14px; }
   .ticket.has-poster { grid-template-columns: 1fr; }
   .event-poster {
     width: min(220px, 72%);
@@ -1109,6 +1156,7 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
     grid-column: 1 / -1;
     aspect-ratio: 11 / 16;
   }
+  .night-poster { aspect-ratio: 11 / 17; }
   .shot.wide { grid-column: 1 / -1; }
   .poster-feature,
   .collage.sheets { grid-template-columns: 1fr; }

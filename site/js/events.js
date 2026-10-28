@@ -38,7 +38,26 @@
 
   function posterFor(event) {
     const item = mediaFor(event);
-    return item && item.poster ? item.poster : null;
+    const poster = item && item.poster;
+    if (!poster || !poster.src || !item.id) return null;
+    const prefix = "/assets/events/" + item.id + "/poster/";
+    if (poster.src.indexOf(prefix) !== 0) return null;
+    return poster;
+  }
+
+  function applyMedia(event) {
+    const item = mediaFor(event);
+    if (!item) return event;
+    const next = Object.assign({}, event);
+    if (item.place) next.where = item.place;
+    if (item.datetime) next.datetime = item.datetime;
+    if (item.whenLabel) next.whenLabel = item.whenLabel;
+    if (item.whenDetail) next.whenDetail = item.whenDetail;
+    if (item.ticket) {
+      next.ticket = Object.assign({}, event.ticket || {}, item.ticket);
+      if (item.ticket.place) next.where = item.ticket.place;
+    }
+    return next;
   }
 
   function posterPreview(event) {
@@ -49,35 +68,6 @@
       '<img src="' + escapeHtml(poster.src) + '" width="' + poster.width + '" height="' + poster.height + '" alt="' + escapeHtml(poster.alt) + '">' +
       "</a>"
     );
-  }
-
-  function ticket(event) {
-    const card = event.ticket || {};
-    const chips = (card.chips || []).map(function (chip) {
-      return '<span class="chip chip-ink">' + escapeHtml(chip) + "</span>";
-    }).join("");
-    const poster = posterPreview(event);
-    return (
-      '<article class="ticket' + (poster ? " has-poster" : "") + '">' +
-      poster +
-      '<div class="ticket-stub">' +
-      '<span class="kicker" style="color: var(--lime);">' + escapeHtml(card.kicker || "") + "</span>" +
-      "<strong>" + stubBig(card.big) + "</strong>" +
-      "<span>" + escapeHtml(card.time || "") + "</span>" +
-      "</div>" +
-      '<div class="ticket-body">' +
-      '<p class="kicker" style="color: var(--wine);">' + escapeHtml(card.place || "") + "</p>" +
-      "<h3>" + escapeHtml(event.title) + "</h3>" +
-      "<p>" + escapeHtml(card.blurb || event.summary) + "</p>" +
-      '<div class="meta">' + chips + "</div>" +
-      '<div class="event-actions">' + actions(event, true) + "</div>" +
-      "</div></article>"
-    );
-  }
-
-  function posterHref(event) {
-    const poster = posterFor(event);
-    return poster ? poster.href : "";
   }
 
   function shot(image) {
@@ -116,14 +106,11 @@
     const rubric = event.href
       ? '<a class="btn btn-small btn-lime" href="' + escapeHtml(event.href) + '" target="_blank" rel="noopener noreferrer">' + label + "</a>"
       : "";
-    const posters = posterHref(event)
-      ? '<a class="btn btn-small btn-ghost" href="' + posterHref(event) + '">Posters</a>'
-      : "";
     const list = withList
       ? '<a class="btn btn-small btn-ghost" href="/events/">All events</a>'
       : "";
-    if (!rubric && !posters && !list) return "";
-    return rubric + posters + list;
+    if (!rubric && !list) return "";
+    return rubric + list;
   }
 
   function listedTicket(event) {
@@ -131,14 +118,12 @@
     const chips = (card.chips || []).map(function (chip) {
       return '<span class="chip chip-ink">' + escapeHtml(chip) + "</span>";
     }).join("");
-    const media = posterHref(event);
     const rubric = event.href
       ? '<a class="btn btn-small btn-lime" href="' + escapeHtml(event.href) + '" target="_blank" rel="noopener noreferrer">View on Rubric</a>'
       : "";
     return (
       '<article class="ticket has-poster">' +
       posterPreview(event) +
-      '<a class="ticket-link" href="' + media + '" aria-label="Posters for ' + escapeHtml(event.title) + '"></a>' +
       '<div class="ticket-stub">' +
       '<span class="kicker" style="color: var(--lime);">' + escapeHtml(card.kicker || "Club night") + "</span>" +
       "<strong>" + stubBig(card.big) + "</strong>" +
@@ -148,7 +133,7 @@
       '<p class="kicker" style="color: var(--wine);">' + escapeHtml(card.place || event.where) + "</p>" +
       "<h3>" + escapeHtml(event.title) + "</h3>" +
       "<p>" + escapeHtml(card.blurb || event.summary) + "</p>" +
-      '<div class="meta">' + chips + '<a class="photos-cue" href="' + media + '">Posters →</a></div>' +
+      '<div class="meta">' + chips + "</div>" +
       (rubric ? '<div class="event-actions">' + rubric + "</div>" : "") +
       "</div></article>"
     );
@@ -164,7 +149,7 @@
       "<div><h3>" + escapeHtml(event.title) + "</h3>" +
       '<p class="where">' + escapeHtml(event.where) + "</p>" +
       "<p>" + escapeHtml(event.summary) + "</p>" +
-      (event.href || posterHref(event) ? '<div class="event-actions">' + actions(event, false) + "</div>" : "") +
+      (event.href ? '<div class="event-actions">' + actions(event, false) + "</div>" : "") +
       "</div>" +
       '<span class="chip chip-' + tone + '">' + escapeHtml(event.status) + "</span>" +
       "</article>"
@@ -199,13 +184,40 @@
     return '<div class="past-night">' + linked + recapHtml(event) + "</div>";
   }
 
+  function gamesBanner(event) {
+    const poster = posterFor(event);
+    const art = poster
+      ? '<a class="games-banner-art" href="' + escapeHtml(poster.src) + '">' +
+        '<img src="' + escapeHtml(poster.src) + '" width="' + poster.width + '" height="' + poster.height + '" alt="' + escapeHtml(poster.alt) + '">' +
+        "</a>"
+      : "";
+    const when = [event.whenLabel, event.whenDetail].filter(Boolean).map(escapeHtml).join(" · ");
+    const rubric = event.href
+      ? '<a class="btn btn-small btn-lime" href="' + escapeHtml(event.href) + '" target="_blank" rel="noopener noreferrer">View on Rubric</a>'
+      : "";
+    return (
+      '<article class="games-banner' + (art ? " has-art" : "") + '">' +
+      art +
+      '<div class="games-banner-copy">' +
+      (when ? '<p class="kicker">' + when + "</p>" : "") +
+      "<h3>" + escapeHtml(event.title) + "</h3>" +
+      (event.where ? '<p class="where">' + escapeHtml(event.where) + "</p>" : "") +
+      "</div>" +
+      (rubric ? '<div class="games-banner-action">' + rubric + "</div>" : "") +
+      "</article>"
+    );
+  }
+
+  function calendarCard(event) {
+    if (isUnnaturalGames(event)) return gamesBanner(event);
+    return posterFor(event) ? listedTicket(event) : row(event);
+  }
+
   function renderUpcoming(events) {
     if (!events.length) {
       return '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>';
     }
-    return '<div class="event-list">' + events.map(function (event) {
-      return posterHref(event) ? listedTicket(event) : row(event);
-    }).join("") + "</div>";
+    return '<div class="event-list">' + events.map(calendarCard).join("") + "</div>";
   }
 
   function personCard(member) {
@@ -297,7 +309,7 @@
   }
 
   function paint(data) {
-      const events = data.events || [];
+      const events = (data.events || []).map(applyMedia);
       const upcoming = events.filter(function (event) { return !event.past; });
       const past = events.filter(function (event) { return event.past; });
       const unavailable = data.rubric === false
@@ -306,7 +318,7 @@
       if (next) {
         const shown = homeUpcoming(upcoming, 3);
         next.innerHTML = shown.length
-          ? shown.map(ticket).join("")
+          ? shown.map(calendarCard).join("")
           : (unavailable || '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>');
       }
       if (list) list.innerHTML = upcoming.length || !unavailable ? renderUpcoming(upcoming) : unavailable;
