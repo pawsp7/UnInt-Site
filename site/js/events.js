@@ -208,11 +208,36 @@
     return '<div class="past-night">' + linked + recapHtml(event) + "</div>";
   }
 
+  function gamesBanner(event) {
+    const poster = posterFor(event);
+    const art = poster
+      ? '<a class="games-banner-art" href="' + escapeHtml(poster.src) + '">' +
+        '<img src="' + escapeHtml(poster.src) + '" width="' + poster.width + '" height="' + poster.height + '" alt="' + escapeHtml(poster.alt) + '">' +
+        "</a>"
+      : "";
+    const when = [event.whenLabel, event.whenDetail].filter(Boolean).map(escapeHtml).join(" · ");
+    const rubric = event.href
+      ? '<a class="btn btn-small btn-lime" href="' + escapeHtml(event.href) + '" target="_blank" rel="noopener noreferrer">View on Rubric</a>'
+      : "";
+    return (
+      '<article class="games-banner' + (art ? " has-art" : "") + '">' +
+      art +
+      '<div class="games-banner-copy">' +
+      (when ? '<p class="kicker">' + when + "</p>" : "") +
+      "<h3>" + escapeHtml(event.title) + "</h3>" +
+      (event.where ? '<p class="where">' + escapeHtml(event.where) + "</p>" : "") +
+      "</div>" +
+      (rubric ? '<div class="games-banner-action">' + rubric + "</div>" : "") +
+      "</article>"
+    );
+  }
+
   function renderUpcoming(events) {
     if (!events.length) {
       return '<p class="empty-state">No upcoming nights are on Rubric yet. When one is published there, it shows up here.</p>';
     }
     return '<div class="event-list">' + events.map(function (event) {
+      if (isUnnaturalGames(event)) return gamesBanner(event);
       return posterFor(event) ? listedTicket(event) : row(event);
     }).join("") + "</div>";
   }
