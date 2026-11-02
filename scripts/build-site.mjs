@@ -246,6 +246,7 @@ ${jsonLd}
       <a class="btn btn-lime btn-small" href="/connect/#join">Join us</a>
     </div>
   </div>
+  <div class="week-events" data-week-events hidden></div>
 </header>
 <main id="content">
 ${body}
