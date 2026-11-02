@@ -866,6 +866,27 @@ a.person:hover { border-color: rgba(186, 248, 55, 0.55); }
 .page-hero { padding: 48px 0 10px; }
 .page-hero p { color: var(--muted); max-width: 62ch; }
 
+.resource {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: center;
+}
+.resource-preview { aspect-ratio: 16 / 9; }
+.resource-preview img { object-fit: cover; }
+.section-head kbd {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  padding: 1px 6px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--paper);
+}
+.resource-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+@media (max-width: 800px) {
+  .resource { grid-template-columns: 1fr; }
+}
+
 .note {
   border-left: 3px solid var(--cyan);
   padding: 8px 0 8px 14px;

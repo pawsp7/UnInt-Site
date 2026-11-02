@@ -36,6 +36,13 @@ const pages = [
     description: "Season 1 of I hate it but it’s so useful. Three episodes in production, with the posters."
   },
   {
+    file: "resources.html",
+    dest: "resources/index.html",
+    page: "resources",
+    title: "Resources — Unnatural Intelligence",
+    description: "Slides and handouts from club workshops, free to open and follow along."
+  },
+  {
     file: "team.html",
     dest: "team/index.html",
     page: "team",
@@ -95,6 +102,7 @@ const nav = [
   ["events", "Events", "/events/"],
   ["media", "Media", "/media/"],
   ["podcast", "Podcast", "/podcast/"],
+  ["resources", "Resources", "/resources/"],
   ["team", "Team", "/team/"],
   ["shop", "Shop", "/shop/"],
   ["connect", "Connect", "/connect/"]
@@ -174,6 +182,7 @@ ${body}
         <li><a href="/events/">Events</a></li>
         <li><a href="/media/">Media</a></li>
         <li><a href="/podcast/">Podcast</a></li>
+        <li><a href="/resources/">Resources</a></li>
         <li><a href="/team/">Team</a></li>
         <li><a href="/shop/">Shop</a></li>
         <li><a href="/connect/">Connect</a></li>
@@ -248,6 +257,7 @@ for (const [from, to] of copies) {
   cpSync(join(root, from), dest);
 }
 cpSync(join(root, "site/assets/events"), join(out, "assets/events"), { recursive: true });
+cpSync(join(root, "site/resources"), join(out, "resources"), { recursive: true });
 cpSync(join(root, "site/css"), join(out, "css"), { recursive: true });
 cpSync(join(root, "site/js"), join(out, "js"), { recursive: true });
 
@@ -264,6 +274,24 @@ for (const font of [
   "LICENSE.txt"
 ]) {
   cpSync(join(root, "charter/fonts", font), join(fontDir, font));
+}
+
+// Slide decks load fonts from their own fonts/ folder. Reuse the charter copies instead of storing them twice.
+const deckFonts = [
+  "Inter-Regular.ttf",
+  "Inter-Medium.ttf",
+  "Inter-SemiBold.ttf",
+  "Inter-Bold.ttf",
+  "InterDisplay-Bold.ttf",
+  "JetBrainsMono-Regular.ttf",
+  "JetBrainsMono-Bold.ttf"
+];
+for (const deck of ["ai-agents-workshop"]) {
+  const deckFontDir = join(out, "resources", deck, "fonts");
+  mkdirSync(deckFontDir, { recursive: true });
+  for (const font of deckFonts) {
+    cpSync(join(root, "charter/fonts", font), join(deckFontDir, font));
+  }
 }
 
 writeFileSync(join(out, ".nojekyll"), "");

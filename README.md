@@ -17,3 +17,7 @@ The Events page layout lives in `site/content/events.html` and `site/js/events.j
 4. Run `node scripts/build-site.mjs`. No HTML or JS edits.
 
 Private-repo recaps not in this tree (Unnatural Games `Recap/IMG_2230–2237` and `FINAL-POSTER.png`, AI Project Showcase posters, AI-Assisted Game Jam v1–v3) were not readable here. Drop those files into a new `<id>/` folder and add the JSON object when you have them.
+
+## Updating /resources/
+
+Workshop slide decks live in `site/resources/<id>/` and are served at `/resources/<id>/`. Leave out the deck's `fonts/` folder: the build copies the Inter and JetBrains Mono files from `charter/fonts/` into it. Add the id to the deck list in `scripts/build-site.mjs`, put a 1600×900 title-slide picture in `site/resources/previews/<id>.jpg`, and add a card to `site/content/resources.html`.

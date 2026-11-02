@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agents: What? How? — Unnatural Intelligence</title>
+<meta name="description" content="Slides for the Unnatural Intelligence AI Agents workshop at SAIT: a short history of talking to machines, how agents work, and a hands-on with opencode.">
+<meta property="og:title" content="AI Agents: What? How? — Unnatural Intelligence">
+<meta property="og:description" content="From punch cards to agents with their own computer. Follow along and install opencode.">
+<link rel="icon" href="img/jellyfish-lime.svg">
+<link rel="preload" href="fonts/InterDisplay-Bold.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="blob a"></div><div class="blob b"></div><div class="blob c"></div>
+<div class="grid-bg"></div>
+
+<main class="stage" id="stage">
+
+<!-- 1 · TITLE -->
+<section class="slide s-title" data-section="Welcome">
+  <div>
+    <div class="brand in"><img src="img/jellyfish-lime.svg" alt=""><div>Unnatural<br>Intelligence<small>SAIT student club · Saitsa</small></div></div>
+    <h1 class="in" style="--d:1"><span class="lime">AI</span><span class="a2">Agents</span><span class="a3 outline">What? How?</span></h1>
+    <div class="start in" style="--d:4"><kbd>→</kbd> press to dive in &nbsp;·&nbsp; MB202 · Thu Oct 1</div>
+  </div>
+  <img class="mascot float glow-pink in pop" style="--d:2" src="img/mascot.webp" alt="Unnatural Intelligence jellyfish mascot">
+  <aside class="notes">Welcome everyone. Grab a seat near an outlet. The slides are online at this URL, so you can follow along and copy commands from your own laptop.</aside>
+</section>
+
+<!-- 2 · MAP -->
+<section class="slide" data-section="Welcome">
+  <p class="kicker in">Tonight's map</p>
+  <h2 class="in" style="--d:1">Two hours, <span class="l">five stops</span></h2>
+  <div class="map">
+    <div class="stop in" style="--d:2"><div class="dot">01</div><div class="t">15 min</div><h3>Hello + history</h3><p>Who we are, and 70 years of talking to machines.</p></div>
+    <div class="stop in" style="--d:3"><div class="dot">02</div><div class="t">30 min</div><h3>What is an agent?</h3><p>Chatbots answer. Agents act.</p></div>
+    <div class="stop in" style="--d:4"><div class="dot">03</div><div class="t">30 min</div><h3>How it works</h3><p>The loop, the tools, the risks.</p></div>
+    <div class="stop in" style="--d:5"><div class="dot">04</div><div class="t">30 min</div><h3>Hands-on</h3><p>Install opencode. Give it a real job.</p></div>
+    <div class="stop in" style="--d:6"><div class="dot">05</div><div class="t">15 min</div><h3>What's next</h3><p>The speed of everything, then Q&amp;A.</p></div>
+  </div>
+  <aside class="notes">Quick club intro: Unnatural Intelligence = make AI accessible, practical and social. Sign-up sheet + Discord QR at the end. No experience needed tonight.</aside>
+</section>
+
+<!-- 3 · HISTORY INTRO -->
+<section class="slide" data-section="History">
+  <p class="kicker pink in">A short history</p>
+  <h2 class="in" style="--d:1">How do you <span class="p">talk</span><br>to a machine?</h2>
+  <p class="lead in" style="--d:2">Every interface in history answers one question: <b>who does the translating?</b> For 70 years, the answer has been sliding from you… to the machine.</p>
+  <div class="translator in" style="--d:3">
+    <div class="end you"><span>🙋</span>You</div>
+    <div class="rail"><div class="bubble"><i>🗣️ translating…</i></div></div>
+    <div class="labels"><span>← machine speaks human</span><span>you speak machine →</span></div>
+    <div class="end machine"><span>🤖</span>Machine</div>
+  </div>
+  <aside class="notes">Ask the room: what was the first computer you ever talked to? Siri? A Tamagotchi? Then walk through the timeline.</aside>
+</section>
+
+<!-- 4 · TIMELINE -->
+<section class="slide s-timeline" data-section="History" id="timeline">
+  <p class="kicker in">Press → to travel through time</p>
+  <div class="timeline-hint">⏳ 1950 → today</div>
+  <div class="eras">
+    <article class="era f">
+      <div class="vis punch"><img src="img/punch-card.webp" alt="IBM-style punched card"></div>
+      <div><div class="year">1950s</div><h3>Punch cards</h3><p>You write a program as <b>holes in cardboard</b>, hand the stack to an operator and come back tomorrow. One typo? Come back the day after.</p><div class="chip tag">You speak machine</div></div>
+    </article>
+    <article class="era f" data-hook="eliza">
+      <div class="vis"><div class="eliza obj" id="eliza"></div></div>
+      <div><div class="year">1966</div><h3>ELIZA</h3><p>The <b>first chatbot</b>, by Joseph Weizenbaum at MIT. It only flipped your words back as questions, and people still told it their secrets.</p><div class="chip tag">The illusion of understanding</div></div>
+    </article>
+    <article class="era f">
+      <div class="vis"><div class="hal obj"><img src="img/hal9000.svg" alt="HAL 9000 eye"></div></div>
+      <div><div class="year">1968</div><h3>HAL 9000</h3><p>In <b>2001: A Space Odyssey</b>, a computer you can just talk to. The dream… and the warning: <i>“I'm sorry Dave, I'm afraid I can't do that.”</i></p><div class="chip tag">Science fiction sets the bar</div></div>
+    </article>
+    <article class="era f">
+      <div class="vis"><img src="img/ibm-model-m.webp" alt="IBM Model M keyboard" style="width:620px"></div>
+      <div><div class="year">1980s</div><h3>The command line</h3><p>A keyboard and a blinking cursor. Powerful, if you memorized <b>exact commands</b>. <code class="lime">C:\&gt; DIR /W</code></p><div class="chip tag">Speak its words, exactly</div></div>
+    </article>
+    <article class="era f">
+      <div class="vis"><div class="mac obj"><img src="img/macintosh-1984.webp" alt="Apple Macintosh 128K, 1984"><svg class="pointer" viewBox="0 0 24 24"><path d="M3 2l16 11-7 1-4 7z" fill="#fff" stroke="#000" stroke-width="1.5"/></svg></div></div>
+      <div><div class="year">1984</div><h3>Point &amp; click</h3><p>The Macintosh puts windows, icons and a mouse in your home. You stop remembering commands, <b>you see them</b>.</p><div class="chip tag">Show me, don't tell me</div></div>
+    </article>
+    <article class="era f">
+      <div class="vis"><div class="palm obj"><img src="img/palm-pilot-1996.webp" alt="Palm Pilot 1000, 1996"><svg viewBox="0 0 100 60"><path d="M20 50 L35 10 L50 50 M27 32 L43 32 M62 50 L62 12 Q82 12 80 24 Q78 32 62 31"/></svg></div></div>
+      <div><div class="year">1996</div><h3>Palm Pilot</h3><p>A computer in your pocket. You write on glass with a stylus… but you still have to learn <b>its alphabet</b> (Graffiti).</p><div class="chip tag">Almost natural</div></div>
+    </article>
+    <article class="era f">
+      <div class="vis"><div class="phone obj"><img src="img/iphone-4s-2011.webp" alt="iPhone 4S, 2011"><div class="wave"></div><div class="wave"></div><div class="wave"></div><img class="siri" src="img/logo-siri.svg" alt="Siri"></div></div>
+      <div><div class="year">2011</div><h3>Siri</h3><p>The iPhone 4S ships with Siri. <b>Just say it.</b> “Set a timer for 10 minutes.” Anything more complicated: “Here's what I found on the web.”</p><div class="chip tag">Voice, with a script</div></div>
+    </article>
+    <article class="era f">
+      <div class="vis"><div class="alexa obj"><div class="wave"></div><div class="wave"></div><img src="img/logo-alexa.svg" alt="Amazon Alexa"><div class="said">“Alexa, play music.”</div></div></div>
+      <div><div class="year">2014</div><h3>Alexa</h3><p>The assistant moves into your <b>kitchen</b>. Millions of homes, mostly used for timers, weather and music. Useful, but it can't really <i>do</i> much.</p><div class="chip tag">Always listening, rarely acting</div></div>
+    </article>
+    <article class="era f">
+      <div class="vis"><div class="laptop obj"><img src="img/macbook.webp" alt="Laptop">
+        <div class="screen">
+          <div class="b me">Explain recursion like I'm 5</div>
+          <div class="b ai"><img src="img/logo-chatgpt.svg" alt="">Imagine a box with a smaller box inside…</div>
+          <div class="b me">Now as a pirate</div>
+          <div class="b ai"><img src="img/logo-chatgpt.svg" alt="">Arr! A treasure map that leads to… another map!</div>
+        </div></div></div>
+      <div><div class="year">2022</div><h3>ChatGPT</h3><p>Nov 30. The machine finally <b>speaks human</b>, any topic, any style. 100 million users in two months. But it only <i>talks</i>.</p><div class="chip tag">It understands you</div></div>
+    </article>
+    <article class="era f">
+      <div class="vis"><div class="agentbox obj">
+        <div class="bar"><img src="img/opencode-logo-dark.svg" alt="opencode"><span class="dim">· build mode</span></div>
+        <div class="rows">
+          <div>› fix the broken link on my site</div>
+          <div class="dim">→ read index.html</div>
+          <div class="dim">→ found href="/abuot"</div>
+          <div class="ok">✎ edit index.html  +1 −1</div>
+          <div class="ok">✓ done, link fixed</div>
+        </div></div></div>
+      <div><div class="year">2025</div><h3>Agents</h3><p>The AI gets <b>hands</b>: it reads your files, runs tools, checks its work and keeps going until the job is done.</p><div class="chip tag">It does the thing</div></div>
+    </article>
+  </div>
+  <div class="track" id="track">
+    <div class="line"></div><div class="fill"></div>
+  </div>
+  <aside class="notes">Keep each era to ~1 minute. Point out the pattern: each step the human has to learn less. ELIZA: people knew it was a script and still got attached. HAL: the dream AND the fear arrived together.</aside>
+</section>
+
+<!-- 5 · LADDER -->
+<section class="slide" data-section="History">
+  <p class="kicker in">The pattern</p>
+  <h2 class="in" style="--d:1">You used to describe the <span class="outline">steps</span>.<br>Now you describe the <span class="l">outcome</span>.</h2>
+  <div class="ladder">
+    <div class="rung in" style="--d:2;height:42%"><div class="ic">📇</div><b>Holes</b><span>punch cards</span></div>
+    <div class="rung in" style="--d:3;height:50%"><div class="ic">⌨️</div><b>Commands</b><span>exact words</span></div>
+    <div class="rung in" style="--d:4;height:58%"><div class="ic">🖱️</div><b>Clicks</b><span>see &amp; point</span></div>
+    <div class="rung in" style="--d:5;height:66%"><div class="ic">👆</div><b>Touch</b><span>pocket glass</span></div>
+    <div class="rung in" style="--d:6;height:74%"><div class="ic">🎙️</div><b>Voice</b><span>short scripts</span></div>
+    <div class="rung in" style="--d:7;height:85%"><div class="ic">💬</div><b>Words</b><span>any question</span></div>
+    <div class="rung goal in pop" style="--d:9;height:100%"><div class="ic">🎯</div><b>Goals</b><span>“make it happen”<br>That's an agent.</span></div>
+  </div>
+  <aside class="notes">This is the bridge to Part 1. With a chatbot you still do the work, it just tells you how. With an agent you give it the goal.</aside>
+</section>
+
+<!-- 6 · SECTION 1 -->
+<section class="slide s-section" data-section="What is an agent?">
+  <div class="num">01</div>
+  <img class="mascot-sm float in pop" style="--d:3" src="img/jellyfish-pink.svg" alt="">
+  <p class="kicker in">Part one</p>
+  <h2 class="in" style="--d:1">What is<br>an <span class="l">agent</span>?</h2>
+  <p class="lead in" style="--d:2">Same brain as a chatbot. <b>Very different job.</b></p>
+</section>
+
+<!-- 7 · VERSUS -->
+<section class="slide" data-section="What is an agent?" id="versus">
+  <p class="kicker in">Same message, two helpers</p>
+  <h2 class="in" style="--d:1;font-size:66px">“My bike tire is flat and I have class at 9.”</h2>
+  <div class="versus in" style="--d:2">
+    <div class="panel bot">
+      <div class="top"><span>💬 Chatbot</span><span>answers</span></div>
+      <div class="body" id="vs-bot"></div>
+    </div>
+    <div class="panel agent">
+      <div class="top"><span>🦾 Agent</span><span>acts</span></div>
+      <div class="body" id="vs-agent"></div>
+    </div>
+  </div>
+  <aside class="notes">The chatbot is the friend who explains how to fix the bike. The agent is the friend who grabs the wrench, or books the shop. Click the slide to replay.</aside>
+</section>
+
+<!-- 8 · FORMULA -->
+<section class="slide" data-section="What is an agent?">
+  <p class="kicker in">The recipe</p>
+  <h2 class="in" style="--d:1">An agent is three things</h2>
+  <div class="formula">
+    <div class="term t1 f"><div class="big">🧠</div><b>A brain</b><span>A language model (GPT, Claude, Grok, Gemini…) that reads, reasons and decides.</span></div>
+    <div class="op f">+</div>
+    <div class="term t2 f"><div class="big">🛠️</div><b>Hands</b><span>Tools: read files, run commands, search the web, click buttons.</span></div>
+    <div class="op f">+</div>
+    <div class="term t3 f"><div class="big"><svg class="loop-ic" viewBox="0 0 120 120" aria-hidden="true"><circle class="track" cx="60" cy="60" r="44"/><circle class="arc" cx="60" cy="60" r="44" pathLength="100"/><g class="comet"><circle cx="60" cy="16" r="9"/></g></svg></div><b>A loop</b><span>It keeps going: try → check → fix, until the goal is done.</span></div>
+    <div class="op f">=</div>
+    <div class="term res f"><img class="float" src="img/jellyfish-lime.svg" alt=""><b>Agent</b></div>
+  </div>
+  <aside class="notes">Press → to build the formula. Without hands, it's a chatbot. Without the loop, it's a one-shot script. All three together is an agent.</aside>
+</section>
+
+<!-- 9 · EXAMPLES -->
+<section class="slide" data-section="What is an agent?">
+  <p class="kicker in">Everyday agents</p>
+  <h2 class="in" style="--d:1">What would you <span class="p">hand off</span>?</h2>
+  <div class="examples">
+    <div class="ex c1 in" style="--d:2"><div class="emo">📚</div><h3>Study</h3><div class="ask">“Turn my lecture notes into a practice quiz.”</div><div class="does"><div>reads your notes folder</div><div>writes 20 questions</div><div>builds a quiz page you can open</div></div></div>
+    <div class="ex c2 in" style="--d:3"><div class="emo">📄</div><h3>Resume</h3><div class="ask">“Tailor my resume to this job posting.”</div><div class="does"><div>compares resume vs posting</div><div>rewrites bullets, invents nothing</div><div>lists likely interview questions</div></div></div>
+    <div class="ex c3 in" style="--d:4"><div class="emo">🚀</div><h3>Project</h3><div class="ask">“Make a website for my club's bake sale.”</div><div class="does"><div>plans the pages</div><div>writes the code</div><div>opens it, fixes what's broken</div></div></div>
+  </div>
+  <aside class="notes">These are exactly the three missions we'll do in the hands-on. Ask: which one would you pick?</aside>
+</section>
+
+<!-- 10 · SECTION 2 -->
+<section class="slide s-section" data-section="How it works">
+  <div class="num">02</div>
+  <img class="mascot-sm float in pop" style="--d:3" src="img/jellyfish-lime.svg" alt="">
+  <p class="kicker pink in">Part two</p>
+  <h2 class="in" style="--d:1">How does<br>it <span class="p">work</span>?</h2>
+  <p class="lead in" style="--d:2">No magic. <b>A loop</b>, a toolbox and a few rules.</p>
+</section>
+
+<!-- 11 · LOOP -->
+<section class="slide s-loop" data-section="How it works" id="loop">
+  <div class="orbit in" style="--d:1">
+    <div class="ring"></div><div class="runner"></div>
+    <div class="core"><img class="float" src="img/mascot.webp" alt=""></div>
+    <div class="node n1"><span class="e">👀</span><b>Perceive</b><span>read the situation</span></div>
+    <div class="node n2"><span class="e">🤔</span><b>Decide</b><span>pick the next step</span></div>
+    <div class="node n3"><span class="e">🛠️</span><b>Act</b><span>use a tool</span></div>
+    <div class="node n4"><span class="e">✅</span><b>Check</b><span>did it work?</span></div>
+  </div>
+  <div>
+    <p class="kicker in">The agent loop</p>
+    <h2 class="in" style="--d:1;font-size:70px">Perceive → decide<br>→ act → <span class="l">check</span></h2>
+    <p class="small in" style="--d:2;margin:20px 0 22px">Goal: <b style="color:var(--paper)">“Put my quiz page online.”</b></p>
+    <div class="loop-story">
+      <div class="ls f" data-node="n1"><span class="k">Perceive</span><span>Looks at the folder: there's a <code>quiz.html</code>, no website yet.</span></div>
+      <div class="ls f" data-node="n2"><span class="k">Decide</span><span>“Simplest path: make an <code>index.html</code>, then deploy.”</span></div>
+      <div class="ls f" data-node="n3"><span class="k">Act</span><span>Renames the file, runs the deploy command.</span></div>
+      <div class="ls f" data-node="n4"><span class="k">Check</span><span>Opens the link… 404! Back to <b>perceive</b> and go around again.</span></div>
+    </div>
+  </div>
+  <aside class="notes">The important part: the check step. A chatbot never looks at whether its answer worked. An agent does, and loops. That's also where it can go wrong: it can loop on a bad idea.</aside>
+</section>
+
+<!-- 12 · TERMINAL SIM -->
+<section class="slide s-term" data-section="How it works" id="sim">
+  <div>
+    <p class="kicker in">Watch one loop, live-ish</p>
+    <div class="term-win in" style="--d:1">
+      <div class="bar"><i></i><i></i><i></i><span>~/agent-lab — opencode</span><img src="img/opencode-logo-dark.svg" alt="opencode"></div>
+      <div class="term-out" id="term-out"></div>
+      <div class="term-foot"><span class="mode">● Build</span><span>tab: plan/build · esc: interrupt</span></div>
+    </div>
+  </div>
+  <div>
+    <div class="phases in" style="--d:2" id="phases">
+      <div class="phase" data-p="perceive"><span class="e">👀</span><b>Perceive</b></div>
+      <div class="phase" data-p="decide"><span class="e">🤔</span><b>Decide</b></div>
+      <div class="phase" data-p="act"><span class="e">🛠️</span><b>Act</b></div>
+      <div class="phase" data-p="check"><span class="e">✅</span><b>Check</b></div>
+    </div>
+    <button class="replay in" style="--d:3" id="replay" type="button">↻ Replay</button>
+  </div>
+  <aside class="notes">This is a simulation of what you'll see in opencode. Note how each line is a tool call, and the agent catches its own mistake.</aside>
+</section>
+
+<!-- 13 · TOOLBOX -->
+<section class="slide" data-section="How it works">
+  <p class="kicker in">The toolbox</p>
+  <h2 class="in" style="--d:1">Tools turn words into <span class="l">actions</span></h2>
+  <div class="tools">
+    <div class="tool in pop" style="--d:2"><div class="e">📖</div><b>Read</b><span>Open and understand your files.</span><code>read notes.md</code></div>
+    <div class="tool in pop" style="--d:3"><div class="e">✍️</div><b>Write</b><span>Create or edit files, line by line.</span><code>edit index.html</code></div>
+    <div class="tool in pop" style="--d:4"><div class="e">💻</div><b>Run</b><span>Use the terminal like you would.</span><code>bash npm test</code></div>
+    <div class="tool in pop" style="--d:5"><div class="e">🔎</div><b>Search</b><span>Look things up on the web.</span><code>webfetch docs</code></div>
+    <div class="tool in pop" style="--d:6"><div class="e">🌐</div><b>Browse</b><span>Click around websites and apps.</span><code>browser click</code></div>
+    <div class="tool in pop" style="--d:7"><div class="e">🔌</div><b>Connect</b><span>Plug into apps through MCP servers.</span><code>mcp calendar</code></div>
+    <div class="tool in pop" style="--d:8"><div class="e">🧾</div><b>Remember</b><span>Keep notes about your project.</span><code>AGENTS.md</code></div>
+    <div class="tool in pop" style="--d:9"><div class="e">🙋</div><b>Ask you</b><span>The most underrated tool of all.</span><code>“allow this?”</code></div>
+  </div>
+  <aside class="notes">The model itself can only produce text. Tools are how that text becomes a real action. The more tools, the more useful and the more risky.</aside>
+</section>
+
+<!-- 14 · FLIP QUIZ -->
+<section class="slide" data-section="How it works">
+  <p class="kicker pink in">Quick game · press → or click a card</p>
+  <h2 class="in" style="--d:1">Would you let an agent…</h2>
+  <div class="flips">
+    <div class="flip f in" style="--d:2"><div class="inner">
+      <div class="face front"><div class="e">📸</div><p>Rename 300 vacation photos by date?</p><small>tap to reveal</small></div>
+      <div class="face back go"><div class="v">Go for it</div><p>Boring, repetitive and easy to check. Agents' favourite kind of job.</p></div>
+    </div></div>
+    <div class="flip f in" style="--d:3"><div class="inner">
+      <div class="face front"><div class="e">✉️</div><p>Email your professor for you?</p><small>tap to reveal</small></div>
+      <div class="face back care"><div class="v">Draft only</div><p>Let it write. You read it and press send. Your name, your voice.</p></div>
+    </div></div>
+    <div class="flip f in" style="--d:4"><div class="inner">
+      <div class="face front"><div class="e">🗑️</div><p>Clean up your Downloads folder?</p><small>tap to reveal</small></div>
+      <div class="face back care"><div class="v">Plan first</div><p>Ask for the list of what it would delete. Approve, then act.</p></div>
+    </div></div>
+    <div class="flip f in" style="--d:5"><div class="inner">
+      <div class="face front"><div class="e">💳</div><p>Pay your rent with your card?</p><small>tap to reveal</small></div>
+      <div class="face back stop"><div class="v">Human finish</div><p>Money, legal stuff, anything you can't undo: you do the final click.</p></div>
+    </div></div>
+    <div class="flip f in" style="--d:6"><div class="inner">
+      <div class="face front"><div class="e">🕸️</div><p>Read a random webpage and run the commands it suggests?</p><small>tap to reveal</small></div>
+      <div class="face back stop"><div class="v">Nope</div><p>That's <b>prompt injection</b>: hidden text on a page can give your agent orders.</p></div>
+    </div></div>
+  </div>
+  <aside class="notes">Let the room vote before each flip (thumbs up / sideways / down). The rule of thumb: how easy is it to undo?</aside>
+</section>
+
+<!-- 15 · RULES -->
+<section class="slide" data-section="How it works">
+  <p class="kicker in">Rules of the road</p>
+  <h2 class="in" style="--d:1">Stay in the <span class="l">loop</span></h2>
+  <div class="rules">
+    <div class="rule in" style="--d:2"><div class="n">01</div><div class="e">🗺️</div><b>Plan first</b><span>In opencode, press <kbd>Tab</kbd> for Plan mode: it thinks but can't touch files.</span></div>
+    <div class="rule in" style="--d:3"><div class="n">02</div><div class="e">👓</div><b>Read the diff</b><span>Look at what changed before you trust it. Green = added, red = removed.</span></div>
+    <div class="rule in" style="--d:4"><div class="n">03</div><div class="e">⏪</div><b>Undo exists</b><span>Type <kbd>/undo</kbd> to roll back the last change. Try again with a better ask.</span></div>
+    <div class="rule in" style="--d:5"><div class="n">04</div><div class="e">🔐</div><b>No secrets</b><span>Never paste passwords, API keys or anyone's private info into a prompt.</span></div>
+    <div class="rule in" style="--d:6"><div class="n">05</div><div class="e">🧪</div><b>Sandbox it</b><span>Work in a fresh folder, not your Documents or your whole drive.</span></div>
+  </div>
+  <p class="lead in" style="--d:7">Agents are confident, fast and sometimes <b>wrong</b>. You are the editor-in-chief.</p>
+</section>
+
+<!-- 16 · SECTION 3 -->
+<section class="slide s-section" data-section="Hands-on">
+  <div class="num">03</div>
+  <img class="mascot-sm float in pop" style="--d:3" src="img/mascot.webp" alt="">
+  <p class="kicker in">Part three · laptops open</p>
+  <h2 class="in" style="--d:1">Your turn<br>to <span class="l">drive</span></h2>
+  <p class="lead in" style="--d:2">Open this page on your laptop. Every command has a <b>copy button</b>.</p>
+</section>
+
+<!-- 17 · MEET OPENCODE -->
+<section class="slide s-oc" data-section="Hands-on">
+  <div>
+    <p class="kicker in">Meet your agent</p>
+    <img class="oc-logo in" style="--d:1" src="img/opencode-logo-dark.svg" alt="opencode">
+    <div class="facts">
+      <div class="fact in" style="--d:2"><div class="e">🆓</div>Free and open source: you can read every line of it.</div>
+      <div class="fact in" style="--d:3"><div class="e">💻</div>Lives in your terminal (desktop app too).</div>
+      <div class="fact in" style="--d:4"><div class="e">🔀</div>Works with any model: Claude, GPT, Gemini, Grok, local ones…</div>
+      <div class="fact in" style="--d:5"><div class="e">🗺️</div>Plan mode to think, Build mode to act.</div>
+    </div>
+  </div>
+  <div class="oc-tui in pop" style="--d:3">
+    <div class="row" style="margin-top:0"><span>~/agent-lab</span><span>● Build</span></div>
+    <div class="sess">
+      <div class="me">make me a quiz about jellyfish 🪼</div>
+      <div class="t">→ Write quiz.html  +96 lines</div>
+      <div class="t">→ Bash open quiz.html</div>
+      <div class="a">Done! 10 questions, from “how many hearts?” (zero) to “are they immortal?” (one species, sort of).</div>
+    </div>
+    <div class="inp">now make it harder<span class="cursor"></span></div>
+    <div class="keys"><span><b>tab</b> plan/build</span><span><b>@</b> file</span><span><b>/</b> commands</span><span><b>esc</b> stop</span></div>
+  </div>
+  <aside class="notes">Why opencode: free, open source, provider-agnostic, so nobody is locked to one paid account tonight.</aside>
+</section>
+
+<!-- 18 · INSTALL -->
+<section class="slide" data-section="Hands-on" id="install">
+  <p class="kicker in">Step 1 · install</p>
+  <h2 class="in" style="--d:1">Install it on <span class="l">Windows</span></h2>
+  <div class="runsteps">
+    <div class="rs in" style="--d:2"><div class="n">1</div><a class="cmd plain" href="https://nodejs.org" target="_blank" rel="noopener"><span>🌐 nodejs.org → download <b>LTS</b></span><span class="copy">open</span></a><div class="what"><b>Get Node.js.</b> Click the big download button, then Next, Next, Finish.</div></div>
+    <div class="rs in" style="--d:3"><div class="n">2</div><div class="cmd plain"><span>⊞ Windows key → type <b>PowerShell</b> → Enter</span></div><div class="what"><b>Open PowerShell.</b> A blue or black window with a blinking cursor.</div></div>
+    <div class="rs in" style="--d:4"><div class="n">3</div><div class="cmd"><code>npm install -g opencode-ai</code><button class="copy" type="button">copy</button></div><div class="what"><b>Install opencode.</b> Paste with right-click, then press Enter. Wait for it to finish.</div></div>
+    <div class="rs in" style="--d:5"><div class="n">4</div><div class="cmd"><code>opencode --version</code><button class="copy" type="button">copy</button></div><div class="what"><b>Check it.</b> See a version number? <b class="lime">You're in.</b></div></div>
+  </div>
+  <div class="check-it in" style="--d:6">
+    <div class="card"><b>Red error “running scripts is disabled”?</b> Paste this, press Enter, then try step 3 again:</div>
+    <div class="cmd" style="flex:1.2"><code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned -Force</code><button class="copy" type="button">copy</button></div>
+  </div>
+  <aside class="notes">Anything else goes wrong: hand up, an exec comes over. Mac users: curl -fsSL https://opencode.ai/install | bash</aside>
+</section>
+
+<!-- 19 · FIRST RUN -->
+<section class="slide" data-section="Hands-on">
+  <p class="kicker in">Step 2 · first run</p>
+  <h2 class="in" style="--d:1">Wake it <span class="p">up</span></h2>
+  <div class="runsteps">
+    <div class="rs in" style="--d:2"><div class="n">1</div><div class="cmd"><code>mkdir agent-lab; cd agent-lab</code><button class="copy" type="button">copy</button></div><div class="what"><b>Make a playground.</b> A fresh, empty folder. Nothing to break.</div></div>
+    <div class="rs in" style="--d:3"><div class="n">2</div><div class="cmd"><code>opencode</code><button class="copy" type="button">copy</button></div><div class="what"><b>Start it.</b> The opencode screen opens right in your terminal.</div></div>
+    <div class="rs in" style="--d:4"><div class="n">3</div><div class="cmd"><code class="tui">what can you do in this folder?</code><button class="copy" type="button">copy</button></div><div class="what"><b>Say hi.</b> Talk to it like a new teammate.</div></div>
+  </div>
+  <aside class="notes">Have an exec walking the room during this slide.</aside>
+</section>
+
+<!-- 21 · QUESTS -->
+<section class="slide" data-section="Hands-on">
+  <p class="kicker pink in">Step 3 · pick a quest</p>
+  <h2 class="in" style="--d:1">Things a chatbot <span class="p">can't do</span></h2>
+  <div class="quests">
+    <div class="quest q1 in" style="--d:2"><div class="lvl">Level 1 · Files</div><div class="e">🗂️</div><h3>Tidy-up robot</h3>
+      <div class="prompt">Create a folder called messy with 25 fake files with random names: photos, homework, receipts, memes and notes. Then sort them into folders by type, give every file a clear name, and write report.md listing everything you moved.</div>
+      <div class="why">A chatbot can't create, move or rename files on your computer.</div>
+      <button class="copy" type="button">copy prompt</button></div>
+    <div class="quest q2 in" style="--d:3"><div class="lvl">Level 2 · Research</div><div class="e">🔎</div><h3>Weekend scout</h3>
+      <div class="prompt">Look up 5 free things to do in Calgary this weekend. Open each page to check the event is real and the date is right. Save the ones that pass to weekend.md with the date, the place and the link.</div>
+      <div class="why">It browses, double-checks its own findings, and saves the result.</div>
+      <button class="copy" type="button">copy prompt</button></div>
+    <div class="quest q3 in" style="--d:4"><div class="lvl">Boss level · Build &amp; run</div><div class="e">🎮</div><h3>Jelly dodge</h3>
+      <div class="prompt">Build a small browser game: a jellyfish dodges falling plastic bags with the arrow keys, with a score and a restart button. Then start a local web server so I can play it from a link, and fix any errors you hit along the way.</div>
+      <div class="why">It writes the code, runs it, sees the errors and fixes them on its own.</div>
+      <button class="copy" type="button">copy prompt</button></div>
+  </div>
+  <aside class="notes">Point at the grey line under each prompt: that's the part a chatbot can't do. Boss level: show the server link on the projector.</aside>
+</section>
+
+<!-- 22 · RECIPE -->
+<section class="slide s-recipe" data-section="Hands-on">
+  <div>
+    <p class="kicker in">Level up your asks</p>
+    <h2 class="in" style="--d:1;font-size:74px">The prompt<br><span class="l">recipe</span></h2>
+    <div class="ingredients">
+      <div class="ing g f"><span class="e">🎯</span><div><b>Goal</b><span>What do you want to exist at the end?</span></div></div>
+      <div class="ing c f"><span class="e">📎</span><div><b>Context</b><span>Files, examples, who it's for.</span></div></div>
+      <div class="ing k f"><span class="e">🚧</span><div><b>Limits</b><span>What it must not do or touch.</span></div></div>
+      <div class="ing d f"><span class="e">🏁</span><div><b>Done when</b><span>How you'll both know it worked.</span></div></div>
+    </div>
+  </div>
+  <div class="built in" style="--d:2">
+    <div class="lbl">Before</div>
+    <div class="bad">make me a study thing</div>
+    <div class="lbl">After</div>
+    <span class="g rec f">Make flashcards for my biology midterm</span>
+    <span class="c rec f">from @notes/week3.md, for a first-year student.</span>
+    <span class="k rec f">Don't edit my notes, only create new files.</span>
+    <span class="d rec f">Done when I can open cards.html and flip 15 cards.</span>
+  </div>
+  <aside class="notes">Talk to it like a smart new teammate on their first day: they're capable, but know nothing about you.</aside>
+</section>
+
+<!-- 23 · SECTION 4 -->
+<section class="slide s-section" data-section="What's next">
+  <div class="num">04</div>
+  <img class="mascot-sm float in pop" style="--d:3" src="img/jellyfish-pink.svg" alt="">
+  <p class="kicker cyan in">Part four</p>
+  <h2 class="in" style="--d:1">The speed<br>of <span class="p">everything</span></h2>
+  <p class="lead in" style="--d:2">Remember the timeline? <b>It's not a line anymore. It's a curve.</b></p>
+</section>
+
+<!-- 24 · 100M USERS -->
+<section class="slide" data-section="What's next">
+  <p class="kicker cyan in">Time to reach 100 million users</p>
+  <h2 class="in" style="--d:1">From decades to <span class="l">months</span></h2>
+  <div class="bars">
+    <div class="barrow in" style="--d:2"><div class="lab">☎️ Telephone</div><div class="track2"><div class="bar" style="--w:100%"></div></div><div class="val">75 years</div></div>
+    <div class="barrow in" style="--d:3"><div class="lab">📱 Mobile phone</div><div class="track2"><div class="bar" style="--w:21.3%"></div></div><div class="val">16 years</div></div>
+    <div class="barrow in" style="--d:4"><div class="lab">🌐 The Web</div><div class="track2"><div class="bar" style="--w:9.3%"></div></div><div class="val">7 years</div></div>
+    <div class="barrow in" style="--d:5"><div class="lab">👍 Facebook</div><div class="track2"><div class="bar" style="--w:6%"></div></div><div class="val">4.5 years</div></div>
+    <div class="barrow in" style="--d:6"><div class="lab">📷 Instagram</div><div class="track2"><div class="bar" style="--w:3.3%"></div></div><div class="val">2.5 years</div></div>
+    <div class="barrow gpt in" style="--d:7"><div class="lab"><img src="img/logo-chatgpt.svg" alt="">ChatGPT</div><div class="track2"><div class="bar" style="--w:.22%"></div><div class="magnify"></div><div class="joke">← yes, that tiny sliver is the bar</div></div><div class="val">2 months</div></div>
+  </div>
+  <div class="src">Commonly cited figures: ITU, Statista, UBS / Similarweb (Feb 2023). Bars to scale.</div>
+  <aside class="notes">And ChatGPT itself already feels old. The next slide is how fast the agent part moved.</aside>
+</section>
+
+<!-- 25 · COMPRESSION -->
+<section class="slide" data-section="What's next">
+  <p class="kicker cyan in">The last four years, to scale</p>
+  <h2 class="in" style="--d:1">The gaps are <span class="p">collapsing</span></h2>
+  <div class="ctl in" style="--d:2" id="ctl">
+    <div class="axis"></div>
+    <div class="ev up" data-date="2022-11-30"><div class="when">Nov 2022</div><div class="what">ChatGPT<small>AI talks</small></div><div class="pin"></div></div>
+    <div class="ev down" data-date="2023-03-14"><div class="pin"></div><div class="when">Mar 2023</div><div class="what">GPT-4<small>passes the bar exam</small></div></div>
+    <div class="ev down" data-date="2024-10-22"><div class="pin"></div><div class="when">Oct 2024</div><div class="what">Computer use<small>AI clicks &amp; types on a screen</small></div></div>
+    <div class="ev up" data-date="2025-04-01"><div class="when">2025</div><div class="what">Terminal agents<small>Claude Code, Codex, opencode</small></div><div class="pin"></div></div>
+    <div class="ev up hot" data-date="2026-08-11"><div class="when">Aug 11 2026</div><div class="what">Grok Bot<small>teammates with their own PC</small></div><div class="pin"></div></div>
+    <div class="ev down hot" data-date="2026-09-29"><div class="pin"></div><div class="when">Sep 29 2026</div><div class="what">OpenAI Dots<small>always-on agents</small></div></div>
+  </div>
+  <aside class="notes">Positions are to scale by date. Look at the right edge: two major launches in seven weeks, the last one two days before this workshop.</aside>
+</section>
+
+<!-- 26 · NOW -->
+<section class="slide" data-section="What's next">
+  <p class="kicker pink in">This semester</p>
+  <h2 class="in" style="--d:1">Agents get <span class="l">their own computer</span></h2>
+  <div class="nowgrid">
+    <div class="now grok in" style="--d:2">
+      <div class="hd"><img class="inv" src="img/logo-grok.svg" alt="Grok"><span class="ago" data-since="2026-08-11"></span></div>
+      <h3>Grok Bot</h3><div class="date">xAI · launched Aug 11, 2026 · beta</div>
+      <ul>
+        <li>Each Bot is a named teammate with a <b>persistent cloud computer</b>: browser, files, terminal.</li>
+        <li>Signs into your apps and websites, even ones with no API.</li>
+        <li>Bots message each other and hand work off, 24/7.</li>
+        <li>Comes back only when it needs your approval.</li>
+      </ul>
+      <img class="deco inv" src="img/logo-grok.svg" alt="">
+    </div>
+    <div class="now dots in" style="--d:3">
+      <div class="hd"><img class="inv" src="img/logo-openai.svg" alt="OpenAI"><span class="ago" data-since="2026-09-29"></span></div>
+      <h3>OpenAI Dots</h3><div class="date">OpenAI · launched Sep 29, 2026 · ChatGPT Pro</div>
+      <ul>
+        <li>A persistent assistant with <b>its own cloud computer</b> and browser.</li>
+        <li>Keeps working while your laptop is closed.</li>
+        <li>Connects to thousands of apps, carries context across Slack and Teams.</li>
+        <li>Optional access to your own laptop, off by default.</li>
+      </ul>
+      <img class="deco inv" src="img/logo-openai.svg" alt="">
+    </div>
+  </div>
+  <div class="common in" style="--d:4">Not a chat window. <span class="p">A coworker.</span></div>
+  <aside class="notes">What you installed tonight is the same idea, running on your laptop, with you watching. These products move the agent to its own machine and let it run for days.</aside>
+</section>
+
+<!-- 27 · EVOLUTION -->
+<section class="slide" data-section="What's next">
+  <p class="kicker in">Where is this going?</p>
+  <h2 class="in" style="--d:1">From tool to… <span class="p">something else</span></h2>
+  <div class="evo">
+    <div class="stage-evo f"><div class="orb">🔨</div><b>Tool</b><div class="rel">you use it</div><div class="eg">calculator, punch card</div></div>
+    <div class="stage-evo f"><div class="orb">💬</div><b>Assistant</b><div class="rel">you ask it</div><div class="eg">Siri, Alexa, ChatGPT</div></div>
+    <div class="stage-evo f"><div class="orb">🦾</div><b>Agent</b><div class="rel">you delegate</div><div class="eg">opencode, tonight</div></div>
+    <div class="stage-evo s4 f"><div class="orb">🧑‍🤝‍🧑</div><b>Teammate</b><div class="rel">it works beside you</div><div class="eg">Grok Bot, Dots</div></div>
+    <div class="stage-evo s5 f"><div class="orb">?</div><b>Next</b><div class="rel">it…?</div><div class="eg">your guess is as good as ours</div></div>
+  </div>
+  <div class="evo-q f">
+    <span>Teams of agents running a project?</span><span>Agents hiring other agents?</span><span>Your own agent negotiating with mine?</span><span>Who's responsible when it's wrong?</span>
+  </div>
+  <aside class="notes">Open question to the room. No right answers; we're guessing too. This is the transition to "what stays human".</aside>
+</section>
+
+<!-- 28 · HUMAN -->
+<section class="slide s-human" data-section="What's next">
+  <div>
+    <p class="kicker pink in">So what stays yours?</p>
+    <h2 class="in" style="--d:1">The machine learned<br>our language. <span class="l">Now what?</span></h2>
+    <div class="words">
+      <div class="word f">Taste</div>
+      <div class="word f">Judgment</div>
+      <div class="word f">Curiosity</div>
+      <div class="word f">Responsibility</div>
+      <div class="word f">Each other</div>
+    </div>
+  </div>
+  <img class="mascot float glow-pink in pop" style="--d:2;width:480px" src="img/mascot.webp" alt="">
+  <aside class="notes">Agents make doing cheap. Knowing what's worth doing, and owning the result, gets more valuable. And community, like this club, is the thing no agent replaces.</aside>
+</section>
+
+<!-- 29 · END -->
+<section class="slide s-end" data-section="Q&amp;A">
+  <div>
+    <p class="kicker in">Q&amp;A · 15 min</p>
+    <h2 class="in" style="--d:1"><span class="l">Ques</span><span class="p">tions?</span></h2>
+    <p class="lead in" style="--d:2">Ask anything: agents, careers, “will it take my job”, or why our mascot is a jellyfish.</p>
+    <div class="join in" style="--d:3">
+      <div class="qr"><img src="img/qr-discord.svg" alt="QR code to the Unnatural Intelligence Discord"></div>
+      <div class="info"><b>Join Unnatural Intelligence</b><br>Discord <code>discord.gg/VDKdEjWAG</code><br>Email <code>unnaturalintelligencesait@gmail.com</code><br><span class="small">Next: mini-hackathons &amp; creative demos.</span></div>
+    </div>
+  </div>
+  <img class="mascot float glow-pink in pop" style="--d:2" src="img/mascot.webp" alt="">
+</section>
+
+<!-- 30 · CREDITS -->
+<section class="slide" data-section="Credits">
+  <p class="kicker in">Credits</p>
+  <h2 class="in" style="--d:1;font-size:64px">Images &amp; sources</h2>
+  <div class="credits in" style="--d:2">
+    <div><b>Punched card</b> · Gwern / agr · Public domain · <a href="https://commons.wikimedia.org/wiki/File:Blue-punch-card-front-horiz.png" target="_blank" rel="noopener">Wikimedia Commons</a></div>
+    <div><b>HAL 9000</b> · Cryteria · CC BY 3.0 · <a href="https://commons.wikimedia.org/wiki/File:HAL9000.svg" target="_blank" rel="noopener">Wikimedia Commons</a></div>
+    <div><b>IBM Model M</b> · Raymangold22 · CC0 · <a href="https://commons.wikimedia.org/wiki/File:IBM_Model_M.png" target="_blank" rel="noopener">Wikimedia Commons</a></div>
+    <div><b>Macintosh 128K</b> · Grm wnr · CC BY-SA 3.0 · <a href="https://commons.wikimedia.org/wiki/File:Macintosh_128k_transparency.png" target="_blank" rel="noopener">Wikimedia Commons</a></div>
+    <div><b>Palm Pilot 1000</b> · Ndiggity · CC BY-SA 4.0 · <a href="https://commons.wikimedia.org/wiki/File:Palm_Pilot_1000.png" target="_blank" rel="noopener">Wikimedia Commons</a></div>
+    <div><b>iPhone 4S</b> · Zach Vega · CC BY-SA 3.0 · <a href="https://commons.wikimedia.org/wiki/File:IPhone_4S_No_shadow.png" target="_blank" rel="noopener">Wikimedia Commons</a></div>
+    <div><b>MacBook Pro</b> · Baryonic Being · CC BY 2.0 · <a href="https://commons.wikimedia.org/wiki/File:MacBook_Pro_transparency.png" target="_blank" rel="noopener">Wikimedia Commons</a></div>
+    <div><b>Logos</b> (Siri, Alexa, ChatGPT, OpenAI, Grok) · trademarks of their owners · via <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a></div>
+    <div><b>opencode logo</b> · <a href="https://github.com/anomalyco/opencode" target="_blank" rel="noopener">anomalyco/opencode</a> · <a href="https://opencode.ai/docs/" target="_blank" rel="noopener">docs</a></div>
+    <div><b>Grok Bot</b> · <a href="https://x.ai/news/introducing-grok-bot" target="_blank" rel="noopener">x.ai/news/introducing-grok-bot</a></div>
+    <div><b>OpenAI Dots</b> · <a href="https://www.vellum.ai/blog/official-openai-dots-breakdown" target="_blank" rel="noopener">launch breakdown</a></div>
+    <div><b>ELIZA transcript</b> · J. Weizenbaum, <i>Communications of the ACM</i>, 1966</div>
+    <div><b>Jellyfish mascot &amp; design</b> · Unnatural Intelligence, SAIT</div>
+  </div>
+</section>
+
+</main>
+
+<div class="progress" id="progress"></div>
+<div class="help" id="help"><kbd>←</kbd> <kbd>→</kbd> or click to move · <kbd>F</kbd> fullscreen · <kbd>N</kbd> notes</div>
+<div class="notes-panel" id="notes-panel"><h4>Speaker notes</h4><div id="notes-body"></div></div>
+<nav class="hud">
+  <div class="sec"><img src="img/jellyfish-lime.svg" alt=""><span id="sec-name"></span></div>
+  <div class="ctrl">
+    <button type="button" id="prev" aria-label="Previous">←</button>
+    <span class="count" id="count"></span>
+    <button type="button" id="next" aria-label="Next">→</button>
+    <button type="button" id="fs" aria-label="Fullscreen">⛶</button>
+  </div>
+</nav>
+<script src="deck.js"></script>
+</body>
+</html>
