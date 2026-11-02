@@ -1,10 +1,90 @@
-import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const out = join(root, "docs");
+const POSTER_NAMES = ["poster.png", "poster.jpg", "poster.jpeg", "poster.webp"];
+const POSTER_FILE = /\.(png|jpe?g|webp)$/i;
+
+function pngSize(buf) {
+  if (buf.length < 24 || buf[0] !== 0x89 || buf[1] !== 0x50) return null;
+  return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
+}
+
+function jpegSize(buf) {
+  if (buf.length < 4 || buf[0] !== 0xff || buf[1] !== 0xd8) return null;
+  let offset = 2;
+  while (offset + 9 < buf.length) {
+    if (buf[offset] !== 0xff) break;
+    const marker = buf[offset + 1];
+    const length = buf.readUInt16BE(offset + 2);
+    if (marker >= 0xc0 && marker <= 0xc3) {
+      return { height: buf.readUInt16BE(offset + 5), width: buf.readUInt16BE(offset + 7) };
+    }
+    offset += 2 + length;
+  }
+  return null;
+}
+
+function webpSize(buf) {
+  if (buf.length < 30 || buf.toString("ascii", 0, 4) !== "RIFF" || buf.toString("ascii", 8, 12) !== "WEBP") {
+    return null;
+  }
+  const chunk = buf.toString("ascii", 12, 16);
+  if (chunk === "VP8X") {
+    return { width: 1 + buf.readUIntLE(24, 3), height: 1 + buf.readUIntLE(27, 3) };
+  }
+  if (chunk === "VP8 " && buf.length >= 30) {
+    const start = buf.indexOf(Buffer.from([0x9d, 0x01, 0x2a]), 20);
+    if (start === -1 || start + 6 >= buf.length) return null;
+    return { width: buf.readUInt16LE(start + 3) & 0x3fff, height: buf.readUInt16LE(start + 5) & 0x3fff };
+  }
+  if (chunk === "VP8L" && buf.length >= 25 && buf[20] === 0x2f) {
+    const bits = buf.readUInt32LE(21);
+    return { width: (bits & 0x3fff) + 1, height: ((bits >> 14) & 0x3fff) + 1 };
+  }
+  return null;
+}
+
+function posterFromFolder(eventsRoot, eventId) {
+  const dir = join(eventsRoot, eventId, "poster");
+  if (!existsSync(dir)) return null;
+  const names = readdirSync(dir).filter((name) => POSTER_FILE.test(name) && !name.startsWith("."));
+  const chosen = POSTER_NAMES.find((name) => names.includes(name)) || names.sort()[0];
+  if (!chosen) return null;
+  const buf = readFileSync(join(dir, chosen));
+  const size = pngSize(buf) || jpegSize(buf) || webpSize(buf);
+  if (!size) return null;
+  return {
+    className: "poster",
+    src: `/assets/events/${eventId}/poster/${chosen}`,
+    width: size.width,
+    height: size.height
+  };
+}
+
+function resolveEventPosters(eventsRoot) {
+  const manifest = JSON.parse(readFileSync(join(eventsRoot, "events.json"), "utf8"));
+  const events = (manifest.events || []).map((item) => {
+    const fromFolder = posterFromFolder(eventsRoot, item.id);
+    if (!fromFolder) {
+      const next = { ...item };
+      delete next.poster;
+      return next;
+    }
+    const alt = item.poster && item.poster.alt ? item.poster.alt : "";
+    return {
+      ...item,
+      poster: {
+        ...fromFolder,
+        alt
+      }
+    };
+  });
+  return { ...manifest, events };
+}
 
 const pages = [
   {
@@ -34,6 +114,13 @@ const pages = [
     page: "podcast",
     title: "Podcast — Unnatural Intelligence",
     description: "Season 1 of I hate it but it’s so useful. Three episodes in production, with the posters."
+  },
+  {
+    file: "resources.html",
+    dest: "resources/index.html",
+    page: "resources",
+    title: "Resources — Unnatural Intelligence",
+    description: "Slides and handouts from club workshops, free to open and follow along."
   },
   {
     file: "team.html",
@@ -95,6 +182,7 @@ const nav = [
   ["events", "Events", "/events/"],
   ["media", "Media", "/media/"],
   ["podcast", "Podcast", "/podcast/"],
+  ["resources", "Resources", "/resources/"],
   ["team", "Team", "/team/"],
   ["shop", "Shop", "/shop/"],
   ["connect", "Connect", "/connect/"]
@@ -174,6 +262,7 @@ ${body}
         <li><a href="/events/">Events</a></li>
         <li><a href="/media/">Media</a></li>
         <li><a href="/podcast/">Podcast</a></li>
+        <li><a href="/resources/">Resources</a></li>
         <li><a href="/team/">Team</a></li>
         <li><a href="/shop/">Shop</a></li>
         <li><a href="/connect/">Connect</a></li>
@@ -248,6 +337,11 @@ for (const [from, to] of copies) {
   cpSync(join(root, from), dest);
 }
 cpSync(join(root, "site/assets/events"), join(out, "assets/events"), { recursive: true });
+writeFileSync(
+  join(out, "assets/events/events.json"),
+  `${JSON.stringify(resolveEventPosters(join(root, "site/assets/events")), null, 2)}\n`
+);
+cpSync(join(root, "site/resources"), join(out, "resources"), { recursive: true });
 cpSync(join(root, "site/css"), join(out, "css"), { recursive: true });
 cpSync(join(root, "site/js"), join(out, "js"), { recursive: true });
 
@@ -264,6 +358,24 @@ for (const font of [
   "LICENSE.txt"
 ]) {
   cpSync(join(root, "charter/fonts", font), join(fontDir, font));
+}
+
+// Slide decks load fonts from their own fonts/ folder. Reuse the charter copies instead of storing them twice.
+const deckFonts = [
+  "Inter-Regular.ttf",
+  "Inter-Medium.ttf",
+  "Inter-SemiBold.ttf",
+  "Inter-Bold.ttf",
+  "InterDisplay-Bold.ttf",
+  "JetBrainsMono-Regular.ttf",
+  "JetBrainsMono-Bold.ttf"
+];
+for (const deck of ["ai-agents-workshop"]) {
+  const deckFontDir = join(out, "resources", deck, "fonts");
+  mkdirSync(deckFontDir, { recursive: true });
+  for (const font of deckFonts) {
+    cpSync(join(root, "charter/fonts", font), join(deckFontDir, font));
+  }
 }
 
 writeFileSync(join(out, ".nojekyll"), "");

@@ -64,6 +64,26 @@ module.exports = [
     }
   },
   {
+    id: "ai-project-showcase",
+    title: "AI Project Showcase",
+    whenLabel: "Thu 26 Nov 2026",
+    whenDetail: "5:00–8:00 PM",
+    datetime: "2026-11-26T17:00",
+    where: "MacDonald Hall, SAIT",
+    summary: "End-of-semester AI Project Showcase. Bring a class project, a side quest, or something almost working.",
+    status: "Showcase",
+    tone: "lime",
+    past: false,
+    ticket: {
+      kicker: "Showcase",
+      big: "26<br>Nov",
+      time: "5:00–8:00 PM",
+      place: "MacDonald Hall, SAIT",
+      blurb: "End-of-semester AI Project Showcase. Bring a class project, a side quest, or something almost working.",
+      chips: ["Student club", "Demos"]
+    }
+  },
+  {
     id: "halt-restart",
     title: "Halt & Restart",
     whenLabel: "18 Sep 2026",

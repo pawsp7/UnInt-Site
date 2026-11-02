@@ -1,6 +1,7 @@
 {
   "visibility": {
-    "unnatural-games": true
+    "unnatural-games": true,
+    "ai-project-showcase": true
   },
   "custom": []
 }
